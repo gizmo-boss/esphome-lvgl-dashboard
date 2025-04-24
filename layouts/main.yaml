@@ -392,7 +392,7 @@ packages:
         on_value:
           - lvgl.label.update:
               id: power_value
-              text: !lambda return std::to_string(std::round(x * 10) / 10.0) + "W";
+              text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "kW";
 
   voltage_sensor:
     sensor:
@@ -402,7 +402,7 @@ packages:
         on_value:
           - lvgl.label.update:
               id: voltage_value
-              text: !lambda return std::to_string(std::round(x * 10) / 10.0) + "V";
+              text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "V";
 
   battery_soc_sensor:
     sensor:
@@ -412,7 +412,7 @@ packages:
         on_value:
           - lvgl.label.update:
               id: battery_soc_value
-              text: !lambda return std::to_string(std::round(x * 10) / 10.0) + "%";
+              text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "%";
 
   battery_voltage_sensor:
     sensor:
@@ -422,7 +422,7 @@ packages:
         on_value:
           - lvgl.label.update:
               id: battery_voltage_value
-              text: !lambda return std::to_string(std::round(x * 10) / 10.0) + "V";
+              text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "V";
 
   # living room sensors
   living_room_temp_sensor:
