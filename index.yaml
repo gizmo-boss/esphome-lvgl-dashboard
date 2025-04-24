@@ -1,0 +1,11 @@
+esphome:
+  name: esphome-web-e90dec
+  friendly_name: HA UI
+
+substitutions:
+  home_page: bedroom
+
+packages:
+  common: !include common.yaml
+  device: !include device.yaml
+  layout: !include layouts/main.yaml

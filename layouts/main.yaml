@@ -1,0 +1,203 @@
+font: !include
+  file: fonts/fonts.yaml
+  vars:
+    text_sm: 16
+    text_md: 20
+    text_lg: 24
+    text_xl: 32
+    text_xxl: 48
+    icons_sm: 20
+    icons_md: 26
+    icons_lg: 34
+    icons_xl: 42
+    icons_xxl: 50
+
+.sizing:
+  - &nav_widget_vars
+    height: 50
+    padding: 8
+
+  - &page_styles
+    <<: !include styles/page_styles.yaml
+    pad_top: 50
+    pad_bottom: 50
+
+  - &container_styles
+    <<: !include styles/container_styles.yaml
+    pad_top: 0
+    pad_bottom: 0
+    pad_left: 6
+    pad_right: 6
+
+  - &button_layout
+    <<: !include styles/button_layout.yaml
+    pad_column: 8
+    pad_row: 8
+
+  - &button_widget_vars
+    width: 49%
+    height: 86
+
+  - &wide_button_widget_vars
+    width: 100%
+    height: 86
+
+script:
+  - id: go_home
+    then:
+      - lvgl.page.show: bedroom
+
+lvgl:
+  default_font: roboto_md
+  theme: !include themes/main.yaml
+  top_layer:
+    widgets:
+      - <<:
+          !include {
+            file: widgets/header/widget.yaml,
+            vars: { <<: *nav_widget_vars },
+          }
+      - <<:
+          !include {
+            file: widgets/footer/widget.yaml,
+            vars: { <<: *nav_widget_vars },
+          }
+      - <<: !include { file: widgets/boot_screen/widget.yaml }
+  pages:
+    - id: splash
+      skip: true
+      on_load:
+        - script.execute: go_home
+
+    - id: bedroom
+      <<: *page_styles
+      on_load:
+        - lvgl.label.update:
+            id: page_title
+            text: Bedroom
+      widgets:
+        - obj:
+            <<: *container_styles
+            layout:
+              <<: *button_layout
+            widgets:
+              - button: # torsher
+                  <<: !include
+                    file: widgets/buttons/icon_text_buttons/light_buttons/widget.yaml
+                    vars:
+                      uid: torsher
+                      entity_id: switch.sonoff_10011cb02b
+                      text: Torsher
+                      <<: *button_widget_vars
+                  on_short_click:
+                    - homeassistant.action:
+                        action: switch.toggle
+                        data: { entity_id: switch.sonoff_10011cb02b }
+
+              - obj: # temperature sensor
+                  width: 100%
+                  height: 85
+                  widgets:
+                    - label:
+                        id: bedroom_temp_label
+                        text: "Temp"
+                        text_font: roboto_lg
+                        align: LEFT_MID
+                    - label:
+                        id: bedroom_temp_value
+                        text: "..."
+                        text_font: roboto_lg
+                        align: RIGHT_MID
+
+    - id: living_room
+      <<: *page_styles
+      on_load:
+        - lvgl.label.update:
+            id: page_title
+            text: Living Room
+      widgets:
+        - obj:
+            <<: *container_styles
+            layout:
+              <<: *button_layout
+            widgets:
+              - button: # light 1
+                  <<: !include
+                    file: widgets/buttons/icon_text_buttons/light_buttons/widget.yaml
+                    vars:
+                      uid: living_room_light_1
+                      entity_id: light.living_room_light_1
+                      text: Light 1
+                      <<: *button_widget_vars
+
+              - button: # light 2
+                  <<: !include
+                    file: widgets/buttons/icon_text_buttons/light_buttons/widget.yaml
+                    vars:
+                      uid: living_room_light_2
+                      entity_id: light.living_room_light_2
+                      text: Light 2
+                      <<: *button_widget_vars
+
+    - id: outdoor
+      <<: *page_styles
+      on_load:
+        - lvgl.label.update:
+            id: page_title
+            text: Outdoor
+      widgets:
+        - obj:
+            <<: *container_styles
+            layout:
+              <<: *button_layout
+            widgets:
+              - obj: # outdoor temperature sensor
+                  width: 100%
+                  height: 85
+                  widgets:
+                    - label:
+                        id: outdoor_temp_label
+                        text: "Outdoor Temp"
+                        text_font: roboto_lg
+                        align: LEFT_MID
+                    - label:
+                        id: outdoor_temp_value
+                        text: "..."
+                        text_font: roboto_lg
+                        align: RIGHT_MID
+
+packages:
+  # header
+  header_sensors: !include { file: widgets/header/sensors.yaml }
+
+  # boot screen
+  boot_screen_sensors: !include { file: widgets/boot_screen/sensors.yaml }
+
+  # bedroom temperature sensor
+  bedroom_temp_sensor:
+    sensor:
+      - id: bedroom_temp
+        platform: homeassistant
+        entity_id: sensor.bedroom_temp_temperature
+        on_value:
+          - lvgl.label.update:
+              id: bedroom_temp_value
+              text: !lambda return std::to_string(std::round(x * 10) / 10.0) + "°C";
+
+  # bedroom
+  torsher_widget_sensors:
+    !include {
+      file: widgets/buttons/icon_text_buttons/light_buttons/sensors.yaml,
+      vars: { uid: torsher, entity_id: switch.sonoff_10011cb02b },
+    }
+
+  outdoor_temp_sensor:
+    sensor:
+      - id: outdoor_temp
+        platform: homeassistant
+        entity_id: sensor.outdoor_temp_sensor_temperature
+        on_value:
+          - lvgl.label.update:
+              id: outdoor_temp_value
+              text: !lambda return std::to_string(std::round(x * 10) / 10.0) + "°C";
+

@@ -1,0 +1,1 @@
+python -m esphome run index.yaml
