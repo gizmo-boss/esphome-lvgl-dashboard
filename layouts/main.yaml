@@ -81,6 +81,18 @@ lvgl:
             layout:
               <<: *button_layout
             widgets:
+              - button: # Bedroom Light
+                  <<: !include
+                    file: widgets/buttons/icon_text_buttons/light_buttons/widget.yaml
+                    vars:
+                      uid: bedroom_light
+                      entity_id: switch.sonoff_10012750d9_1
+                      text: Bedroom Light
+                      <<: *button_widget_vars
+                  on_short_click:
+                    - homeassistant.action:
+                        action: switch.toggle
+                        data: { entity_id: switch.sonoff_10012750d9_1 }
               - button: # torsher
                   <<: !include
                     file: widgets/buttons/icon_text_buttons/light_buttons/widget.yaml
@@ -421,7 +433,7 @@ packages:
         on_value:
           - lvgl.label.update:
               id: living_room_temp_value
-              text: !lambda return std::to_string(std::round(x * 10) / 10.0) + "°C";
+              text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "°C";
 
   # bathroom sensors
   bathroom_temp_sensor:
@@ -432,7 +444,7 @@ packages:
         on_value:
           - lvgl.label.update:
               id: bathroom_temp_value
-              text: !lambda return std::to_string(std::round(x * 10) / 10.0) + "°C";
+              text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "°C";
 
   # corridor sensors
   corridor_temp_sensor:
@@ -443,7 +455,7 @@ packages:
         on_value:
           - lvgl.label.update:
               id: corridor_temp_value
-              text: !lambda return std::to_string(std::round(x * 10) / 10.0) + "°C";
+              text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "°C";
 
   # outdoor sensors
   outdoor_temp_sensor:
@@ -454,7 +466,7 @@ packages:
         on_value:
           - lvgl.label.update:
               id: outdoor_temp_value
-              text: !lambda return std::to_string(std::round(x * 10) / 10.0) + "°C";
+              text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "°C";
 
   outdoor_humidity_sensor:
     sensor:
@@ -464,13 +476,19 @@ packages:
         on_value:
           - lvgl.label.update:
               id: outdoor_humidity_value
-              text: !lambda return std::to_string(std::round(x * 10) / 10.0) + "%";
+              text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "%";
 
   # bedroom
   torsher_widget_sensors:
     !include {
       file: widgets/buttons/icon_text_buttons/light_buttons/sensors.yaml,
       vars: { uid: torsher, entity_id: switch.sonoff_10011cb02b },
+    }
+
+  bedroom_light_sensors:
+    !include {
+      file: widgets/buttons/icon_text_buttons/light_buttons/sensors.yaml,
+      vars: { uid: bedroom_light, entity_id: switch.sonoff_10012750d9_1 },
     }
 
   bedroom_temp_sensor:
@@ -481,5 +499,5 @@ packages:
         on_value:
           - lvgl.label.update:
               id: bedroom_temp_value
-              text: !lambda return std::to_string(std::round(x * 10) / 10.0) + "°C";
+              text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "°C";
 
