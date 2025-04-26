@@ -96,7 +96,7 @@ lvgl:
                 text: Torsher
                 <<: *button_widget_vars
             on_short_click:
-            - logger.log: "MAIN Toggling switch switch.sonoff_10011cb02b"
+            # - logger.log: "MAIN Toggling switch switch.sonoff_10011cb02b"
             - homeassistant.service:
                 service: switch.toggle
                 data: { entity_id: switch.sonoff_10011cb02b }
@@ -138,6 +138,10 @@ lvgl:
                 entity_id: switch.sonoff_1001275592_1
                 text: Room Light
                 <<: *button_widget_vars
+            on_short_click:
+            - homeassistant.service:
+                service: switch.toggle
+                data: { entity_id: switch.sonoff_1001275592_1 }
         - button:
             # kitchen light
             <<: !include
@@ -147,6 +151,10 @@ lvgl:
                 entity_id: switch.sonoff_1001275136_3
                 text: Kitchen Light
                 <<: *button_widget_vars
+            on_short_click:
+            - homeassistant.service:
+                service: switch.toggle
+                data: { entity_id: switch.sonoff_1001275136_3 }
         - button:
             # dinner table
             <<: !include
@@ -156,6 +164,10 @@ lvgl:
                 entity_id: switch.sonoff_1001275592_3
                 text: Dinner Table
                 <<: *button_widget_vars
+            on_short_click:
+            - homeassistant.service:
+                service: switch.toggle
+                data: { entity_id: switch.sonoff_1001275592_3 }
         - obj:
             # temperature sensor
             width: 100%
@@ -193,6 +205,10 @@ lvgl:
                 entity_id: switch.sonoff_1001275189_1
                 text: Bathroom Light
                 <<: *button_widget_vars
+            on_short_click:
+            - homeassistant.service:
+                service: switch.toggle
+                data: { entity_id: switch.sonoff_1001275189_1 }
         - button:
             # mirror
             <<: !include
@@ -202,6 +218,10 @@ lvgl:
                 entity_id: switch.sonoff_1001275189_2
                 text: Mirror
                 <<: *button_widget_vars
+            on_short_click:
+            - homeassistant.service:
+                service: switch.toggle
+                data: { entity_id: switch.sonoff_1001275189_2 }
         - button:
             # fan
             <<: !include
@@ -211,6 +231,10 @@ lvgl:
                 entity_id: switch.sonoff_1000af2f21_1
                 text: Fan
                 <<: *button_widget_vars
+            on_short_click:
+            - homeassistant.service:
+                service: switch.toggle
+                data: { entity_id: switch.sonoff_1000af2f21_1 }
         - obj:
             # temperature sensor
             width: 100%
@@ -248,6 +272,10 @@ lvgl:
                 entity_id: switch.sonoff_1001275136_2
                 text: Corridor Light
                 <<: *button_widget_vars
+            on_short_click:
+            - homeassistant.service:
+                service: switch.toggle
+                data: { entity_id: switch.sonoff_1001275136_2 }
         - button:
             # closet light
             <<: !include
@@ -257,6 +285,10 @@ lvgl:
                 entity_id: switch.sonoff_1000b1b936_3
                 text: Closet Light
                 <<: *button_widget_vars
+            on_short_click:
+            - homeassistant.service:
+                service: switch.toggle
+                data: { entity_id: switch.sonoff_1000b1b936_3 }
         - obj:
             # temperature sensor
             width: 100%
@@ -437,39 +469,6 @@ packages:
           id: battery_voltage_value
           text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "V";
 
-  # living room sensors
-  living_room_temp_sensor:
-    sensor:
-    - id: living_room_temp
-      platform: homeassistant
-      entity_id: sensor.livingroom_temp_temperature
-      on_value:
-      - lvgl.label.update:
-          id: living_room_temp_value
-          text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "°C";
-
-  # bathroom sensors
-  bathroom_temp_sensor:
-    sensor:
-    - id: bathroom_temp
-      platform: homeassistant
-      entity_id: sensor.bathroom_temp_temperature
-      on_value:
-      - lvgl.label.update:
-          id: bathroom_temp_value
-          text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "°C";
-
-  # corridor sensors
-  corridor_temp_sensor:
-    sensor:
-    - id: corridor_temp
-      platform: homeassistant
-      entity_id: sensor.corridor_temp_temperature
-      on_value:
-      - lvgl.label.update:
-          id: corridor_temp_value
-          text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "°C";
-
   # outdoor sensors
   outdoor_temp_sensor:
     sensor:
@@ -493,9 +492,7 @@ packages:
 
   # bedroom
   torsher_widget_sensors: !include { file: widgets/buttons/icon_text_buttons/light_buttons/sensors.yaml, vars: { uid: torsher, entity_id: switch.sonoff_10011cb02b } }
-
   bedroom_light_sensors: !include { file: widgets/buttons/icon_text_buttons/light_buttons/sensors.yaml, vars: { uid: bedroom_light, entity_id: switch.sonoff_10012750d9_1 } }
-
   bedroom_temp_sensor:
     sensor:
     - id: bedroom_temp
@@ -504,4 +501,45 @@ packages:
       on_value:
       - lvgl.label.update:
           id: bedroom_temp_value
+          text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "°C";
+
+  #livingroom
+  room_light_widget_sensors: !include { file: widgets/buttons/icon_text_buttons/light_buttons/sensors.yaml, vars: { uid: living_room_light, entity_id: switch.sonoff_1001275592_1 } }
+  kitchen_light_widget_sensors: !include { file: widgets/buttons/icon_text_buttons/light_buttons/sensors.yaml, vars: { uid: kitchen_light, entity_id: switch.sonoff_1001275136_3 } }
+  dinner_table_light_widget_sensors: !include { file: widgets/buttons/icon_text_buttons/light_buttons/sensors.yaml, vars: { uid: dinner_table, entity_id: switch.sonoff_1001275592_3 } }
+  living_room_temp_sensor:
+    sensor:
+    - id: living_room_temp
+      platform: homeassistant
+      entity_id: sensor.livingroom_temp_temperature
+      on_value:
+      - lvgl.label.update:
+          id: living_room_temp_value
+          text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "°C";
+
+  #bathroom
+  bathroom_light_widget_sensors: !include { file: widgets/buttons/icon_text_buttons/light_buttons/sensors.yaml, vars: { uid: bathroom_light, entity_id: switch.sonoff_1001275189_1 } }
+  mirror_light_widget_sensors: !include { file: widgets/buttons/icon_text_buttons/light_buttons/sensors.yaml, vars: { uid: mirror, entity_id: switch.sonoff_1001275189_2 } }
+  fan__widget_sensors: !include { file: widgets/buttons/icon_text_buttons/light_buttons/sensors.yaml, vars: { uid: fan, entity_id: switch.sonoff_1000af2f21_1 } }
+  bathroom_temp_sensor:
+    sensor:
+    - id: bathroom_temp
+      platform: homeassistant
+      entity_id: sensor.bathroom_temp_temperature
+      on_value:
+      - lvgl.label.update:
+          id: bathroom_temp_value
+          text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "°C";
+
+  #corridor
+  corridor_light_widget_sensors: !include { file: widgets/buttons/icon_text_buttons/light_buttons/sensors.yaml, vars: { uid: corridor_light, entity_id: switch.sonoff_1001275136_2 } }
+  mcloset_light_widget_sensors: !include { file: widgets/buttons/icon_text_buttons/light_buttons/sensors.yaml, vars: { uid: closet_light, entity_id: switch.sonoff_1000b1b936_3 } }
+  corridor_temp_sensor:
+    sensor:
+    - id: corridor_temp
+      platform: homeassistant
+      entity_id: sensor.corridor_temp_temperature
+      on_value:
+      - lvgl.label.update:
+          id: corridor_temp_value
           text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "°C";
