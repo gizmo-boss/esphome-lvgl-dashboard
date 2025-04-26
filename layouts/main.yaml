@@ -13,368 +13,381 @@ font: !include
     icons_xxl: 50
 
 .sizing:
-  - &nav_widget_vars
-    height: 50
-    padding: 8
+- &nav_widget_vars
+  height: 50
+  padding: 8
 
-  - &page_styles
-    <<: !include styles/page_styles.yaml
-    pad_top: 50
-    pad_bottom: 50
+- &page_styles
+  <<: !include styles/page_styles.yaml
+  pad_top: 50
+  pad_bottom: 50
 
-  - &container_styles
-    <<: !include styles/container_styles.yaml
-    pad_top: 0
-    pad_bottom: 0
-    pad_left: 6
-    pad_right: 6
+- &container_styles
+  <<: !include styles/container_styles.yaml
+  pad_top: 0
+  pad_bottom: 0
+  pad_left: 6
+  pad_right: 6
 
-  - &button_layout
-    <<: !include styles/button_layout.yaml
-    pad_column: 8
-    pad_row: 8
+- &button_layout
+  <<: !include styles/button_layout.yaml
+  pad_column: 8
+  pad_row: 8
 
-  - &button_widget_vars
-    width: 49%
-    height: 86
+- &button_widget_vars
+  width: 49%
+  height: 86
 
-  - &wide_button_widget_vars
-    width: 100%
-    height: 86
+- &wide_button_widget_vars
+  width: 100%
+  height: 86
 
 script:
-  - id: go_home
-    then:
-      - lvgl.page.show: bedroom
+- id: go_home
+  then:
+  - lvgl.page.show: bedroom
 
 lvgl:
   default_font: roboto_md
   theme: !include themes/main.yaml
   top_layer:
     widgets:
-      - <<:
-          !include {
-            file: widgets/header/widget.yaml,
-            vars: { <<: *nav_widget_vars },
-          }
-      - <<:
-          !include {
-            file: widgets/footer/widget.yaml,
-            vars: { <<: *nav_widget_vars },
-          }
-      - <<: !include { file: widgets/boot_screen/widget.yaml }
+    - <<: !include { file: widgets/header/widget.yaml, vars: { <<: *nav_widget_vars } }
+    - <<: !include { file: widgets/footer/widget.yaml, vars: { <<: *nav_widget_vars } }
+    - <<: !include { file: widgets/boot_screen/widget.yaml }
   pages:
-    - id: splash
-      skip: true
-      on_load:
-        - script.execute: go_home
+  - id: splash
+    skip: true
+    on_load:
+    - script.execute: go_home
 
-    - id: bedroom
-      <<: *page_styles
-      on_load:
-        - lvgl.label.update:
-            id: page_title
-            text: Bedroom
-      widgets:
+  - id: bedroom
+    <<: *page_styles
+    on_load:
+    - lvgl.label.update:
+        id: page_title
+        text: Bedroom
+    widgets:
+    - obj:
+        <<: *container_styles
+        layout:
+          <<: *button_layout
+        widgets:
+        - button:
+            # Bedroom Light
+            <<: !include
+              file: widgets/buttons/icon_text_buttons/light_buttons/widget.yaml
+              vars:
+                uid: bedroom_light
+                entity_id: switch.sonoff_10012750d9_1
+                text: Bedroom Light
+                <<: *button_widget_vars
+            on_short_click:
+            - homeassistant.service:
+                service: switch.toggle
+                data: { entity_id: switch.sonoff_10012750d9_1 }
+        - button:
+            # torsher
+            <<: !include
+              file: widgets/buttons/icon_text_buttons/light_buttons/widget.yaml
+              vars:
+                uid: torsher
+                entity_id: switch.sonoff_10011cb02b
+                text: Torsher
+                <<: *button_widget_vars
+            on_short_click:
+            - logger.log: "MAIN Toggling switch switch.sonoff_10011cb02b"
+            - homeassistant.service:
+                service: switch.toggle
+                data: { entity_id: switch.sonoff_10011cb02b }
+
         - obj:
-            <<: *container_styles
-            layout:
-              <<: *button_layout
+            # temperature sensor
+            width: 100%
+            height: 85
             widgets:
-              - button: # Bedroom Light
-                  <<: !include
-                    file: widgets/buttons/icon_text_buttons/light_buttons/widget.yaml
-                    vars:
-                      uid: bedroom_light
-                      entity_id: switch.sonoff_10012750d9_1
-                      text: Bedroom Light
-                      <<: *button_widget_vars
-                  on_short_click:
-                    - homeassistant.action:
-                        action: switch.toggle
-                        data: { entity_id: switch.sonoff_10012750d9_1 }
-              - button: # torsher
-                  <<: !include
-                    file: widgets/buttons/icon_text_buttons/light_buttons/widget.yaml
-                    vars:
-                      uid: torsher
-                      entity_id: switch.sonoff_10011cb02b
-                      text: Torsher
-                      <<: *button_widget_vars
-                  on_short_click:
-                    - homeassistant.action:
-                        action: switch.toggle
-                        data: { entity_id: switch.sonoff_10011cb02b }
+            - label:
+                id: bedroom_temp_label
+                text: "Temp"
+                text_font: roboto_lg
+                align: LEFT_MID
+            - label:
+                id: bedroom_temp_value
+                text: "..."
+                text_font: roboto_lg
+                align: RIGHT_MID
 
-              - obj: # temperature sensor
-                  width: 100%
-                  height: 85
-                  widgets:
-                    - label:
-                        id: bedroom_temp_label
-                        text: "Temp"
-                        text_font: roboto_lg
-                        align: LEFT_MID
-                    - label:
-                        id: bedroom_temp_value
-                        text: "..."
-                        text_font: roboto_lg
-                        align: RIGHT_MID
-
-    - id: energy
-      <<: *page_styles
-      on_load:
-        - lvgl.label.update:
-            id: page_title
-            text: Energy
-      widgets:
+  - id: living_room
+    <<: *page_styles
+    on_load:
+    - lvgl.label.update:
+        id: page_title
+        text: Living Room
+    widgets:
+    - obj:
+        <<: *container_styles
+        layout:
+          <<: *button_layout
+        widgets:
+        - button:
+            # room light
+            <<: !include
+              file: widgets/buttons/icon_text_buttons/light_buttons/widget.yaml
+              vars:
+                uid: living_room_light
+                entity_id: switch.sonoff_1001275592_1
+                text: Room Light
+                <<: *button_widget_vars
+        - button:
+            # kitchen light
+            <<: !include
+              file: widgets/buttons/icon_text_buttons/light_buttons/widget.yaml
+              vars:
+                uid: kitchen_light
+                entity_id: switch.sonoff_1001275136_3
+                text: Kitchen Light
+                <<: *button_widget_vars
+        - button:
+            # dinner table
+            <<: !include
+              file: widgets/buttons/icon_text_buttons/light_buttons/widget.yaml
+              vars:
+                uid: dinner_table
+                entity_id: switch.sonoff_1001275592_3
+                text: Dinner Table
+                <<: *button_widget_vars
         - obj:
-            <<: *container_styles
-            layout:
-              <<: *button_layout
+            # temperature sensor
+            width: 100%
+            height: 85
             widgets:
-              - obj: # power sensor
-                  width: 100%
-                  height: 85
-                  widgets:
-                    - label:
-                        id: power_label
-                        text: "Power"
-                        text_font: roboto_lg
-                        align: LEFT_MID
-                    - label:
-                        id: power_value
-                        text: "..."
-                        text_font: roboto_lg
-                        align: RIGHT_MID
-              - obj: # voltage sensor
-                  width: 100%
-                  height: 85
-                  widgets:
-                    - label:
-                        id: voltage_label
-                        text: "Voltage"
-                        text_font: roboto_lg
-                        align: LEFT_MID
-                    - label:
-                        id: voltage_value
-                        text: "..."
-                        text_font: roboto_lg
-                        align: RIGHT_MID
-              - obj: # battery soc
-                  width: 100%
-                  height: 85
-                  widgets:
-                    - label:
-                        id: battery_soc_label
-                        text: "Battery SoC"
-                        text_font: roboto_lg
-                        align: LEFT_MID
-                    - label:
-                        id: battery_soc_value
-                        text: "..."
-                        text_font: roboto_lg
-                        align: RIGHT_MID
-              - obj: # battery voltage
-                  width: 100%
-                  height: 85
-                  widgets:
-                    - label:
-                        id: battery_voltage_label
-                        text: "Battery Voltage"
-                        text_font: roboto_lg
-                        align: LEFT_MID
-                    - label:
-                        id: battery_voltage_value
-                        text: "..."
-                        text_font: roboto_lg
-                        align: RIGHT_MID
+            - label:
+                id: living_room_temp_label
+                text: "Temperature"
+                text_font: roboto_lg
+                align: LEFT_MID
+            - label:
+                id: living_room_temp_value
+                text: "..."
+                text_font: roboto_lg
+                align: RIGHT_MID
 
-    - id: living_room
-      <<: *page_styles
-      on_load:
-        - lvgl.label.update:
-            id: page_title
-            text: Living Room
-      widgets:
+  - id: bathroom
+    <<: *page_styles
+    on_load:
+    - lvgl.label.update:
+        id: page_title
+        text: Bathroom
+    widgets:
+    - obj:
+        <<: *container_styles
+        layout:
+          <<: *button_layout
+        widgets:
+        - button:
+            # bathroom light
+            <<: !include
+              file: widgets/buttons/icon_text_buttons/light_buttons/widget.yaml
+              vars:
+                uid: bathroom_light
+                entity_id: switch.sonoff_1001275189_1
+                text: Bathroom Light
+                <<: *button_widget_vars
+        - button:
+            # mirror
+            <<: !include
+              file: widgets/buttons/icon_text_buttons/light_buttons/widget.yaml
+              vars:
+                uid: mirror
+                entity_id: switch.sonoff_1001275189_2
+                text: Mirror
+                <<: *button_widget_vars
+        - button:
+            # fan
+            <<: !include
+              file: widgets/buttons/icon_text_buttons/light_buttons/widget.yaml
+              vars:
+                uid: fan
+                entity_id: switch.sonoff_1000af2f21_1
+                text: Fan
+                <<: *button_widget_vars
         - obj:
-            <<: *container_styles
-            layout:
-              <<: *button_layout
+            # temperature sensor
+            width: 100%
+            height: 85
             widgets:
-              - button: # room light
-                  <<: !include
-                    file: widgets/buttons/icon_text_buttons/light_buttons/widget.yaml
-                    vars:
-                      uid: living_room_light
-                      entity_id: switch.sonoff_1001275592_1
-                      text: Room Light
-                      <<: *button_widget_vars
-              - button: # kitchen light
-                  <<: !include
-                    file: widgets/buttons/icon_text_buttons/light_buttons/widget.yaml
-                    vars:
-                      uid: kitchen_light
-                      entity_id: switch.sonoff_1001275136_3
-                      text: Kitchen Light
-                      <<: *button_widget_vars
-              - button: # dinner table
-                  <<: !include
-                    file: widgets/buttons/icon_text_buttons/light_buttons/widget.yaml
-                    vars:
-                      uid: dinner_table
-                      entity_id: switch.sonoff_1001275592_3
-                      text: Dinner Table
-                      <<: *button_widget_vars
-              - obj: # temperature sensor
-                  width: 100%
-                  height: 85
-                  widgets:
-                    - label:
-                        id: living_room_temp_label
-                        text: "Temperature"
-                        text_font: roboto_lg
-                        align: LEFT_MID
-                    - label:
-                        id: living_room_temp_value
-                        text: "..."
-                        text_font: roboto_lg
-                        align: RIGHT_MID
+            - label:
+                id: bathroom_temp_label
+                text: "Temperature"
+                text_font: roboto_lg
+                align: LEFT_MID
+            - label:
+                id: bathroom_temp_value
+                text: "..."
+                text_font: roboto_lg
+                align: RIGHT_MID
 
-    - id: bathroom
-      <<: *page_styles
-      on_load:
-        - lvgl.label.update:
-            id: page_title
-            text: Bathroom
-      widgets:
+  - id: corridor
+    <<: *page_styles
+    on_load:
+    - lvgl.label.update:
+        id: page_title
+        text: Corridor
+    widgets:
+    - obj:
+        <<: *container_styles
+        layout:
+          <<: *button_layout
+        widgets:
+        - button:
+            # corridor light
+            <<: !include
+              file: widgets/buttons/icon_text_buttons/light_buttons/widget.yaml
+              vars:
+                uid: corridor_light
+                entity_id: switch.sonoff_1001275136_2
+                text: Corridor Light
+                <<: *button_widget_vars
+        - button:
+            # closet light
+            <<: !include
+              file: widgets/buttons/icon_text_buttons/light_buttons/widget.yaml
+              vars:
+                uid: closet_light
+                entity_id: switch.sonoff_1000b1b936_3
+                text: Closet Light
+                <<: *button_widget_vars
         - obj:
-            <<: *container_styles
-            layout:
-              <<: *button_layout
+            # temperature sensor
+            width: 100%
+            height: 85
             widgets:
-              - button: # bathroom light
-                  <<: !include
-                    file: widgets/buttons/icon_text_buttons/light_buttons/widget.yaml
-                    vars:
-                      uid: bathroom_light
-                      entity_id: switch.sonoff_1001275189_1
-                      text: Bathroom Light
-                      <<: *button_widget_vars
-              - button: # mirror
-                  <<: !include
-                    file: widgets/buttons/icon_text_buttons/light_buttons/widget.yaml
-                    vars:
-                      uid: mirror
-                      entity_id: switch.sonoff_1001275189_2
-                      text: Mirror
-                      <<: *button_widget_vars
-              - button: # fan
-                  <<: !include
-                    file: widgets/buttons/icon_text_buttons/light_buttons/widget.yaml
-                    vars:
-                      uid: fan
-                      entity_id: switch.sonoff_1000af2f21_1
-                      text: Fan
-                      <<: *button_widget_vars
-              - obj: # temperature sensor
-                  width: 100%
-                  height: 85
-                  widgets:
-                    - label:
-                        id: bathroom_temp_label
-                        text: "Temperature"
-                        text_font: roboto_lg
-                        align: LEFT_MID
-                    - label:
-                        id: bathroom_temp_value
-                        text: "..."
-                        text_font: roboto_lg
-                        align: RIGHT_MID
+            - label:
+                id: corridor_temp_label
+                text: "Temperature"
+                text_font: roboto_lg
+                align: LEFT_MID
+            - label:
+                id: corridor_temp_value
+                text: "..."
+                text_font: roboto_lg
+                align: RIGHT_MID
 
-    - id: corridor
-      <<: *page_styles
-      on_load:
-        - lvgl.label.update:
-            id: page_title
-            text: Corridor
-      widgets:
+  - id: outdoor
+    <<: *page_styles
+    on_load:
+    - lvgl.label.update:
+        id: page_title
+        text: Outdoor
+    widgets:
+    - obj:
+        <<: *container_styles
+        layout:
+          <<: *button_layout
+        widgets:
         - obj:
-            <<: *container_styles
-            layout:
-              <<: *button_layout
+            # temperature sensor
+            width: 100%
+            height: 85
             widgets:
-              - button: # corridor light
-                  <<: !include
-                    file: widgets/buttons/icon_text_buttons/light_buttons/widget.yaml
-                    vars:
-                      uid: corridor_light
-                      entity_id: switch.sonoff_1001275136_2
-                      text: Corridor Light
-                      <<: *button_widget_vars
-              - button: # closet light
-                  <<: !include
-                    file: widgets/buttons/icon_text_buttons/light_buttons/widget.yaml
-                    vars:
-                      uid: closet_light
-                      entity_id: switch.sonoff_1000b1b936_3
-                      text: Closet Light
-                      <<: *button_widget_vars
-              - obj: # temperature sensor
-                  width: 100%
-                  height: 85
-                  widgets:
-                    - label:
-                        id: corridor_temp_label
-                        text: "Temperature"
-                        text_font: roboto_lg
-                        align: LEFT_MID
-                    - label:
-                        id: corridor_temp_value
-                        text: "..."
-                        text_font: roboto_lg
-                        align: RIGHT_MID
+            - label:
+                id: outdoor_temp_label
+                text: "Temperature"
+                text_font: roboto_lg
+                align: LEFT_MID
+            - label:
+                id: outdoor_temp_value
+                text: "..."
+                text_font: roboto_lg
+                align: RIGHT_MID
+        - obj:
+            # humidity sensor
+            width: 100%
+            height: 85
+            widgets:
+            - label:
+                id: outdoor_humidity_label
+                text: "Humidity"
+                text_font: roboto_lg
+                align: LEFT_MID
+            - label:
+                id: outdoor_humidity_value
+                text: "..."
+                text_font: roboto_lg
+                align: RIGHT_MID
 
-    - id: outdoor
-      <<: *page_styles
-      on_load:
-        - lvgl.label.update:
-            id: page_title
-            text: Outdoor
-      widgets:
+  - id: energy
+    <<: *page_styles
+    on_load:
+    - lvgl.label.update:
+        id: page_title
+        text: Energy
+    widgets:
+    - obj:
+        <<: *container_styles
+        layout:
+          <<: *button_layout
+        widgets:
         - obj:
-            <<: *container_styles
-            layout:
-              <<: *button_layout
+            # power sensor
+            width: 100%
+            height: 85
             widgets:
-              - obj: # temperature sensor
-                  width: 100%
-                  height: 85
-                  widgets:
-                    - label:
-                        id: outdoor_temp_label
-                        text: "Temperature"
-                        text_font: roboto_lg
-                        align: LEFT_MID
-                    - label:
-                        id: outdoor_temp_value
-                        text: "..."
-                        text_font: roboto_lg
-                        align: RIGHT_MID
-              - obj: # humidity sensor
-                  width: 100%
-                  height: 85
-                  widgets:
-                    - label:
-                        id: outdoor_humidity_label
-                        text: "Humidity"
-                        text_font: roboto_lg
-                        align: LEFT_MID
-                    - label:
-                        id: outdoor_humidity_value
-                        text: "..."
-                        text_font: roboto_lg
-                        align: RIGHT_MID
+            - label:
+                id: power_label
+                text: "Power"
+                text_font: roboto_lg
+                align: LEFT_MID
+            - label:
+                id: power_value
+                text: "..."
+                text_font: roboto_lg
+                align: RIGHT_MID
+        - obj:
+            # voltage sensor
+            width: 100%
+            height: 85
+            widgets:
+            - label:
+                id: voltage_label
+                text: "Voltage"
+                text_font: roboto_lg
+                align: LEFT_MID
+            - label:
+                id: voltage_value
+                text: "..."
+                text_font: roboto_lg
+                align: RIGHT_MID
+        - obj:
+            # battery soc
+            width: 100%
+            height: 85
+            widgets:
+            - label:
+                id: battery_soc_label
+                text: "Battery SoC"
+                text_font: roboto_lg
+                align: LEFT_MID
+            - label:
+                id: battery_soc_value
+                text: "..."
+                text_font: roboto_lg
+                align: RIGHT_MID
+        - obj:
+            # battery voltage
+            width: 100%
+            height: 85
+            widgets:
+            - label:
+                id: battery_voltage_label
+                text: "Battery Voltage"
+                text_font: roboto_lg
+                align: LEFT_MID
+            - label:
+                id: battery_voltage_value
+                text: "..."
+                text_font: roboto_lg
+                align: RIGHT_MID
 
 packages:
   # header
@@ -386,118 +399,109 @@ packages:
   # energy sensors
   power_sensor:
     sensor:
-      - id: power
-        platform: homeassistant
-        entity_id: sensor.apartment_power_input_phase_a_power
-        on_value:
-          - lvgl.label.update:
-              id: power_value
-              text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "kW";
+    - id: power
+      platform: homeassistant
+      entity_id: sensor.apartment_power_input_phase_a_power
+      on_value:
+      - lvgl.label.update:
+          id: power_value
+          text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "kW";
 
   voltage_sensor:
     sensor:
-      - id: voltage
-        platform: homeassistant
-        entity_id: sensor.apartment_power_input_phase_a_voltage
-        on_value:
-          - lvgl.label.update:
-              id: voltage_value
-              text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "V";
+    - id: voltage
+      platform: homeassistant
+      entity_id: sensor.apartment_power_input_phase_a_voltage
+      on_value:
+      - lvgl.label.update:
+          id: voltage_value
+          text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "V";
 
   battery_soc_sensor:
     sensor:
-      - id: battery_soc
-        platform: homeassistant
-        entity_id: sensor.40517480283_battery_soc
-        on_value:
-          - lvgl.label.update:
-              id: battery_soc_value
-              text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "%";
+    - id: battery_soc
+      platform: homeassistant
+      entity_id: sensor.40517480283_battery_soc
+      on_value:
+      - lvgl.label.update:
+          id: battery_soc_value
+          text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "%";
 
   battery_voltage_sensor:
     sensor:
-      - id: battery_voltage
-        platform: homeassistant
-        entity_id: sensor.40517480283_battery_voltage
-        on_value:
-          - lvgl.label.update:
-              id: battery_voltage_value
-              text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "V";
+    - id: battery_voltage
+      platform: homeassistant
+      entity_id: sensor.40517480283_battery_voltage
+      on_value:
+      - lvgl.label.update:
+          id: battery_voltage_value
+          text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "V";
 
   # living room sensors
   living_room_temp_sensor:
     sensor:
-      - id: living_room_temp
-        platform: homeassistant
-        entity_id: sensor.livingroom_temp_temperature
-        on_value:
-          - lvgl.label.update:
-              id: living_room_temp_value
-              text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "°C";
+    - id: living_room_temp
+      platform: homeassistant
+      entity_id: sensor.livingroom_temp_temperature
+      on_value:
+      - lvgl.label.update:
+          id: living_room_temp_value
+          text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "°C";
 
   # bathroom sensors
   bathroom_temp_sensor:
     sensor:
-      - id: bathroom_temp
-        platform: homeassistant
-        entity_id: sensor.bathroom_temp_temperature
-        on_value:
-          - lvgl.label.update:
-              id: bathroom_temp_value
-              text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "°C";
+    - id: bathroom_temp
+      platform: homeassistant
+      entity_id: sensor.bathroom_temp_temperature
+      on_value:
+      - lvgl.label.update:
+          id: bathroom_temp_value
+          text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "°C";
 
   # corridor sensors
   corridor_temp_sensor:
     sensor:
-      - id: corridor_temp
-        platform: homeassistant
-        entity_id: sensor.corridor_temp_temperature
-        on_value:
-          - lvgl.label.update:
-              id: corridor_temp_value
-              text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "°C";
+    - id: corridor_temp
+      platform: homeassistant
+      entity_id: sensor.corridor_temp_temperature
+      on_value:
+      - lvgl.label.update:
+          id: corridor_temp_value
+          text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "°C";
 
   # outdoor sensors
   outdoor_temp_sensor:
     sensor:
-      - id: outdoor_temp
-        platform: homeassistant
-        entity_id: sensor.outdoor_temp_sensor_temperature
-        on_value:
-          - lvgl.label.update:
-              id: outdoor_temp_value
-              text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "°C";
+    - id: outdoor_temp
+      platform: homeassistant
+      entity_id: sensor.outdoor_temp_sensor_temperature
+      on_value:
+      - lvgl.label.update:
+          id: outdoor_temp_value
+          text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "°C";
 
   outdoor_humidity_sensor:
     sensor:
-      - id: outdoor_humidity
-        platform: homeassistant
-        entity_id: sensor.outdoor_temp_sensor_humidity
-        on_value:
-          - lvgl.label.update:
-              id: outdoor_humidity_value
-              text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "%";
+    - id: outdoor_humidity
+      platform: homeassistant
+      entity_id: sensor.outdoor_temp_sensor_humidity
+      on_value:
+      - lvgl.label.update:
+          id: outdoor_humidity_value
+          text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "%";
 
   # bedroom
-  torsher_widget_sensors:
-    !include {
-      file: widgets/buttons/icon_text_buttons/light_buttons/sensors.yaml,
-      vars: { uid: torsher, entity_id: switch.sonoff_10011cb02b },
-    }
+  torsher_widget_sensors: !include { file: widgets/buttons/icon_text_buttons/light_buttons/sensors.yaml, vars: { uid: torsher, entity_id: switch.sonoff_10011cb02b } }
 
-  bedroom_light_sensors:
-    !include {
-      file: widgets/buttons/icon_text_buttons/light_buttons/sensors.yaml,
-      vars: { uid: bedroom_light, entity_id: switch.sonoff_10012750d9_1 },
-    }
+  bedroom_light_sensors: !include { file: widgets/buttons/icon_text_buttons/light_buttons/sensors.yaml, vars: { uid: bedroom_light, entity_id: switch.sonoff_10012750d9_1 } }
 
   bedroom_temp_sensor:
     sensor:
-      - id: bedroom_temp
-        platform: homeassistant
-        entity_id: sensor.bedroom_temp_temperature
-        on_value:
-          - lvgl.label.update:
-              id: bedroom_temp_value
-              text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "°C";
-
+    - id: bedroom_temp
+      platform: homeassistant
+      entity_id: sensor.bedroom_temp_temperature
+      on_value:
+      - lvgl.label.update:
+          id: bedroom_temp_value
+          text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "°C";
