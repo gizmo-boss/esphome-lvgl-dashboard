@@ -1,3 +1,9 @@
+globals:
+  - id: display_is_off
+    type: bool
+    restore_value: no
+    initial_value: 'false'
+
 font: !include
   file: fonts/fonts.yaml
   vars:
@@ -46,6 +52,21 @@ script:
 - id: go_home
   then:
   - lvgl.page.show: bedroom
+
+- id: turn_off_display
+  then:
+  - globals.set:
+      id: display_is_off
+      value: 'true'
+  - light.turn_off: backlight
+
+- id: turn_on_display
+  then:
+  - globals.set:
+      id: display_is_off
+      value: 'false'
+  - light.turn_on: backlight
+  - script.execute: go_home
 
 lvgl:
   default_font: roboto_md
