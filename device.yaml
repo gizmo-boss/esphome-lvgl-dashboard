@@ -60,11 +60,25 @@ display:
 touchscreen:
   - id: main_touchscreen
     platform: axs15231
-    # on_touch:
-    #   - lambda: |-
-    #         ESP_LOGI("cal", "x=%d, y=%d, x_raw=%d, y_raw=%0d",
-    #           touch.x,
-    #           touch.y,
-    #           touch.x_raw,
-    #           touch.y_raw
-    #         );
+    touch_timeout: 50ms
+    update_interval: 50ms
+    address: 0x3B
+    on_touch:
+      - lambda: |-
+          // Update the last touch time
+          id(last_touch_time) = millis();
+          
+          // If display is off, turn it on and stop event propagation
+          if (!id(display_on)) {
+            id(display_on) = true;
+            id(backlight).turn_on().perform();
+            // We can't stop propagation in this version of ESPHome
+          }
+          
+          // For debugging (optional)
+          ESP_LOGI("touch", "x=%d, y=%d, x_raw=%d, y_raw=%d",
+            touch.x,
+            touch.y,
+            touch.x_raw,
+            touch.y_raw
+          );

@@ -12,57 +12,79 @@ web_server:
   port: 80
 
 ota:
-- platform: esphome
+  - platform: esphome
 
 api:
   encryption:
     key: !secret api_encryption_key
   on_client_connected:
-  - globals.set:
-      id: homeassistant_ip
-      value: !lambda return client_address;
+    - globals.set:
+        id: homeassistant_ip
+        value: !lambda return client_address;
 
 switch:
-- platform: restart
-  name: Restart
+  - platform: restart
+    name: Restart
 
 binary_sensor:
-- platform: status
-  name: Status
+  - platform: status
+    name: Status
 
 sensor:
-- id: wifi_signal_db
-  name: WiFi Signal
-  platform: wifi_signal
-  update_interval: 60s
-  entity_category: diagnostic
+  - id: wifi_signal_db
+    name: WiFi Signal
+    platform: wifi_signal
+    update_interval: 60s
+    entity_category: diagnostic
 
-- id: wifi_signal_strength
-  name: WiFi Strength
-  platform: copy
-  source_id: wifi_signal_db
-  filters:
-  - lambda: return min(max(2 * (x + 100.0), 0.0), 100.0);
-  unit_of_measurement: "%"
-  entity_category: diagnostic
+  - id: wifi_signal_strength
+    name: WiFi Strength
+    platform: copy
+    source_id: wifi_signal_db
+    filters:
+      - lambda: return min(max(2 * (x + 100.0), 0.0), 100.0);
+    unit_of_measurement: "%"
+    entity_category: diagnostic
 
 text_sensor:
-- platform: homeassistant
-  name: "HomeAssistant Text Sensor"
-  entity_id: sensor.dummy_text_sensor
-  internal: true
+  - platform: homeassistant
+    name: "HomeAssistant Text Sensor"
+    entity_id: sensor.dummy_text_sensor
+    internal: true
 
-- platform: wifi_info
-  ip_address:
-    name: IP Address
-    entity_category: diagnostic
-  ssid:
-    name: Connected SSID
-    entity_category: diagnostic
-  mac_address:
-    name: Mac Address
-    entity_category: diagnostic
+  - platform: wifi_info
+    ip_address:
+      name: IP Address
+      entity_category: diagnostic
+    ssid:
+      name: Connected SSID
+      entity_category: diagnostic
+    mac_address:
+      name: Mac Address
+      entity_category: diagnostic
 
 globals:
-- id: homeassistant_ip
-  type: std::string
+  - id: homeassistant_ip
+    type: std::string
+  - id: display_on
+    type: bool
+    restore_value: false
+    initial_value: 'true'
+  - id: last_touch_time
+    type: uint32_t
+    restore_value: false
+    initial_value: '0'
+
+interval:
+  - interval: 1s
+    then:
+      - if:
+          condition:
+            lambda: |-
+              return id(display_on) && (millis() - id(last_touch_time) > 60000); // 60 seconds timeout
+          then:
+            - logger.log: "Display timeout reached, turning off"
+            - light.turn_off: backlight
+            - globals.set:
+                id: display_on
+                value: 'false'
