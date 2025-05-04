@@ -143,7 +143,7 @@ lvgl:
             widgets:
             - label:
                 id: bedroom_temp_label
-                text: "Temp"
+                text: "Temperature"
                 text_font: roboto_lg
                 align: LEFT_MID
             - label:
@@ -235,6 +235,21 @@ lvgl:
                 text: "..."
                 text_font: roboto_lg
                 align: RIGHT_MID
+        - obj:
+            # temperature humidity
+            width: 100%
+            height: 85
+            widgets:
+            - label:
+                id: living_room_humidity_label
+                text: "Humidity"
+                text_font: roboto_lg
+                align: LEFT_MID
+            - label:
+                id: living_room_humidity_value
+                text: "..."
+                text_font: roboto_lg
+                align: RIGHT_MID
 
   - id: bathroom
     <<: *page_styles
@@ -302,6 +317,21 @@ lvgl:
                 text: "..."
                 text_font: roboto_lg
                 align: RIGHT_MID
+        - obj:
+            # temperature humidity
+            width: 100%
+            height: 85
+            widgets:
+            - label:
+                id: bathroom_humidity_label
+                text: "Humidity"
+                text_font: roboto_lg
+                align: LEFT_MID
+            - label:
+                id: bathroom_humidity_value
+                text: "..."
+                text_font: roboto_lg
+                align: RIGHT_MID
 
   - id: corridor
     <<: *page_styles
@@ -356,6 +386,21 @@ lvgl:
                 text: "..."
                 text_font: roboto_lg
                 align: RIGHT_MID
+        - obj:
+            # temperature humidity
+            width: 100%
+            height: 85
+            widgets:
+            - label:
+                id: corridor_humidity_label
+                text: "Humidity"
+                text_font: roboto_lg
+                align: LEFT_MID
+            - label:
+                id: corridor_humidity_value
+                text: "..."
+                text_font: roboto_lg
+                align: RIGHT_MID
 
   - id: outdoor
     <<: *page_styles
@@ -396,6 +441,21 @@ lvgl:
                 align: LEFT_MID
             - label:
                 id: outdoor_humidity_value
+                text: "..."
+                text_font: roboto_lg
+                align: RIGHT_MID
+        - obj:
+            # pressure sensor
+            width: 100%
+            height: 85
+            widgets:
+            - label:
+                id: outdoor_pressure_label
+                text: "Pressure"
+                text_font: roboto_lg
+                align: LEFT_MID
+            - label:
+                id: outdoor_pressure_value
                 text: "..."
                 text_font: roboto_lg
                 align: RIGHT_MID
@@ -541,6 +601,16 @@ packages:
       - lvgl.label.update:
           id: outdoor_humidity_value
           text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "%";
+  
+  outdoor_pressure_sensor:
+    sensor:
+    - id: outdoor_pressure
+      platform: homeassistant
+      entity_id: sensor.outdoor_temp_sensor_pressure
+      on_value:
+      - lvgl.label.update:
+          id: outdoor_pressure_value
+          text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "hPa";        
 
   # bedroom
   torsher_widget_sensors: !include { file: widgets/buttons/icon_text_buttons/light_buttons/sensors.yaml, vars: { uid: torsher, entity_id: switch.sonoff_10011cb02b } }
@@ -580,6 +650,15 @@ packages:
       - lvgl.label.update:
           id: living_room_temp_value
           text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "°C";
+  living_room_humidity_sensor:
+    sensor:
+    - id: living_room_humidity
+      platform: homeassistant
+      entity_id: sensor.bedroom_temp_humidity
+      on_value:
+      - lvgl.label.update:
+          id: living_room_humidity_value
+          text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "%";
 
   #bathroom
   bathroom_light_widget_sensors: !include { file: widgets/buttons/icon_text_buttons/light_buttons/sensors.yaml, vars: { uid: bathroom_light, entity_id: switch.sonoff_1001275189_1 } }
@@ -594,6 +673,15 @@ packages:
       - lvgl.label.update:
           id: bathroom_temp_value
           text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "°C";
+  bathroom_humidity_sensor:
+    sensor:
+    - id: bathroom_humidity
+      platform: homeassistant
+      entity_id: sensor.bathroom_temp_humidity
+      on_value:
+      - lvgl.label.update:
+          id: bathroom_humidity_value
+          text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "%";
 
   #corridor
   corridor_light_widget_sensors: !include { file: widgets/buttons/icon_text_buttons/light_buttons/sensors.yaml, vars: { uid: corridor_light, entity_id: switch.sonoff_1001275136_2 } }
@@ -607,3 +695,12 @@ packages:
       - lvgl.label.update:
           id: corridor_temp_value
           text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "°C";
+  corridor_humidity_sensor:
+    sensor:
+    - id: corridor_humidity
+      platform: homeassistant
+      entity_id: sensor.corridor_temp_humidity
+      on_value:
+      - lvgl.label.update:
+          id: corridor_humidity_value
+          text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "%";
