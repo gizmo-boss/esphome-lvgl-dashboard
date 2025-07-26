@@ -113,14 +113,14 @@ lvgl:
               file: widgets/buttons/icon_text_buttons/light_buttons/widget.yaml
               vars:
                 uid: torsher
-                entity_id: switch.sonoff_10011cb02b
+                entity_id: switch.bedroom_floor_lamp
                 text: Torsher
                 <<: *button_widget_vars
             on_short_click:
-            # - logger.log: "MAIN Toggling switch switch.sonoff_10011cb02b"
+            # - logger.log: "MAIN Toggling switch switch.bedroom_floor_lamp"
             - homeassistant.service:
                 service: switch.toggle
-                data: { entity_id: switch.sonoff_10011cb02b }
+                data: { entity_id: switch.bedroom_floor_lamp }
         - button:
             # Stylage Light
             <<: !include
@@ -613,7 +613,7 @@ packages:
           text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "hPa";        
 
   # bedroom
-  torsher_widget_sensors: !include { file: widgets/buttons/icon_text_buttons/light_buttons/sensors.yaml, vars: { uid: torsher, entity_id: switch.sonoff_10011cb02b } }
+  torsher_widget_sensors: !include { file: widgets/buttons/icon_text_buttons/light_buttons/sensors.yaml, vars: { uid: torsher, entity_id: switch.bedroom_floor_lamp } }
   bedroom_light_sensors: !include { file: widgets/buttons/icon_text_buttons/light_buttons/sensors.yaml, vars: { uid: bedroom_light, entity_id: switch.sonoff_10012750d9_1 } }
   stylage_light_sensors: !include { file: widgets/buttons/icon_text_buttons/light_buttons/sensors.yaml, vars: { uid: stylage_light, entity_id: light.stylage_rgb_light } }
 
