@@ -669,19 +669,20 @@ lvgl:
                 text: "\U000F0241"
                 text_color: 0xFFCC00
                 align: LEFT_MID
+                x: -10
             - label:
                 text: "Grid Power"
                 text_font: roboto_sm
                 text_color: 0x888888
                 align: LEFT_MID
-                x: 40
+                x: 30
                 y: -18
             - label:
                 id: power_value
                 text: "--"
                 text_font: roboto_xl
                 align: LEFT_MID
-                x: 40
+                x: 30
                 y: 14
         - obj:
             width: 49%
@@ -695,19 +696,20 @@ lvgl:
                 text: "\U000F140B"
                 text_color: 0x00CCFF
                 align: LEFT_MID
+                x: -10
             - label:
                 text: "Voltage"
                 text_font: roboto_sm
                 text_color: 0x888888
                 align: LEFT_MID
-                x: 40
+                x: 30
                 y: -18
             - label:
                 id: voltage_value
                 text: "--"
                 text_font: roboto_xl
                 align: LEFT_MID
-                x: 40
+                x: 30
                 y: 14
         # Separator between Grid and Battery
         - obj:
@@ -731,6 +733,7 @@ lvgl:
                 text: "\U000F0079"
                 text_color: 0x4CAF50
                 align: LEFT_MID
+                x: -10
             - label:
                 text: "Battery"
                 text_font: roboto_sm
@@ -769,19 +772,20 @@ lvgl:
                 text: "\U000F12A3"
                 text_color: 0x9575CD
                 align: LEFT_MID
+                x: -10
             - label:
                 text: "Batt Voltage"
                 text_font: roboto_sm
                 text_color: 0x888888
                 align: LEFT_MID
-                x: 40
+                x: 30
                 y: -18
             - label:
                 id: battery_voltage_value
                 text: "--"
                 text_font: roboto_xl
                 align: LEFT_MID
-                x: 40
+                x: 30
                 y: 14
         - obj:
             width: 49%
@@ -796,19 +800,20 @@ lvgl:
                 text: "\U000F0241"
                 text_color: 0x4CAF50
                 align: LEFT_MID
+                x: -10
             - label:
                 text: "Batt Power"
                 text_font: roboto_sm
                 text_color: 0x888888
                 align: LEFT_MID
-                x: 40
+                x: 30
                 y: -18
             - label:
                 id: battery_power_value
                 text: "--"
                 text_font: roboto_xl
                 align: LEFT_MID
-                x: 40
+                x: 30
                 y: 14
 
 packages:
@@ -1051,7 +1056,6 @@ packages:
       - lvgl.label.update:
           id: bathroom_humidity_value
           text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "%";
-
   #corridor
   corridor_light_widget_sensors: !include { file: widgets/buttons/icon_text_buttons/light_buttons/sensors.yaml, vars: { uid: corridor_light, entity_id: switch.sonoff_1001275136_2 } }
   mcloset_light_widget_sensors: !include { file: widgets/buttons/icon_text_buttons/light_buttons/sensors.yaml, vars: { uid: closet_light, entity_id: switch.sonoff_1000b1b936_3 } }
