@@ -806,14 +806,14 @@ lvgl:
                 text_font: roboto_sm
                 text_color: 0x888888
                 align: LEFT_MID
-                x: 30
+                x: 20
                 y: -18
             - label:
                 id: battery_power_value
                 text: "--"
                 text_font: roboto_xl
                 align: LEFT_MID
-                x: 30
+                x: 20
                 y: 14
 
 packages:
