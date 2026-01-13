@@ -462,6 +462,7 @@ lvgl:
 
   - id: energy
     <<: *page_styles
+    scrollbar_mode: "off"
     on_load:
     - lvgl.label.update:
         id: page_title
@@ -469,84 +470,166 @@ lvgl:
     widgets:
     - obj:
         <<: *container_styles
+        scrollbar_mode: "off"
+        scrollable: false
         layout:
           <<: *button_layout
+          pad_row: 10
         widgets:
+        # Row 1: Grid Power & Voltage
         - obj:
-            # power sensor
-            width: 100%
-            height: 85
+            width: 49%
+            height: 70
+            bg_opa: TRANSP
+            border_width: 0
+            scrollbar_mode: "off"
             widgets:
             - label:
-                id: power_label
-                text: "Power"
-                text_font: roboto_lg
+                text_font: mdi_xl
+                text: "\U000F0241"
+                text_color: 0xFFCC00
                 align: LEFT_MID
+            - label:
+                text: "Grid Power"
+                text_font: roboto_sm
+                text_color: 0x888888
+                align: LEFT_MID
+                x: 40
+                y: -18
             - label:
                 id: power_value
-                text: "..."
-                text_font: roboto_lg
-                align: RIGHT_MID
+                text: "--"
+                text_font: roboto_xl
+                align: LEFT_MID
+                x: 40
+                y: 14
         - obj:
-            # voltage sensor
-            width: 100%
-            height: 85
+            width: 49%
+            height: 70
+            bg_opa: TRANSP
+            border_width: 0
+            scrollbar_mode: "off"
             widgets:
             - label:
-                id: voltage_label
-                text: "Voltage"
-                text_font: roboto_lg
+                text_font: mdi_xl
+                text: "\U000F140B"
+                text_color: 0x00CCFF
                 align: LEFT_MID
+            - label:
+                text: "Voltage"
+                text_font: roboto_sm
+                text_color: 0x888888
+                align: LEFT_MID
+                x: 40
+                y: -18
             - label:
                 id: voltage_value
-                text: "..."
-                text_font: roboto_lg
-                align: RIGHT_MID
+                text: "--"
+                text_font: roboto_xl
+                align: LEFT_MID
+                x: 40
+                y: 14
+        # Separator between Grid and Battery
         - obj:
-            # battery soc
             width: 100%
-            height: 85
+            height: 2
+            bg_color: 0x555555
+            border_width: 0
+            radius: 1
+            scrollbar_mode: "off"
+        # Row 2: Battery SoC with bar
+        - obj:
+            width: 100%
+            height: 65
+            bg_opa: TRANSP
+            border_width: 0
+            scrollbar_mode: "off"
             widgets:
             - label:
-                id: battery_soc_label
-                text: "Battery SoC"
-                text_font: roboto_lg
+                text_font: mdi_xl
+                id: battery_soc_icon
+                text: "\U000F0079"
+                text_color: 0x4CAF50
                 align: LEFT_MID
+            - label:
+                text: "Battery"
+                text_font: roboto_sm
+                text_color: 0x888888
+                align: TOP_MID
+                y: -5
             - label:
                 id: battery_soc_value
-                text: "..."
-                text_font: roboto_lg
+                text: "--%"
+                text_font: roboto_xl
+                align: CENTER
+                y: 8
+            - bar:
+                id: battery_soc_bar
+                width: 100
+                height: 12
+                radius: 6
+                bg_color: 0x3A3F4B
+                indicator:
+                  bg_color: 0x4CAF50
+                  radius: 6
+                min_value: 0
+                max_value: 100
+                value: 0
                 align: RIGHT_MID
+        # Row 3: Battery Voltage & Power
         - obj:
-            # battery voltage
-            width: 100%
-            height: 85
+            width: 49%
+            height: 70
+            bg_opa: TRANSP
+            border_width: 0
+            scrollbar_mode: "off"
             widgets:
             - label:
-                id: battery_voltage_label
-                text: "Battery Voltage"
-                text_font: roboto_lg
+                text_font: mdi_xl
+                text: "\U000F12A3"
+                text_color: 0x9575CD
                 align: LEFT_MID
+            - label:
+                text: "Batt Voltage"
+                text_font: roboto_sm
+                text_color: 0x888888
+                align: LEFT_MID
+                x: 40
+                y: -18
             - label:
                 id: battery_voltage_value
-                text: "..."
-                text_font: roboto_lg
-                align: RIGHT_MID
+                text: "--"
+                text_font: roboto_xl
+                align: LEFT_MID
+                x: 40
+                y: 14
         - obj:
-            # battery power
-            width: 100%
-            height: 85
+            width: 49%
+            height: 70
+            bg_opa: TRANSP
+            border_width: 0
+            scrollbar_mode: "off"
             widgets:
             - label:
-                id: battery_power_label
-                text: "Battery Power"
-                text_font: roboto_lg
+                text_font: mdi_xl
+                id: battery_power_icon
+                text: "\U000F0241"
+                text_color: 0x4CAF50
                 align: LEFT_MID
             - label:
+                text: "Batt Power"
+                text_font: roboto_sm
+                text_color: 0x888888
+                align: LEFT_MID
+                x: 40
+                y: -18
+            - label:
                 id: battery_power_value
-                text: "..."
-                text_font: roboto_lg
-                align: RIGHT_MID
+                text: "--"
+                text_font: roboto_xl
+                align: LEFT_MID
+                x: 40
+                y: 14
 
 packages:
   # header
@@ -564,7 +647,11 @@ packages:
       on_value:
       - lvgl.label.update:
           id: power_value
-          text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "kW";
+          text: !lambda |-
+            if (std::isnan(x)) return std::string("--");
+            char buf[16];
+            snprintf(buf, sizeof(buf), "%.1fkW", x);
+            return std::string(buf);
 
   voltage_sensor:
     sensor:
@@ -574,7 +661,11 @@ packages:
       on_value:
       - lvgl.label.update:
           id: voltage_value
-          text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "V";
+          text: !lambda |-
+            if (std::isnan(x)) return std::string("--");
+            char buf[16];
+            snprintf(buf, sizeof(buf), "%.0fV", x);
+            return std::string(buf);
 
   battery_soc_sensor:
     sensor:
@@ -584,7 +675,35 @@ packages:
       on_value:
       - lvgl.label.update:
           id: battery_soc_value
-          text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "%";
+          text: !lambda |-
+            if (std::isnan(x)) return std::string("--%");
+            char buf[8];
+            snprintf(buf, sizeof(buf), "%d%%", (int)std::round(x));
+            return std::string(buf);
+      - lvgl.bar.update:
+          id: battery_soc_bar
+          value: !lambda |-
+            if (std::isnan(x)) return 0;
+            return (int)x;
+      - lvgl.label.update:
+          id: battery_soc_icon
+          text: !lambda |-
+            if (std::isnan(x)) return "\U000F0091";          // battery-unknown
+            if (x >= 90) return "\U000F0079";      // battery full
+            else if (x >= 80) return "\U000F0082"; // battery-90
+            else if (x >= 70) return "\U000F0081"; // battery-80
+            else if (x >= 60) return "\U000F0080"; // battery-70
+            else if (x >= 50) return "\U000F007F"; // battery-60
+            else if (x >= 40) return "\U000F007E"; // battery-50
+            else if (x >= 30) return "\U000F007D"; // battery-40
+            else if (x >= 20) return "\U000F007C"; // battery-30
+            else if (x >= 10) return "\U000F007B"; // battery-20
+            else return "\U000F007A";              // battery-10
+          text_color: !lambda |-
+            if (std::isnan(x)) return lv_color_hex(0x888888);
+            if (x >= 60) return lv_color_hex(0x4CAF50);      // green
+            else if (x >= 30) return lv_color_hex(0xFFCC00); // yellow
+            else return lv_color_hex(0xFF5252);              // red
 
   battery_voltage_sensor:
     sensor:
@@ -594,7 +713,11 @@ packages:
       on_value:
       - lvgl.label.update:
           id: battery_voltage_value
-          text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "V";
+          text: !lambda |-
+            if (std::isnan(x)) return std::string("--");
+            char buf[16];
+            snprintf(buf, sizeof(buf), "%.1fV", x);
+            return std::string(buf);
 
   battery_power_sensor:
     sensor:
@@ -604,7 +727,25 @@ packages:
       on_value:
       - lvgl.label.update:
           id: battery_power_value
-          text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "W";
+          text: !lambda |-
+            if (std::isnan(x)) return std::string("--");
+            char buf[16];
+            int val = (int)std::round(x);
+            if (val > 0) snprintf(buf, sizeof(buf), "+%dW", val);
+            else snprintf(buf, sizeof(buf), "%dW", val);
+            return std::string(buf);
+          text_color: !lambda |-
+            if (std::isnan(x)) return lv_color_hex(0x888888);
+            if (x > 0) return lv_color_hex(0x4CAF50);   // green = charging
+            else if (x < 0) return lv_color_hex(0xFF9800); // orange = discharging
+            else return lv_color_hex(0xFFFFFF);         // white = idle
+      - lvgl.label.update:
+          id: battery_power_icon
+          text_color: !lambda |-
+            if (std::isnan(x)) return lv_color_hex(0x888888);
+            if (x > 0) return lv_color_hex(0x4CAF50);   // green = charging
+            else if (x < 0) return lv_color_hex(0xFF9800); // orange = discharging
+            else return lv_color_hex(0xFFFFFF);         // white = idle
 
   # outdoor sensors
   outdoor_temp_sensor:
