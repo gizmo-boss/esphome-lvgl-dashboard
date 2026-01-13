@@ -10,12 +10,29 @@ obj: # title bar
     radius: 0
     pad_all: 0
     align: TOP_MID
+    on_long_press:
+      - script.execute: show_settings
     widgets:
       - label: # title
           id: page_title
           align: LEFT_MID
           x: ${padding} # RESOLUTION-SPECIFIC
           text: " "
+      - button: # settings button (swipe down area)
+          id: settings_btn
+          width: 50
+          height: 100%
+          align: CENTER
+          bg_opa: TRANSP
+          border_width: 0
+          on_click:
+            - script.execute: show_settings
+          widgets:
+            - label:
+                text: "\U000F0140"
+                text_font: mdi_sm
+                text_color: 0x888888
+                align: CENTER
       - label: # clock
           id: nav_clock
           align: RIGHT_MID

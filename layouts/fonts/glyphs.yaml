@@ -39,3 +39,10 @@
 - "\U000F125D" # battery-heart-variant (battery health)
 - "\U000F12A3" # sine-wave (voltage/AC)
 - "\U000F1A13" # home-lightning-bolt
+- "\U000F0493" # cog (settings)
+- "\U000F00E0" # brightness-6 (brightness)
+- "\U000F0156" # close (X)
+- "\U000F0131" # checkbox-marked
+- "\U000F0130" # checkbox-blank-outline
+- "\U000F0594" # timer-off (auto-off)
+- "\U000F012C" # check (checkmark)
