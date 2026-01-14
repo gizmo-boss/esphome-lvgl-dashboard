@@ -47,3 +47,6 @@
 - "\U000F0594" # timer-off (auto-off)
 - "\U000F012C" # check (checkmark)
 - "\U000F05A9" # wifi
+- "\U000F050F" # thermometer-lines (temperature)
+- "\U000F058E" # water-percent (humidity)
+- "\U000F0874" # gauge-full (pressure)
