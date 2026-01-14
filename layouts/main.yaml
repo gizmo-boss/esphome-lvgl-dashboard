@@ -961,46 +961,56 @@ lvgl:
             border_width: 0
             radius: 1
             scrollbar_mode: "off"
-        # Row 2: Battery SoC with bar
+        # Row 2: Battery SoC - horizontal battery with percentage inside
         - obj:
             width: 100%
-            height: 65
+            height: 50
             bg_opa: TRANSP
             border_width: 0
             scrollbar_mode: "off"
             widgets:
-            - label:
-                text_font: mdi_xl
-                id: battery_soc_icon
-                text: "\U000F0079"
-                text_color: 0x4CAF50
+            # Battery terminal (left side)
+            - obj:
+                width: 8
+                height: 20
+                bg_color: 0xFFFFFF
+                border_width: 0
+                radius: 2
                 align: LEFT_MID
-                x: -10
-            - label:
-                text: "Battery"
-                text_font: roboto_sm
-                text_color: 0x888888
-                align: TOP_MID
-                y: -5
-            - label:
-                id: battery_soc_value
-                text: "--%"
-                text_font: roboto_xl
-                align: CENTER
-                y: 8
-            - bar:
-                id: battery_soc_bar
-                width: 100
-                height: 12
-                radius: 6
-                bg_color: 0x3A3F4B
-                indicator:
-                  bg_color: 0x4CAF50
-                  radius: 6
-                min_value: 0
-                max_value: 100
-                value: 0
+                x: 6
+                scrollbar_mode: "off"
+            # Battery container (main body)
+            - obj:
+                id: battery_container
+                width: 92%
+                height: 40
+                bg_color: 0x2A2E38
+                border_width: 2
+                border_color: 0xFFFFFF
+                radius: 4
                 align: RIGHT_MID
+                x: -10
+                pad_all: 0
+                scrollbar_mode: "off"
+                widgets:
+                # Filled part indicator (for color change) - full height, fills from right
+                - obj:
+                    id: battery_soc_fill
+                    width: 0
+                    height: 100%
+                    bg_color: 0x4CAF50
+                    border_width: 0
+                    radius: 2
+                    align: RIGHT_MID
+                    pad_all: 0
+                    scrollbar_mode: "off"
+                # Percentage text inside battery
+                - label:
+                    id: battery_soc_value
+                    text: "--%"
+                    text_font: roboto_lg
+                    text_color: 0xFFFFFF
+                    align: CENTER
         # Row 3: Battery Voltage & Power
         - obj:
             width: 49%
@@ -1130,30 +1140,24 @@ packages:
             char buf[8];
             snprintf(buf, sizeof(buf), "%d%%", (int)std::round(x));
             return std::string(buf);
-      - lvgl.bar.update:
-          id: battery_soc_bar
-          value: !lambda |-
-            if (std::isnan(x)) return 0;
-            return (int)x;
-      - lvgl.label.update:
-          id: battery_soc_icon
-          text: !lambda |-
-            if (std::isnan(x)) return "\U000F0091";          // battery-unknown
-            if (x >= 90) return "\U000F0079";      // battery full
-            else if (x >= 80) return "\U000F0082"; // battery-90
-            else if (x >= 70) return "\U000F0081"; // battery-80
-            else if (x >= 60) return "\U000F0080"; // battery-70
-            else if (x >= 50) return "\U000F007F"; // battery-60
-            else if (x >= 40) return "\U000F007E"; // battery-50
-            else if (x >= 30) return "\U000F007D"; // battery-40
-            else if (x >= 20) return "\U000F007C"; // battery-30
-            else if (x >= 10) return "\U000F007B"; // battery-20
-            else return "\U000F007A";              // battery-10
-          text_color: !lambda |-
-            if (std::isnan(x)) return lv_color_hex(0x888888);
-            if (x >= 60) return lv_color_hex(0x4CAF50);      // green
-            else if (x >= 30) return lv_color_hex(0xFFCC00); // yellow
-            else return lv_color_hex(0xFF5252);              // red
+      - lambda: |-
+          if (std::isnan(x)) {
+            lv_obj_set_width(id(battery_soc_fill), 0);
+            lv_obj_set_style_bg_color(id(battery_soc_fill), lv_color_hex(0x888888), LV_PART_MAIN);
+            return;
+          }
+          int percent = (int)std::round(x);
+          int container_width = lv_obj_get_width(id(battery_container));
+          int container_height = lv_obj_get_height(id(battery_container));
+          lv_obj_set_width(id(battery_soc_fill), (container_width * percent) / 100);
+          lv_obj_set_height(id(battery_soc_fill), container_height);
+          if (percent >= 60) {
+            lv_obj_set_style_bg_color(id(battery_soc_fill), lv_color_hex(0x4CAF50), LV_PART_MAIN); // green
+          } else if (percent >= 30) {
+            lv_obj_set_style_bg_color(id(battery_soc_fill), lv_color_hex(0xFFCC00), LV_PART_MAIN); // yellow
+          } else {
+            lv_obj_set_style_bg_color(id(battery_soc_fill), lv_color_hex(0xFF5252), LV_PART_MAIN); // red
+          }
 
   battery_voltage_sensor:
     sensor:
