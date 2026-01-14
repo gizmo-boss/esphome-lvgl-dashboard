@@ -33,6 +33,14 @@ obj: # title bar
                 text_font: mdi_sm
                 text_color: 0x888888
                 align: CENTER
+      - label: # wifi icon
+          id: wifi_icon
+          align: RIGHT_MID
+          x: -95 # RESOLUTION-SPECIFIC (clock width + padding)
+          text: "\U000F05A9"
+          text_font: mdi_sm
+          text_color: 0x888888
+          hidden: true
       - label: # clock
           id: nav_clock
           align: RIGHT_MID
