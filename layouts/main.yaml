@@ -583,7 +583,7 @@ lvgl:
         - button:
             # fan
             <<: !include
-              file: widgets/buttons/icon_text_buttons/light_buttons/widget.yaml
+              file: widgets/buttons/icon_text_buttons/fan_buttons/widget.yaml
               vars:
                 uid: fan
                 entity_id: switch.sonoff_1000af2f21_1
@@ -1411,7 +1411,7 @@ packages:
   #bathroom
   bathroom_light_widget_sensors: !include { file: widgets/buttons/icon_text_buttons/light_buttons/sensors.yaml, vars: { uid: bathroom_light, entity_id: switch.sonoff_1001275189_1 } }
   mirror_light_widget_sensors: !include { file: widgets/buttons/icon_text_buttons/light_buttons/sensors.yaml, vars: { uid: mirror, entity_id: switch.sonoff_1001275189_2 } }
-  fan__widget_sensors: !include { file: widgets/buttons/icon_text_buttons/light_buttons/sensors.yaml, vars: { uid: fan, entity_id: switch.sonoff_1000af2f21_1 } }
+  fan__widget_sensors: !include { file: widgets/buttons/icon_text_buttons/fan_buttons/sensors.yaml, vars: { uid: fan, entity_id: switch.sonoff_1000af2f21_1 } }
   bathroom_temp_sensor:
     sensor:
     - id: bathroom_temp

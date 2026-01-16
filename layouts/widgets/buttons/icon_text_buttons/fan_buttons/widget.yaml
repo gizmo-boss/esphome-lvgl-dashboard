@@ -1,0 +1,29 @@
+# required vars:
+# - uid
+# - entity_id
+# - width
+# - height
+# - text
+
+# button:
+<<: !include
+  file: ../stateful.yaml
+  vars:
+    uid: ${uid}
+    entity_id: ${entity_id}
+    width: ${width}
+    height: ${height}
+    icon_on: "\U000F0210"
+    icon_off: "\U000F0210"
+    text: ${text}
+on_short_click:
+- logger.log: "Toggling switch ${entity_id}"
+- homeassistant.service:
+    action: switch.toggle
+    data:
+      entity_id: ${entity_id}
+on_long_press:
+- homeassistant.service:
+    action: switch.turn_off
+    data:
+      entity_id: ${entity_id}
