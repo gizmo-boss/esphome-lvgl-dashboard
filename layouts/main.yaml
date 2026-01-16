@@ -11,6 +11,14 @@ globals:
     type: float
     restore_value: yes
     initial_value: '1.0'
+  - id: battery_time_status_str
+    type: std::string
+    restore_value: no
+    initial_value: ''
+  - id: battery_energy_remaining_val
+    type: float
+    restore_value: no
+    initial_value: '0.0'
 
 font: !include
   file: fonts/fonts.yaml
@@ -1011,6 +1019,14 @@ lvgl:
                     text_font: roboto_lg
                     text_color: 0xFFFFFF
                     align: CENTER
+                # Energy value in brackets (smaller font) - right of percentage
+                - label:
+                    id: battery_energy_value
+                    text: ""
+                    text_font: roboto_sm
+                    text_color: 0xFFFFFF
+                    align: RIGHT_MID
+                    x: -10
         # Row 3: Battery Voltage & Power
         - obj:
             width: 49%
@@ -1066,6 +1082,45 @@ lvgl:
                 text_font: roboto_xl
                 align: LEFT_MID
                 x: 20
+                y: 14
+        # Separator between Battery and New Sensors
+        - obj:
+            width: 100%
+            height: 2
+            bg_color: 0x555555
+            border_width: 0
+            radius: 1
+            scrollbar_mode: "off"
+        # Row 4: Battery Time Dynamic
+        - obj:
+            width: 100%
+            height: 86
+            bg_opa: TRANSP
+            border_width: 0
+            scrollbar_mode: "off"
+            widgets:
+            - label:
+                id: battery_time_icon
+                text_font: mdi_lg
+                text: "\U000F19E5"
+                text_color: 0x888888
+                align: LEFT_MID
+                x: -5
+            - label:
+                id: battery_time_primary
+                text: "--"
+                text_font: roboto_sm
+                text_color: 0x888888
+                align: LEFT_MID
+                x: 30
+                y: -18
+            - label:
+                id: battery_time_secondary
+                text: "--"
+                text_font: roboto_xl
+                text_color: 0xFFFFFF
+                align: LEFT_MID
+                x: 30
                 y: 14
 
 packages:
@@ -1133,13 +1188,17 @@ packages:
       platform: homeassistant
       entity_id: sensor.40517480283_battery_soc
       on_value:
-      - lvgl.label.update:
-          id: battery_soc_value
-          text: !lambda |-
-            if (std::isnan(x)) return std::string("--%");
-            char buf[8];
-            snprintf(buf, sizeof(buf), "%d%%", (int)std::round(x));
-            return std::string(buf);
+      - lambda: |-
+          if (std::isnan(x)) {
+            lv_label_set_text(id(battery_soc_value), "--%");
+            lv_label_set_text(id(battery_energy_value), "");
+            return;
+          }
+          int percent = (int)std::round(x);
+          char buf[16];
+          snprintf(buf, sizeof(buf), "%d%%", percent);
+          lv_label_set_text(id(battery_soc_value), buf);
+          // Energy will be updated separately
       - lambda: |-
           if (std::isnan(x)) {
             lv_obj_set_width(id(battery_soc_fill), 0);
@@ -1200,6 +1259,75 @@ packages:
             if (x > 0) return lv_color_hex(0x4CAF50);   // green = charging
             else if (x < 0) return lv_color_hex(0xFF9800); // orange = discharging
             else return lv_color_hex(0xFFFFFF);         // white = idle
+
+  battery_time_dynamic_sensor:
+    text_sensor:
+    - id: battery_time_status
+      platform: homeassistant
+      entity_id: sensor.battery_time_dynamic_2
+      attribute: status
+      on_value:
+      - globals.set:
+          id: battery_time_status_str
+          value: !lambda return x;
+      - lambda: |-
+          std::string status = x;
+          // Update primary text
+          if (status == "Charging") {
+            lv_label_set_text(id(battery_time_primary), "Time to Full");
+            lv_label_set_text(id(battery_time_icon), "\U000F17E0"); // battery-charging
+            lv_obj_set_style_text_color(id(battery_time_icon), lv_color_hex(0x4CAF50), LV_PART_MAIN); // green
+            lv_obj_set_style_text_color(id(battery_time_primary), lv_color_hex(0x888888), LV_PART_MAIN); // green
+          } else if (status == "Discharging") {
+            lv_label_set_text(id(battery_time_primary), "Time to Empty");
+            lv_label_set_text(id(battery_time_icon), "\U000F17DE"); // battery-discharging
+            lv_obj_set_style_text_color(id(battery_time_icon), lv_color_hex(0xFF9800), LV_PART_MAIN); // orange
+            lv_obj_set_style_text_color(id(battery_time_primary), lv_color_hex(0x888888), LV_PART_MAIN); // orange
+          } else if (status == "Standby") {
+            lv_label_set_text(id(battery_time_primary), "Standby");
+            lv_label_set_text(id(battery_time_icon), "\U000F19E5"); // battery-idle
+            lv_obj_set_style_text_color(id(battery_time_icon), lv_color_hex(0x888888), LV_PART_MAIN); // grey
+            lv_obj_set_style_text_color(id(battery_time_primary), lv_color_hex(0x888888), LV_PART_MAIN); // grey
+          } else {
+            lv_label_set_text(id(battery_time_primary), "—");
+            lv_label_set_text(id(battery_time_icon), "\U000F19E5"); // battery-idle
+            lv_obj_set_style_text_color(id(battery_time_icon), lv_color_hex(0x888888), LV_PART_MAIN); // grey
+            lv_obj_set_style_text_color(id(battery_time_primary), lv_color_hex(0x888888), LV_PART_MAIN); // grey
+          }
+    - id: battery_time_value
+      platform: homeassistant
+      entity_id: sensor.battery_time_dynamic_2
+      on_value:
+      - lambda: |-
+          std::string status = id(battery_time_status_str);
+          if (status == "Charging" || status == "Discharging") {
+            if (x.empty()) {
+              lv_label_set_text(id(battery_time_secondary), "--");
+            } else {
+              lv_label_set_text(id(battery_time_secondary), x.c_str());
+            }
+          } else {
+            lv_label_set_text(id(battery_time_secondary), "");
+          }
+
+  battery_energy_remaining_sensor:
+    sensor:
+    - id: battery_energy_remaining
+      platform: homeassistant
+      entity_id: sensor.battery_energy_remaining_2
+      on_value:
+      - globals.set:
+          id: battery_energy_remaining_val
+          value: !lambda return x;
+      - lambda: |-
+          // Update battery Energy label
+          if (std::isnan(x) || x == 0.0) {
+            lv_label_set_text(id(battery_energy_value), "");
+          } else {
+            char buf[32];
+            snprintf(buf, sizeof(buf), "(%.0f Wh)", x);
+            lv_label_set_text(id(battery_energy_value), buf);
+          }
 
   # outdoor sensors
   outdoor_temp_sensor:

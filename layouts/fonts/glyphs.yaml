@@ -45,6 +45,10 @@
 - "\U000F0131" # checkbox-marked
 - "\U000F0130" # checkbox-blank-outline
 - "\U000F0594" # timer-off (auto-off)
+- "\U000F05B3" # clock-outline
+- "\U000F17E0" # battery-charging (custom)
+- "\U000F17DE" # battery-discharging (custom)
+- "\U000F19E5" # battery-idle (custom)
 - "\U000F012C" # check (checkmark)
 - "\U000F05A9" # wifi
 - "\U000F050F" # thermometer-lines (temperature)
