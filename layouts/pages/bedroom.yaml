@@ -62,19 +62,15 @@ widgets:
             service: switch.toggle
             data: { entity_id: switch.bedroom_floor_lamp }
     - button:
-        # Stylage Light
+        # Stylage RGB Light (with color control)
         <<: !include
-          file: ../widgets/buttons/icon_text_buttons/light_buttons/widget.yaml
+          file: ../widgets/buttons/icon_text_buttons/rgb_light_buttons/widget.yaml
           vars:
             uid: stylage_light
             entity_id: light.stylage_rgb_light
             text: Stylage
             width: 49%
             height: 86
-        on_short_click:
-        - homeassistant.service:
-            service: light.toggle
-            data: { entity_id: light.stylage_rgb_light}
 
     # Separator before Temp/Humidity
     - obj:

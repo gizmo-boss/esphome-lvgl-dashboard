@@ -32,6 +32,8 @@ lvgl:
     - <<: !include { file: widgets/boot_screen/widget.yaml }
     # Settings Panel (hidden by default, shown on swipe down)
     - <<: !include widgets/settings_panel/widget.yaml
+    # Light Control Panel (hidden by default, shown on long press)
+    - <<: !include widgets/light_control_panel/widget.yaml
   pages:
   - id: splash
     skip: true

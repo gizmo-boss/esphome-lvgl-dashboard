@@ -1,0 +1,61 @@
+# required vars:
+# - uid
+# - entity_id
+
+# Binary sensor for on/off state
+binary_sensor:
+  - id: ${uid}_widget_sensor
+    platform: homeassistant
+    entity_id: ${entity_id}
+    trigger_on_initial_state: true
+    on_state:
+      - if:
+          condition:
+            - binary_sensor.is_on: ${uid}_widget_sensor
+          then:
+            - lvgl.widget.hide:
+                - ${uid}_icon_circle_unknown
+                - ${uid}_icon_circle_off
+            - lvgl.widget.show:
+                - ${uid}_icon_circle_on
+          else:
+            - lvgl.widget.hide:
+                - ${uid}_icon_circle_unknown
+                - ${uid}_icon_circle_on
+            - lvgl.widget.show:
+                - ${uid}_icon_circle_off
+
+# Text sensor for RGB color
+text_sensor:
+  - id: ${uid}_rgb_sensor
+    platform: homeassistant
+    entity_id: ${entity_id}
+    attribute: rgb_color
+    on_value:
+      - lambda: |-
+          // Parse RGB color from string like "(255, 128, 64)"
+          if (x.length() > 0 && x != "None" && x != "null") {
+            int r = 255, g = 183, b = 71;  // Default warm color
+            
+            // Try to parse the RGB tuple
+            if (x.front() == '(' || x.front() == '[') {
+              std::string clean = x.substr(1, x.length() - 2);
+              int pos1 = clean.find(',');
+              if (pos1 != std::string::npos) {
+                int pos2 = clean.find(',', pos1 + 1);
+                if (pos2 != std::string::npos) {
+                  r = std::atoi(clean.substr(0, pos1).c_str());
+                  g = std::atoi(clean.substr(pos1 + 1, pos2 - pos1 - 1).c_str());
+                  b = std::atoi(clean.substr(pos2 + 1).c_str());
+                }
+              }
+            }
+            
+            // Calculate background color (dimmed version)
+            uint32_t bg_color = ((r / 4) << 16) | ((g / 4) << 8) | (b / 4);
+            // Icon color (full brightness)
+            uint32_t icon_color = (r << 16) | (g << 8) | b;
+            
+            lv_obj_set_style_bg_color(id(${uid}_icon_circle_on), lv_color_hex(bg_color), LV_PART_MAIN);
+            lv_obj_set_style_text_color(id(${uid}_icon_label), lv_color_hex(icon_color), LV_PART_MAIN);
+          }

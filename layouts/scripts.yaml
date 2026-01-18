@@ -39,6 +39,168 @@
       - lvgl.widget.hide: auto_off_checked
       - lvgl.widget.show: auto_off_unchecked
 
+# Light control panel scripts
+- id: show_light_control
+  parameters:
+    light_entity: string
+    light_uid: string
+  then:
+  - globals.set:
+      id: current_light_entity
+      value: !lambda return light_entity;
+  - lvgl.label.update:
+      id: light_control_title
+      text: !lambda |-
+        if (light_uid == "stylage_light") return "Stylage";
+        return "Light Control";
+  - lvgl.widget.show: light_control_panel
+
+- id: hide_light_control
+  then:
+  - lvgl.widget.hide: light_control_panel
+
+- id: update_light_brightness
+  parameters:
+    brightness: int
+  then:
+  - globals.set:
+      id: current_light_brightness
+      value: !lambda return brightness;
+  - lvgl.label.update:
+      id: light_brightness_value
+      text: !lambda |-
+        char buf[8];
+        snprintf(buf, sizeof(buf), "%d%%", (brightness * 100) / 255);
+        return std::string(buf);
+  - lambda: |-
+      // Update preview color with new brightness
+      int h = id(current_light_hue);
+      int s = id(current_light_saturation);
+      int v = brightness * 100 / 255;
+      
+      // HSV to RGB conversion
+      float hf = h / 60.0f;
+      int hi = (int)hf % 6;
+      float f = hf - (int)hf;
+      float sf = s / 100.0f;
+      float vf = v / 100.0f;
+      
+      float p = vf * (1 - sf);
+      float q = vf * (1 - f * sf);
+      float t = vf * (1 - (1 - f) * sf);
+      
+      float r, g, b;
+      switch(hi) {
+        case 0: r = vf; g = t; b = p; break;
+        case 1: r = q; g = vf; b = p; break;
+        case 2: r = p; g = vf; b = t; break;
+        case 3: r = p; g = q; b = vf; break;
+        case 4: r = t; g = p; b = vf; break;
+        default: r = vf; g = p; b = q; break;
+      }
+      
+      uint32_t color = ((int)(r * 255) << 16) | ((int)(g * 255) << 8) | (int)(b * 255);
+      lv_obj_set_style_bg_color(id(light_color_preview), lv_color_hex(color), LV_PART_MAIN);
+  - homeassistant.service:
+      service: light.turn_on
+      data_template:
+        entity_id: !lambda return id(current_light_entity);
+        brightness: !lambda return std::to_string(id(current_light_brightness));
+
+- id: update_light_color
+  parameters:
+    hue: int
+  then:
+  - globals.set:
+      id: current_light_hue
+      value: !lambda return hue;
+  - script.execute:
+      id: apply_light_hs_color
+
+- id: update_light_saturation
+  parameters:
+    saturation: int
+  then:
+  - globals.set:
+      id: current_light_saturation
+      value: !lambda return saturation;
+  - script.execute:
+      id: apply_light_hs_color
+
+- id: apply_light_hs_color
+  then:
+  - lambda: |-
+      int h = id(current_light_hue);
+      int s = id(current_light_saturation);
+      int v = id(current_light_brightness) * 100 / 255;
+      
+      // HSV to RGB conversion for preview (full saturation/value for arc color)
+      float hf = h / 60.0f;
+      int hi = (int)hf % 6;
+      float f = hf - (int)hf;
+      float sf = s / 100.0f;
+      float vf = v / 100.0f;
+      
+      float p = vf * (1 - sf);
+      float q = vf * (1 - f * sf);
+      float t = vf * (1 - (1 - f) * sf);
+      
+      float r, g, b;
+      switch(hi) {
+        case 0: r = vf; g = t; b = p; break;
+        case 1: r = q; g = vf; b = p; break;
+        case 2: r = p; g = vf; b = t; break;
+        case 3: r = p; g = q; b = vf; break;
+        case 4: r = t; g = p; b = vf; break;
+        default: r = vf; g = p; b = q; break;
+      }
+      
+      uint32_t color = ((int)(r * 255) << 16) | ((int)(g * 255) << 8) | (int)(b * 255);
+      lv_obj_set_style_bg_color(id(light_color_preview), lv_color_hex(color), LV_PART_MAIN);
+      
+      // Update arc indicator color (pure hue, full saturation)
+      float hf2 = h / 60.0f;
+      int hi2 = (int)hf2 % 6;
+      float f2 = hf2 - (int)hf2;
+      float r2, g2, b2;
+      switch(hi2) {
+        case 0: r2 = 1.0f; g2 = f2; b2 = 0; break;
+        case 1: r2 = 1.0f - f2; g2 = 1.0f; b2 = 0; break;
+        case 2: r2 = 0; g2 = 1.0f; b2 = f2; break;
+        case 3: r2 = 0; g2 = 1.0f - f2; b2 = 1.0f; break;
+        case 4: r2 = f2; g2 = 0; b2 = 1.0f; break;
+        default: r2 = 1.0f; g2 = 0; b2 = 1.0f - f2; break;
+      }
+      uint32_t arc_color = ((int)(r2 * 255) << 16) | ((int)(g2 * 255) << 8) | (int)(b2 * 255);
+      lv_obj_set_style_arc_color(id(light_hue_arc), lv_color_hex(arc_color), LV_PART_INDICATOR);
+  - homeassistant.service:
+      service: light.turn_on
+      data_template:
+        entity_id: !lambda return id(current_light_entity);
+        hs_color: !lambda |-
+          return "[" + std::to_string(id(current_light_hue)) + ", " + std::to_string(id(current_light_saturation)) + "]";
+
+- id: set_light_preset
+  parameters:
+    preset: string
+  then:
+  - lambda: |-
+      int h = 30, s = 100;
+      if (preset == "white") { h = 0; s = 0; }
+      else if (preset == "warm") { h = 30; s = 80; }
+      else if (preset == "red") { h = 0; s = 100; }
+      else if (preset == "green") { h = 120; s = 100; }
+      else if (preset == "blue") { h = 220; s = 100; }
+      else if (preset == "purple") { h = 280; s = 100; }
+      
+      id(current_light_hue) = h;
+      id(current_light_saturation) = s;
+      
+      lv_arc_set_value(id(light_hue_arc), h);
+      lv_slider_set_value(id(light_saturation_slider), s, LV_ANIM_ON);
+  - script.execute:
+      id: apply_light_hs_color
+
 - id: update_battery_display
   then:
   - lambda: |-

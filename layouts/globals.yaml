@@ -18,6 +18,23 @@
   type: float
   restore_value: no
   initial_value: '0.0'
+# Light control panel state
+- id: current_light_entity
+  type: std::string
+  restore_value: no
+  initial_value: '""'
+- id: current_light_hue
+  type: int
+  restore_value: no
+  initial_value: '30'
+- id: current_light_saturation
+  type: int
+  restore_value: no
+  initial_value: '100'
+- id: current_light_brightness
+  type: int
+  restore_value: no
+  initial_value: '255'
 # Work state history storage (8 entries max)
 - id: work_state_current
   type: std::string

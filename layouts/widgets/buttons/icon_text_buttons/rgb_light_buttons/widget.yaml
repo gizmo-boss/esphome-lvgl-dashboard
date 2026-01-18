@@ -1,0 +1,82 @@
+# required vars:
+# - uid
+# - entity_id
+# - width
+# - height
+# - text
+
+# RGB Light button with color indicator
+# button:
+  id: ${uid}_widget
+  width: ${width}
+  height: ${height}
+  pad_all: 12
+  on_long_press:
+  - script.execute:
+      id: show_light_control
+      light_entity: ${entity_id}
+      light_uid: ${uid}
+  widgets:
+    # Icon circle container - OFF state (gray)
+    - obj:
+        id: ${uid}_icon_circle_off
+        width: 50
+        height: 50
+        radius: 25
+        bg_color: 0x42495A
+        border_width: 0
+        align: LEFT_MID
+        scrollbar_mode: "off"
+        hidden: true
+        widgets:
+          - label:
+              text: "󰌶"
+              text_font: mdi_md
+              text_color: 0x9DA0A6
+              align: CENTER
+    # Icon circle container - ON state (colored based on light color)
+    - obj:
+        id: ${uid}_icon_circle_on
+        width: 50
+        height: 50
+        radius: 25
+        bg_color: 0x5C4A1A
+        border_width: 0
+        align: LEFT_MID
+        scrollbar_mode: "off"
+        hidden: true
+        widgets:
+          - label:
+              id: ${uid}_icon_label
+              text: "󰛨"
+              text_font: mdi_md
+              text_color: 0xFFB347
+              align: CENTER
+    # Icon circle container - UNKNOWN state
+    - obj:
+        id: ${uid}_icon_circle_unknown
+        width: 50
+        height: 50
+        radius: 25
+        bg_color: 0x42495A
+        border_width: 0
+        align: LEFT_MID
+        scrollbar_mode: "off"
+        widgets:
+          - label:
+              text: "\U000F01D8"
+              text_font: mdi_md
+              text_color: 0x9DA0A6
+              align: CENTER
+    # Text label to the right of the circle
+    - label:
+        id: ${uid}_widget_text
+        text: ${text}
+        text_font: roboto_md
+        align: LEFT_MID
+        x: 62
+  on_short_click:
+  - homeassistant.service:
+      service: light.toggle
+      data:
+        entity_id: ${entity_id}

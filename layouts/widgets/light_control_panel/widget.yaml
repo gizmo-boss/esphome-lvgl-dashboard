@@ -1,0 +1,236 @@
+obj:
+  id: light_control_panel
+  width: 100%
+  height: 100%
+  bg_color: 0x42495A
+  bg_opa: 98%
+  hidden: true
+  scrollbar_mode: "off"
+  scrollable: false
+  pad_left: 6
+  pad_right: 6
+  pad_top: 6
+  layout:
+    type: FLEX
+    flex_flow: COLUMN
+    flex_align_main: START
+    pad_row: 8
+  widgets:
+  # Header bar
+  - obj:
+      width: 100%
+      height: 45
+      bg_opa: TRANSP
+      border_width: 0
+      scrollbar_mode: "off"
+      widgets:
+      - label:
+          id: light_control_icon
+          text: "󰛨"
+          text_font: mdi_lg
+          text_color: 0xFFB347
+          align: LEFT_MID
+          x: 6
+      - label:
+          id: light_control_title
+          text: "Light Control"
+          text_font: roboto_lg
+          text_color: 0xFFFFFF
+          align: LEFT_MID
+          x: 44
+      - button:
+          width: 45
+          height: 45
+          align: RIGHT_MID
+          bg_color: 0x5A6173
+          radius: 20
+          border_width: 0
+          on_click:
+          - script.execute: hide_light_control
+          widgets:
+          - label:
+              text: "\U000F0156"
+              text_font: mdi_lg
+              text_color: 0xFF5555
+              align: CENTER
+  # Separator
+  - obj:
+      width: 100%
+      height: 2
+      bg_color: 0x555555
+      border_width: 0
+      radius: 1
+      scrollbar_mode: "off"
+  # Color wheel area with Arc and center preview
+  - obj:
+      width: 100%
+      height: 220
+      bg_opa: TRANSP
+      border_width: 0
+      scrollbar_mode: "off"
+      widgets:
+      # Hue Arc (circular color selector)
+      - arc:
+          id: light_hue_arc
+          width: 210
+          height: 210
+          align: CENTER
+          min_value: 0
+          max_value: 360
+          value: 30
+          start_angle: 0
+          end_angle: 360
+          rotation: 270
+          adjustable: true
+          bg_color: 0x555555
+          arc_width: 20
+          indicator:
+            arc_color: 0xFF8800
+            arc_width: 20
+          knob:
+            bg_color: 0xFFFFFF
+            radius: 14
+            pad_all: 12
+          on_value:
+          - script.execute:
+              id: update_light_color
+              hue: !lambda return (int)x;
+      # Color preview circle in center
+      - obj:
+          id: light_color_preview
+          width: 120
+          height: 120
+          radius: 60
+          bg_color: 0xFFB347
+          border_width: 4
+          border_color: 0xFFFFFF
+          align: CENTER
+          scrollbar_mode: "off"
+          widgets:
+          - label:
+              text: "󰛨"
+              text_font: mdi_xxl
+              text_color: 0xFFFFFF
+              align: CENTER
+  # Brightness control card
+  - obj:
+      width: 100%
+      height: 90
+      bg_color: 0x5A6173
+      radius: 20
+      border_width: 0
+      scrollbar_mode: "off"
+      pad_all: 12
+      widgets:
+      - label:
+          text: "\U000F00E0"
+          text_font: mdi_lg
+          text_color: 0xFFCC00
+          align: TOP_LEFT
+      - label:
+          text: "Brightness"
+          text_font: roboto_sm
+          text_color: 0x888888
+          align: TOP_LEFT
+          x: 36
+          y: 4
+      - label:
+          id: light_brightness_value
+          text: "100%"
+          text_font: roboto_md
+          text_color: 0xFFFFFF
+          align: TOP_RIGHT
+          y: 2
+      - slider:
+          id: light_brightness_slider
+          width: 100%
+          height: 26
+          align: BOTTOM_MID
+          y: -6
+          min_value: 1
+          max_value: 255
+          value: 255
+          bg_color: 0x42495A
+          indicator:
+            bg_color: 0xFFCC00
+          knob:
+            bg_color: 0xFFFFFF
+            radius: 12
+          on_value:
+          - script.execute:
+              id: update_light_brightness
+              brightness: !lambda return (int)x;
+  # Hidden saturation slider (for script compatibility)
+  - obj:
+      width: 0
+      height: 0
+      hidden: true
+      widgets:
+      - slider:
+          id: light_saturation_slider
+          width: 1
+          height: 1
+          min_value: 0
+          max_value: 100
+          value: 100
+  # Quick color presets row
+  - obj:
+      width: 100%
+      height: 60
+      bg_opa: TRANSP
+      border_width: 0
+      scrollbar_mode: "off"
+      layout:
+        type: FLEX
+        flex_flow: ROW
+        flex_align_main: SPACE_EVENLY
+      widgets:
+      - button:
+          width: 46
+          height: 46
+          radius: 23
+          bg_color: 0xFFFFFF
+          border_width: 2
+          border_color: 0x888888
+          on_click:
+          - script.execute: { id: set_light_preset, preset: white }
+      - button:
+          width: 46
+          height: 46
+          radius: 23
+          bg_color: 0xFFB347
+          border_width: 0
+          on_click:
+          - script.execute: { id: set_light_preset, preset: warm }
+      - button:
+          width: 46
+          height: 46
+          radius: 23
+          bg_color: 0xFF3333
+          border_width: 0
+          on_click:
+          - script.execute: { id: set_light_preset, preset: red }
+      - button:
+          width: 46
+          height: 46
+          radius: 23
+          bg_color: 0x33FF33
+          border_width: 0
+          on_click:
+          - script.execute: { id: set_light_preset, preset: green }
+      - button:
+          width: 46
+          height: 46
+          radius: 23
+          bg_color: 0x3388FF
+          border_width: 0
+          on_click:
+          - script.execute: { id: set_light_preset, preset: blue }
+      - button:
+          width: 46
+          height: 46
+          radius: 23
+          bg_color: 0xAA33FF
+          border_width: 0
+          on_click:
+          - script.execute: { id: set_light_preset, preset: purple }

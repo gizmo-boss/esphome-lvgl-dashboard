@@ -1,7 +1,7 @@
 # Bedroom widget sensors
 torsher_widget_sensors: !include { file: ../widgets/buttons/icon_text_buttons/light_buttons/sensors.yaml, vars: { uid: torsher, entity_id: switch.bedroom_floor_lamp } }
 bedroom_light_sensors: !include { file: ../widgets/buttons/icon_text_buttons/light_buttons/sensors.yaml, vars: { uid: bedroom_light, entity_id: switch.sonoff_10012750d9_1 } }
-stylage_light_sensors: !include { file: ../widgets/buttons/icon_text_buttons/light_buttons/sensors.yaml, vars: { uid: stylage_light, entity_id: light.stylage_rgb_light } }
+stylage_light_sensors: !include { file: ../widgets/buttons/icon_text_buttons/rgb_light_buttons/sensors.yaml, vars: { uid: stylage_light, entity_id: light.stylage_rgb_light } }
 
 # Bedroom temperature sensor
 bedroom_temp_sensor:
