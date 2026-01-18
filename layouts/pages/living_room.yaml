@@ -1,0 +1,141 @@
+id: living_room
+pad_top: 50
+pad_bottom: 50
+scrollbar_mode: "off"
+on_load:
+- lvgl.label.update:
+    id: page_title
+    text: Living Room
+widgets:
+- obj:
+    width: 100%
+    height: 100%
+    border_width: 0
+    radius: 0
+    pad_top: 0
+    pad_bottom: 0
+    pad_left: 6
+    pad_right: 6
+    scrollbar_mode: "off"
+    scrollable: false
+    layout:
+      type: FLEX
+      flex_flow: ROW_WRAP
+      flex_align_main: START
+      pad_column: 8
+      pad_row: 10
+    widgets:
+    # Separator at the top
+    - obj:
+        width: 100%
+        height: 2
+        bg_color: 0x555555
+        border_width: 0
+        radius: 1
+        scrollbar_mode: "off"
+    - button:
+        # room light
+        <<: !include
+          file: ../widgets/buttons/icon_text_buttons/light_buttons/widget.yaml
+          vars:
+            uid: living_room_light
+            entity_id: switch.sonoff_1001275592_1
+            text: Room Light
+            width: 49%
+            height: 86
+        on_short_click:
+        - homeassistant.service:
+            service: switch.toggle
+            data: { entity_id: switch.sonoff_1001275592_1 }
+    - button:
+        # kitchen light
+        <<: !include
+          file: ../widgets/buttons/icon_text_buttons/light_buttons/widget.yaml
+          vars:
+            uid: kitchen_light
+            entity_id: switch.sonoff_1001275136_3
+            text: Kitchen Light
+            width: 49%
+            height: 86
+        on_short_click:
+        - homeassistant.service:
+            service: switch.toggle
+            data: { entity_id: switch.sonoff_1001275136_3 }
+    - button:
+        # dinner table
+        <<: !include
+          file: ../widgets/buttons/icon_text_buttons/light_buttons/widget.yaml
+          vars:
+            uid: dinner_table
+            entity_id: switch.sonoff_1001275592_3
+            text: Dinner Table
+            width: 49%
+            height: 86
+        on_short_click:
+        - homeassistant.service:
+            service: switch.toggle
+            data: { entity_id: switch.sonoff_1001275592_3 }
+    # Separator before Temp/Humidity
+    - obj:
+        width: 100%
+        height: 2
+        bg_color: 0x555555
+        border_width: 0
+        radius: 1
+        scrollbar_mode: "off"
+    - obj:
+        # temperature sensor
+        width: 49%
+        height: 70
+        bg_opa: TRANSP
+        border_width: 0
+        scrollbar_mode: "off"
+        widgets:
+        - label:
+            text_font: mdi_xl
+            text: "\U000F050F"
+            text_color: 0xFF5252
+            align: LEFT_MID
+            x: -10
+        - label:
+            text: "Temperature"
+            text_font: roboto_sm
+            text_color: 0x888888
+            align: LEFT_MID
+            x: 30
+            y: -18
+        - label:
+            id: living_room_temp_value
+            text: "..."
+            text_font: roboto_xl
+            align: LEFT_MID
+            x: 30
+            y: 14
+    - obj:
+        # humidity sensor
+        width: 49%
+        height: 70
+        bg_opa: TRANSP
+        border_width: 0
+        scrollbar_mode: "off"
+        widgets:
+        - label:
+            text_font: mdi_xl
+            text: "\U000F058E"
+            text_color: 0x00CCFF
+            align: LEFT_MID
+            x: -10
+        - label:
+            text: "Humidity"
+            text_font: roboto_sm
+            text_color: 0x888888
+            align: LEFT_MID
+            x: 30
+            y: -18
+        - label:
+            id: living_room_humidity_value
+            text: "..."
+            text_font: roboto_xl
+            align: LEFT_MID
+            x: 30
+            y: 14

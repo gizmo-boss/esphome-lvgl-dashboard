@@ -1,0 +1,181 @@
+# Grid power sensor
+power_sensor:
+  sensor:
+  - id: power
+    platform: homeassistant
+    entity_id: sensor.apartment_power_input_phase_a_power
+    on_value:
+    - lvgl.label.update:
+        id: power_value
+        text: !lambda |-
+          if (std::isnan(x)) return std::string("--");
+          char buf[16];
+          snprintf(buf, sizeof(buf), "%.1fkW", x);
+          return std::string(buf);
+
+# Voltage sensor
+voltage_sensor:
+  sensor:
+  - id: voltage
+    platform: homeassistant
+    entity_id: sensor.apartment_power_input_phase_a_voltage
+    on_value:
+    - lvgl.label.update:
+        id: voltage_value
+        text: !lambda |-
+          if (std::isnan(x)) return std::string("--");
+          char buf[16];
+          snprintf(buf, sizeof(buf), "%.0fV", x);
+          return std::string(buf);
+
+# Battery SoC sensor
+battery_soc_sensor:
+  sensor:
+  - id: battery_soc
+    platform: homeassistant
+    entity_id: sensor.40517480283_battery_soc
+    on_value:
+    - lambda: |-
+        if (std::isnan(x)) {
+          lv_label_set_text(id(battery_soc_value), "--%");
+          lv_label_set_text(id(battery_energy_value), "");
+          return;
+        }
+        int percent = (int)std::round(x);
+        char buf[16];
+        snprintf(buf, sizeof(buf), "%d%%", percent);
+        lv_label_set_text(id(battery_soc_value), buf);
+        // Energy will be updated separately
+    - lambda: |-
+        if (std::isnan(x)) {
+          lv_obj_set_width(id(battery_soc_fill), 0);
+          lv_obj_set_style_bg_color(id(battery_soc_fill), lv_color_hex(0x888888), LV_PART_MAIN);
+          return;
+        }
+        int percent = (int)std::round(x);
+        int container_width = lv_obj_get_width(id(battery_container));
+        int container_height = lv_obj_get_height(id(battery_container));
+        lv_obj_set_width(id(battery_soc_fill), (container_width * percent) / 100);
+        lv_obj_set_height(id(battery_soc_fill), container_height);
+        if (percent >= 60) {
+          lv_obj_set_style_bg_color(id(battery_soc_fill), lv_color_hex(0x4CAF50), LV_PART_MAIN); // green
+        } else if (percent >= 30) {
+          lv_obj_set_style_bg_color(id(battery_soc_fill), lv_color_hex(0xFFCC00), LV_PART_MAIN); // yellow
+        } else {
+          lv_obj_set_style_bg_color(id(battery_soc_fill), lv_color_hex(0xFF5252), LV_PART_MAIN); // red
+        }
+
+# Battery voltage sensor
+battery_voltage_sensor:
+  sensor:
+  - id: battery_voltage
+    platform: homeassistant
+    entity_id: sensor.40517480283_battery_voltage
+    on_value:
+    - lvgl.label.update:
+        id: battery_voltage_value
+        text: !lambda |-
+          if (std::isnan(x)) return std::string("--");
+          char buf[16];
+          snprintf(buf, sizeof(buf), "%.1fV", x);
+          return std::string(buf);
+
+# Battery power sensor
+battery_power_sensor:
+  sensor:
+  - id: battery_power
+    platform: homeassistant
+    entity_id: sensor.40517480283_battery_power
+    on_value:
+    - lvgl.label.update:
+        id: battery_power_value
+        text: !lambda |-
+          if (std::isnan(x)) return std::string("--");
+          char buf[16];
+          int val = (int)std::round(x);
+          if (val > 0) snprintf(buf, sizeof(buf), "+%dW", val);
+          else snprintf(buf, sizeof(buf), "%dW", val);
+          return std::string(buf);
+        text_color: !lambda |-
+          if (std::isnan(x)) return lv_color_hex(0x888888);
+          if (x > 0) return lv_color_hex(0x4CAF50);   // green = charging
+          else if (x < 0) return lv_color_hex(0xFF9800); // orange = discharging
+          else return lv_color_hex(0xFFFFFF);         // white = idle
+    - lvgl.label.update:
+        id: battery_power_icon
+        text_color: !lambda |-
+          if (std::isnan(x)) return lv_color_hex(0x888888);
+          if (x > 0) return lv_color_hex(0x4CAF50);   // green = charging
+          else if (x < 0) return lv_color_hex(0xFF9800); // orange = discharging
+          else return lv_color_hex(0xFFFFFF);         // white = idle
+
+# Battery time dynamic sensor
+battery_time_dynamic_sensor:
+  text_sensor:
+  - id: battery_time_status
+    platform: homeassistant
+    entity_id: sensor.battery_time_dynamic_2
+    attribute: status
+    on_value:
+    - globals.set:
+        id: battery_time_status_str
+        value: !lambda return x;
+    - lambda: |-
+        std::string status = x;
+        // Update primary text
+        if (status == "Charging") {
+          lv_label_set_text(id(battery_time_primary), "Time to Full");
+          lv_label_set_text(id(battery_time_icon), "\U000F17E0"); // battery-charging
+          lv_obj_set_style_text_color(id(battery_time_icon), lv_color_hex(0x4CAF50), LV_PART_MAIN); // green
+          lv_obj_set_style_text_color(id(battery_time_primary), lv_color_hex(0x888888), LV_PART_MAIN); // green
+        } else if (status == "Discharging") {
+          lv_label_set_text(id(battery_time_primary), "Time to Empty");
+          lv_label_set_text(id(battery_time_icon), "\U000F17DE"); // battery-discharging
+          lv_obj_set_style_text_color(id(battery_time_icon), lv_color_hex(0xFF9800), LV_PART_MAIN); // orange
+          lv_obj_set_style_text_color(id(battery_time_primary), lv_color_hex(0x888888), LV_PART_MAIN); // orange
+        } else if (status == "Standby") {
+          lv_label_set_text(id(battery_time_primary), "Standby");
+          lv_label_set_text(id(battery_time_icon), "\U000F19E5"); // battery-idle
+          lv_obj_set_style_text_color(id(battery_time_icon), lv_color_hex(0x888888), LV_PART_MAIN); // grey
+          lv_obj_set_style_text_color(id(battery_time_primary), lv_color_hex(0x888888), LV_PART_MAIN); // grey
+        } else {
+          lv_label_set_text(id(battery_time_primary), "—");
+          lv_label_set_text(id(battery_time_icon), "\U000F19E5"); // battery-idle
+          lv_obj_set_style_text_color(id(battery_time_icon), lv_color_hex(0x888888), LV_PART_MAIN); // grey
+          lv_obj_set_style_text_color(id(battery_time_primary), lv_color_hex(0x888888), LV_PART_MAIN); // grey
+        }
+  - id: battery_time_value
+    platform: homeassistant
+    entity_id: sensor.battery_time_dynamic_2
+    on_value:
+    - lambda: |-
+        std::string status = id(battery_time_status_str);
+        if (status == "Charging" || status == "Discharging") {
+          if (x.empty()) {
+            lv_label_set_text(id(battery_time_secondary), "--");
+          } else {
+            lv_label_set_text(id(battery_time_secondary), x.c_str());
+          }
+        } else {
+          lv_label_set_text(id(battery_time_secondary), "");
+        }
+
+# Battery energy remaining sensor
+battery_energy_remaining_sensor:
+  sensor:
+  - id: battery_energy_remaining
+    platform: homeassistant
+    entity_id: sensor.battery_energy_remaining_2
+    on_value:
+    - globals.set:
+        id: battery_energy_remaining_val
+        value: !lambda return x;
+    - lambda: |-
+        // Update battery Energy label
+        if (std::isnan(x) || x == 0.0) {
+          lv_label_set_text(id(battery_energy_value), "");
+        } else {
+          char buf[32];
+          snprintf(buf, sizeof(buf), "(%.0f Wh)", x);
+          lv_label_set_text(id(battery_energy_value), buf);
+        }

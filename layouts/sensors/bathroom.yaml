@@ -1,0 +1,26 @@
+# Bathroom widget sensors
+bathroom_light_widget_sensors: !include { file: ../widgets/buttons/icon_text_buttons/light_buttons/sensors.yaml, vars: { uid: bathroom_light, entity_id: switch.sonoff_1001275189_1 } }
+mirror_light_widget_sensors: !include { file: ../widgets/buttons/icon_text_buttons/light_buttons/sensors.yaml, vars: { uid: mirror, entity_id: switch.sonoff_1001275189_2 } }
+fan__widget_sensors: !include { file: ../widgets/buttons/icon_text_buttons/fan_buttons/sensors.yaml, vars: { uid: fan, entity_id: switch.sonoff_1000af2f21_1 } }
+
+# Bathroom temperature sensor
+bathroom_temp_sensor:
+  sensor:
+  - id: bathroom_temp
+    platform: homeassistant
+    entity_id: sensor.bathroom_temp_temperature
+    on_value:
+    - lvgl.label.update:
+        id: bathroom_temp_value
+        text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "°C";
+
+# Bathroom humidity sensor
+bathroom_humidity_sensor:
+  sensor:
+  - id: bathroom_humidity
+    platform: homeassistant
+    entity_id: sensor.bathroom_temp_humidity
+    on_value:
+    - lvgl.label.update:
+        id: bathroom_humidity_value
+        text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "%";

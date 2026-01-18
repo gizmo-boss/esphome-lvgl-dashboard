@@ -1,0 +1,32 @@
+# Outdoor temperature sensor
+outdoor_temp_sensor:
+  sensor:
+  - id: outdoor_temp
+    platform: homeassistant
+    entity_id: sensor.outdoor_temp_sensor_temperature
+    on_value:
+    - lvgl.label.update:
+        id: outdoor_temp_value
+        text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "°C";
+
+# Outdoor humidity sensor
+outdoor_humidity_sensor:
+  sensor:
+  - id: outdoor_humidity
+    platform: homeassistant
+    entity_id: sensor.outdoor_temp_sensor_humidity
+    on_value:
+    - lvgl.label.update:
+        id: outdoor_humidity_value
+        text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "%";
+
+# Outdoor pressure sensor
+outdoor_pressure_sensor:
+  sensor:
+  - id: outdoor_pressure
+    platform: homeassistant
+    entity_id: sensor.outdoor_temp_sensor_pressure
+    on_value:
+    - lvgl.label.update:
+        id: outdoor_pressure_value
+        text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "hPa";

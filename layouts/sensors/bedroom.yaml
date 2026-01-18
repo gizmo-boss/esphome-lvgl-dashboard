@@ -1,0 +1,26 @@
+# Bedroom widget sensors
+torsher_widget_sensors: !include { file: ../widgets/buttons/icon_text_buttons/light_buttons/sensors.yaml, vars: { uid: torsher, entity_id: switch.bedroom_floor_lamp } }
+bedroom_light_sensors: !include { file: ../widgets/buttons/icon_text_buttons/light_buttons/sensors.yaml, vars: { uid: bedroom_light, entity_id: switch.sonoff_10012750d9_1 } }
+stylage_light_sensors: !include { file: ../widgets/buttons/icon_text_buttons/light_buttons/sensors.yaml, vars: { uid: stylage_light, entity_id: light.stylage_rgb_light } }
+
+# Bedroom temperature sensor
+bedroom_temp_sensor:
+  sensor:
+  - id: bedroom_temp
+    platform: homeassistant
+    entity_id: sensor.bedroom_temp_temperature
+    on_value:
+    - lvgl.label.update:
+        id: bedroom_temp_value
+        text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "°C";
+
+# Bedroom humidity sensor
+bedroom_humidity_sensor:
+  sensor:
+  - id: bedroom_humidity
+    platform: homeassistant
+    entity_id: sensor.bedroom_temp_humidity
+    on_value:
+    - lvgl.label.update:
+        id: bedroom_humidity_value
+        text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "%";

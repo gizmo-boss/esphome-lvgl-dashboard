@@ -1,0 +1,70 @@
+- id: go_home
+  then:
+  - lvgl.page.show: bedroom
+
+- id: turn_off_display
+  then:
+  - globals.set:
+      id: display_is_off
+      value: 'true'
+  - light.turn_off: backlight
+
+- id: turn_on_display
+  then:
+  - globals.set:
+      id: display_is_off
+      value: 'false'
+  - light.turn_on: backlight
+  - script.execute: go_home
+
+- id: show_settings
+  then:
+  - lvgl.widget.show: settings_panel
+
+- id: hide_settings
+  then:
+  - lvgl.widget.hide: settings_panel
+
+- id: toggle_auto_off
+  then:
+  - lambda: |-
+      id(auto_off_enabled) = !id(auto_off_enabled);
+  - if:
+      condition:
+        lambda: 'return id(auto_off_enabled);'
+      then:
+      - lvgl.widget.show: auto_off_checked
+      - lvgl.widget.hide: auto_off_unchecked
+      else:
+      - lvgl.widget.hide: auto_off_checked
+      - lvgl.widget.show: auto_off_unchecked
+
+- id: update_battery_display
+  then:
+  - lambda: |-
+      float soc = id(battery_soc).state;
+      if (std::isnan(soc)) {
+        lv_label_set_text(id(battery_soc_value), "--%");
+        lv_obj_set_width(id(battery_soc_fill), 0);
+        lv_obj_set_style_bg_color(id(battery_soc_fill), lv_color_hex(0x888888), LV_PART_MAIN);
+        return;
+      }
+      int percent = (int)std::round(soc);
+      char buf[16];
+      snprintf(buf, sizeof(buf), "%d%%", percent);
+      lv_label_set_text(id(battery_soc_value), buf);
+      
+      int container_width = lv_obj_get_width(id(battery_container));
+      int container_height = lv_obj_get_height(id(battery_container));
+      if (container_width > 0) {
+        lv_obj_set_width(id(battery_soc_fill), (container_width * percent) / 100);
+        lv_obj_set_height(id(battery_soc_fill), container_height);
+      }
+      
+      if (percent >= 60) {
+        lv_obj_set_style_bg_color(id(battery_soc_fill), lv_color_hex(0x4CAF50), LV_PART_MAIN);
+      } else if (percent >= 30) {
+        lv_obj_set_style_bg_color(id(battery_soc_fill), lv_color_hex(0xFFCC00), LV_PART_MAIN);
+      } else {
+        lv_obj_set_style_bg_color(id(battery_soc_fill), lv_color_hex(0xFF5252), LV_PART_MAIN);
+      }
