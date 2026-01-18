@@ -5,15 +5,15 @@
 - id: turn_off_display
   then:
   - globals.set:
-      id: display_is_off
-      value: 'true'
+      id: display_on
+      value: 'false'
   - light.turn_off: backlight
 
 - id: turn_on_display
   then:
   - globals.set:
-      id: display_is_off
-      value: 'false'
+      id: display_on
+      value: 'true'
   - light.turn_on: backlight
   - script.execute: go_home
 

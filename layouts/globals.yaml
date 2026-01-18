@@ -1,7 +1,3 @@
-- id: display_is_off
-  type: bool
-  restore_value: no
-  initial_value: 'false'
 - id: auto_off_enabled
   type: bool
   restore_value: yes

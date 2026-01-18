@@ -25,6 +25,12 @@ api:
     - globals.set:
         id: homeassistant_ip
         value: !lambda return client_address;
+    - logger.log:
+        format: "Client connected: %s"
+        args: ['client_address.c_str()']
+  on_client_disconnected:
+    - lambda: 'id(homeassistant_ip) = "";'
+    - logger.log: "Client disconnected"
 
 button:
   - platform: restart
@@ -50,6 +56,12 @@ sensor:
     unit_of_measurement: "%"
     entity_category: diagnostic
 
+  - platform: uptime
+    id: device_uptime
+    name: Uptime
+    entity_category: diagnostic
+    update_interval: 60s
+
 text_sensor:
   - platform: homeassistant
     name: "HomeAssistant Text Sensor"
@@ -66,6 +78,17 @@ text_sensor:
     mac_address:
       name: Mac Address
       entity_category: diagnostic
+
+  - platform: template
+    id: connected_client
+    name: Connected Client
+    entity_category: diagnostic
+    lambda: |-
+      if (id(homeassistant_ip).empty()) {
+        return std::string("Not connected");
+      }
+      return id(homeassistant_ip);
+    update_interval: 10s
 
 globals:
   - id: homeassistant_ip

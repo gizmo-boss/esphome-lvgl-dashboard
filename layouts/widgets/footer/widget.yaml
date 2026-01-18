@@ -53,13 +53,13 @@ obj: # navigation bar
         on_long_press:
           - if:
               condition:
-                - lambda: return display_is_off;
+                - lambda: return !id(display_on);
               then:
                 - script.execute: turn_on_display
         # on_press:
         #   - if:
         #       condition:
-        #         - lambda: return display_is_off;
+        #         - lambda: return !id(display_on);
         #       then:
         #         - script.execute: turn_on_display
         #       else:
