@@ -2,12 +2,20 @@ obj:
   id: settings_panel
   width: 100%
   height: 100%
-  bg_color: 0x2A2E38
-  bg_opa: 95%
+  bg_color: 0x42495A
+  bg_opa: 98%
   hidden: true
   scrollbar_mode: "off"
+  pad_left: 6
+  pad_right: 6
+  pad_top: 6
+  layout:
+    type: FLEX
+    flex_flow: COLUMN
+    flex_align_main: START
+    pad_row: 8
   widgets:
-  # Header with close button
+  # Header bar (matching titlebar style)
   - obj:
       width: 100%
       height: 50
@@ -18,20 +26,21 @@ obj:
       - label:
           text: "\U000F0493"
           text_font: mdi_lg
-          text_color: 0xFFFFFF
+          text_color: 0x00B6FF
           align: LEFT_MID
-          x: 12
+          x: 6
       - label:
           text: "Settings"
           text_font: roboto_lg
           text_color: 0xFFFFFF
           align: LEFT_MID
-          x: 50
+          x: 44
       - button:
           width: 50
           height: 50
           align: RIGHT_MID
-          bg_opa: TRANSP
+          bg_color: 0x5A6173
+          radius: 20
           border_width: 0
           on_click:
           - script.execute: hide_settings
@@ -41,109 +50,131 @@ obj:
               text_font: mdi_lg
               text_color: 0xFF5555
               align: CENTER
-  # Content
+  # Separator
   - obj:
       width: 100%
-      height: 280
-      y: 60
+      height: 2
+      bg_color: 0x555555
+      border_width: 0
+      radius: 1
+      scrollbar_mode: "off"
+  # Brightness control card
+  - obj:
+      width: 100%
+      height: 90
+      bg_color: 0x5A6173
+      radius: 20
+      border_width: 0
+      scrollbar_mode: "off"
+      pad_all: 12
+      widgets:
+      - label:
+          text: "\U000F00E0"
+          text_font: mdi_lg
+          text_color: 0xFFCC00
+          align: TOP_LEFT
+      - label:
+          text: "Brightness"
+          text_font: roboto_sm
+          text_color: 0x888888
+          align: TOP_LEFT
+          x: 36
+          y: 2
+      - slider:
+          id: brightness_slider
+          width: 100%
+          height: 24
+          align: BOTTOM_MID
+          y: -6
+          min_value: 10
+          max_value: 100
+          value: 100
+          bg_color: 0x42495A
+          indicator:
+            bg_color: 0xFFCC00
+          knob:
+            bg_color: 0xFFFFFF
+            radius: 12
+          on_value:
+          - light.turn_on:
+              id: backlight
+              brightness: !lambda return x / 100.0;
+          - globals.set:
+              id: brightness_level
+              value: !lambda return x / 100.0;
+  # Auto-off toggle card
+  - button:
+      width: 100%
+      height: 70
+      bg_color: 0x5A6173
+      radius: 20
+      border_width: 0
+      on_click:
+      - script.execute: toggle_auto_off
+      widgets:
+      - label:
+          text: "\U000F0425"
+          text_font: mdi_lg
+          text_color: 0x00B6FF
+          align: LEFT_MID
+          x: 12
+      - label:
+          text: "Auto Screen Off"
+          text_font: roboto_md
+          text_color: 0xFFFFFF
+          align: LEFT_MID
+          x: 48
+      - obj:
+          id: auto_off_checked
+          width: 44
+          height: 44
+          align: RIGHT_MID
+          x: -12
+          bg_color: 0x4CAF50
+          radius: 20
+          border_width: 0
+          widgets:
+          - label:
+              text: "\U000F012C"
+              text_font: mdi_lg
+              text_color: 0xFFFFFF
+              align: CENTER
+      - obj:
+          id: auto_off_unchecked
+          width: 44
+          height: 44
+          align: RIGHT_MID
+          x: -12
+          bg_color: 0x42495A
+          radius: 20
+          border_width: 2
+          border_color: 0x888888
+          hidden: true
+  # Separator before info section
+  - obj:
+      width: 100%
+      height: 2
+      bg_color: 0x555555
+      border_width: 0
+      radius: 1
+      scrollbar_mode: "off"
+  # Device info row
+  - obj:
+      width: 100%
+      height: 50
       bg_opa: TRANSP
       border_width: 0
       scrollbar_mode: "off"
-      pad_left: 16
-      pad_right: 16
       widgets:
-      # Brightness label row
-      - obj:
-          width: 100%
-          height: 40
-          bg_opa: TRANSP
-          border_width: 0
-          scrollbar_mode: "off"
-          widgets:
-          - label:
-              text: "\U000F00E0"
-              text_font: mdi_lg
-              text_color: 0xFFCC00
-              align: LEFT_MID
-          - label:
-              text: "Brightness"
-              text_font: roboto_md
-              align: LEFT_MID
-              x: 40
-      # Brightness slider row
-      - obj:
-          width: 100%
-          height: 50
-          y: 45
-          bg_opa: TRANSP
-          border_width: 0
-          scrollbar_mode: "off"
-          widgets:
-          - slider:
-              id: brightness_slider
-              width: 100%
-              height: 24
-              align: CENTER
-              min_value: 10
-              max_value: 100
-              value: 100
-              indicator:
-                bg_color: 0xFFCC00
-              knob:
-                bg_color: 0xFFFFFF
-                radius: 12
-              on_value:
-              - light.turn_on:
-                  id: backlight
-                  brightness: !lambda return x / 100.0;
-              - globals.set:
-                  id: brightness_level
-                  value: !lambda return x / 100.0;
-      # Auto-off toggle row
-      - button:
-          width: 100%
-          height: 60
-          y: 110
-          bg_color: 0x3A4050
-          radius: 12
-          border_width: 0
-          on_click:
-          - script.execute: toggle_auto_off
-          widgets:
-          - label:
-              text: "\U000F0425"
-              text_font: mdi_lg
-              text_color: 0x00B6FF
-              align: LEFT_MID
-              x: 12
-          - label:
-              text: "Auto-off"
-              text_font: roboto_md
-              align: LEFT_MID
-              x: 52
-          - obj:
-              id: auto_off_checked
-              width: 36
-              height: 36
-              align: RIGHT_MID
-              x: -12
-              bg_color: 0x4CAF50
-              radius: 6
-              border_width: 0
-              widgets:
-              - label:
-                  text: "\U000F012C"
-                  text_font: mdi_lg
-                  text_color: 0xFFFFFF
-                  align: CENTER
-          - obj:
-              id: auto_off_unchecked
-              width: 36
-              height: 36
-              align: RIGHT_MID
-              x: -12
-              bg_color: 0x555555
-              radius: 6
-              border_width: 2
-              border_color: 0x888888
-              hidden: true
+      - label:
+          text: "\U000F05A9"
+          text_font: mdi_md
+          text_color: 0x888888
+          align: LEFT_MID
+          x: 6
+      - label:
+          text: "Connected to Home Assistant"
+          text_font: roboto_sm
+          text_color: 0x888888
+          align: LEFT_MID
+          x: 42
