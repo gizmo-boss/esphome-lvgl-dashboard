@@ -40,7 +40,7 @@ widgets:
           vars:
             uid: corridor_light
             entity_id: switch.sonoff_1001275136_2
-            text: Corridor Light
+            text: Corridor
             width: 49%
             height: 86
         on_short_click:
@@ -54,7 +54,7 @@ widgets:
           vars:
             uid: closet_light
             entity_id: switch.sonoff_1000b1b936_3
-            text: Closet Light
+            text: Closet
             width: 49%
             height: 86
         on_short_click:

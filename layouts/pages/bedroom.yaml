@@ -40,7 +40,7 @@ widgets:
           vars:
             uid: bedroom_light
             entity_id: switch.sonoff_10012750d9_1
-            text: Bedroom Light
+            text: Bedroom
             width: 49%
             height: 86
         on_short_click:
@@ -68,7 +68,7 @@ widgets:
           vars:
             uid: stylage_light
             entity_id: light.stylage_rgb_light
-            text: Stylage Light
+            text: Stylage
             width: 49%
             height: 86
         on_short_click:
