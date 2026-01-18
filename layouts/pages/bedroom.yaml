@@ -40,7 +40,7 @@ widgets:
           vars:
             uid: bedroom_light
             entity_id: switch.sonoff_10012750d9_1
-            text: Bedroom
+            text: Main
             width: 49%
             height: 86
         on_short_click:

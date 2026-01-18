@@ -13,13 +13,13 @@ binary_sensor:
             - binary_sensor.is_on: ${uid}_widget_sensor
           then:
             - lvgl.widget.hide:
-                - ${uid}_widget_unknown
-                - ${uid}_widget_off
+                - ${uid}_icon_circle_unknown
+                - ${uid}_icon_circle_off
             - lvgl.widget.show:
-                - ${uid}_widget_on
+                - ${uid}_icon_circle_on
           else:
             - lvgl.widget.hide:
-                - ${uid}_widget_unknown
-                - ${uid}_widget_on
+                - ${uid}_icon_circle_unknown
+                - ${uid}_icon_circle_on
             - lvgl.widget.show:
-                - ${uid}_widget_off
+                - ${uid}_icon_circle_off

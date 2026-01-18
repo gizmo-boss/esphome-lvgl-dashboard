@@ -40,7 +40,7 @@ widgets:
           vars:
             uid: living_room_light
             entity_id: switch.sonoff_1001275592_1
-            text: Room
+            text: Main
             width: 49%
             height: 86
         on_short_click:
@@ -68,7 +68,7 @@ widgets:
           vars:
             uid: dinner_table
             entity_id: switch.sonoff_1001275592_3
-            text: Dinner Table
+            text: Table
             width: 49%
             height: 86
         on_short_click:

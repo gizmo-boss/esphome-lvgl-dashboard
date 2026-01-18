@@ -7,7 +7,7 @@
 
 # button:
 <<: !include
-  file: ../stateful.yaml
+  file: stateful.yaml
   vars:
     uid: ${uid}
     entity_id: ${entity_id}

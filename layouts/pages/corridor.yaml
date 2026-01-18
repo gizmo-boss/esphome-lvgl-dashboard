@@ -5,7 +5,7 @@ scrollbar_mode: "off"
 on_load:
 - lvgl.label.update:
     id: page_title
-    text: Corridor
+    text: Hall
 widgets:
 - obj:
     width: 100%
@@ -40,7 +40,7 @@ widgets:
           vars:
             uid: corridor_light
             entity_id: switch.sonoff_1001275136_2
-            text: Corridor
+            text: Hall
             width: 49%
             height: 86
         on_short_click:

@@ -6,7 +6,7 @@
 # - icon_off
 # - text
 
-# Mushroom-style button layout
+# Mushroom-style fan button layout with green color
 # button:
   id: ${uid}_widget
   width: ${width}
@@ -30,22 +30,23 @@
               text_font: mdi_md
               text_color: 0x9DA0A6
               align: CENTER
-    # Icon circle container - ON state (amber/yellow)
+    # Icon circle container - ON state (green)
     - obj:
         id: ${uid}_icon_circle_on
         width: 50
         height: 50
         radius: 25
-        bg_color: 0x5C4A1A
+        bg_color: 0x1B4332
         border_width: 0
         align: LEFT_MID
         scrollbar_mode: "off"
         hidden: true
         widgets:
           - label:
+              id: ${uid}_spinning_icon
               text: ${icon_on}
               text_font: mdi_md
-              text_color: 0xFFB347
+              text_color: 0x52B788
               align: CENTER
     # Icon circle container - UNKNOWN state
     - obj:

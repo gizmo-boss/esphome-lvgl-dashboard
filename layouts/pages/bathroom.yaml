@@ -40,7 +40,7 @@ widgets:
           vars:
             uid: bathroom_light
             entity_id: switch.sonoff_1001275189_1
-            text: Bathroom
+            text: Main
             width: 49%
             height: 86
         on_short_click:
