@@ -58,3 +58,15 @@
 - "\U000F0266" # format-color-fill (color picker)
 - "\U000F0B66" # invert-colors (saturation)
 - "\U000F0769" # palette (color palette)
+- "\U000F0393" # thermostat
+- "\U000F0166" # air-conditioner
+- "\U000F001B" # air-conditioner-alt (F001B)
+- "\U000F0238" # fire (heat)
+- "\U000F0F29" # snowflake (cool)
+- "\U000F0374" # minus-circle-outline
+- "\U000F0417" # plus-circle-outline
+- "\U000F04D8" # speedometer (fan speed)
+- "\U000F0192" # clock-fast (auto mode)
+- "\U000F0E0C" # fan-off
+- "\U000F1B40" # hvac
+- "\U000F058C" # water (humidity/dry mode)

@@ -34,6 +34,8 @@ lvgl:
     - <<: !include widgets/settings_panel/widget.yaml
     # Light Control Panel (hidden by default, shown on long press)
     - <<: !include widgets/light_control_panel/widget.yaml
+    # Climate Control Panel (hidden by default, shown on click)
+    - <<: !include widgets/climate_control_panel/widget.yaml
   pages:
   - id: splash
     skip: true
@@ -46,6 +48,7 @@ lvgl:
   - <<: !include pages/corridor.yaml
   - <<: !include pages/outdoor.yaml
   - <<: !include pages/energy.yaml
+  - <<: !include pages/climate.yaml
 
 packages:
   # header
@@ -74,3 +77,6 @@ packages:
 
   # energy sensors
   <<: !include sensors/energy.yaml
+
+  # climate sensors
+  <<: !include sensors/climate.yaml

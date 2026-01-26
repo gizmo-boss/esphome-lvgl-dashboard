@@ -1,0 +1,344 @@
+obj:
+  id: climate_control_panel
+  width: 100%
+  height: 100%
+  bg_color: 0x1E2128
+  bg_opa: 98%
+  hidden: true
+  scrollbar_mode: "off"
+  scrollable: false
+  pad_left: 10
+  pad_right: 10
+  pad_top: 10
+  layout:
+    type: FLEX
+    flex_flow: COLUMN
+    flex_align_main: START
+    pad_row: 6
+  widgets:
+  # Header bar
+  - obj:
+      width: 100%
+      height: 45
+      bg_opa: TRANSP
+      border_width: 0
+      scrollbar_mode: "off"
+      scrollable: false
+      widgets:
+      - label:
+          id: climate_control_icon
+          text: "\U000F001B"
+          text_font: mdi_lg
+          text_color: 0x00BFFF
+          align: LEFT_MID
+          x: 0
+      - label:
+          id: climate_control_title
+          text: "Climate"
+          text_font: roboto_lg
+          text_color: 0xFFFFFF
+          align: LEFT_MID
+          x: 40
+      - label:
+          id: climate_control_status
+          text: "off"
+          text_font: roboto_sm
+          text_color: 0x888888
+          align: CENTER
+      - button:
+          width: 42
+          height: 42
+          align: RIGHT_MID
+          bg_color: 0x3A4048
+          radius: 21
+          border_width: 0
+          on_click:
+          - script.execute: hide_climate_control
+          widgets:
+          - label:
+              text: "\U000F0156"
+              text_font: mdi_lg
+              text_color: 0xFF5555
+              align: CENTER
+  # Temperature Arc area
+  - obj:
+      width: 100%
+      height: 200
+      bg_opa: TRANSP
+      border_width: 0
+      scrollbar_mode: "off"
+      scrollable: false
+      widgets:
+      # Temperature Arc
+      - arc:
+          id: climate_temp_arc
+          width: 190
+          height: 190
+          align: CENTER
+          min_value: 16
+          max_value: 30
+          value: 24
+          start_angle: 135
+          end_angle: 45
+          rotation: 0
+          adjustable: true
+          mode: NORMAL
+          bg_color: 0x3A4048
+          arc_width: 18
+          indicator:
+            arc_color: 0x00BFFF
+            arc_width: 18
+          knob:
+            bg_color: 0xFFFFFF
+            radius: 14
+            pad_all: 10
+          on_value:
+          - script.execute:
+              id: update_climate_temp
+              temp: !lambda return (int)x;
+      # Center circle with temperature
+      - obj:
+          width: 130
+          height: 130
+          radius: 65
+          bg_color: 0x2A2E38
+          border_width: 3
+          border_color: 0x3A4048
+          align: CENTER
+          scrollbar_mode: "off"
+          scrollable: false
+          widgets:
+          - label:
+              id: climate_current_temp_big
+              text: "--"
+              text_font: roboto_xxl
+              text_color: 0xFFFFFF
+              align: CENTER
+              y: -8
+          - label:
+              text: "°C"
+              text_font: roboto_md
+              text_color: 0x888888
+              align: CENTER
+              y: 24
+  # Target temperature display
+  - obj:
+      width: 100%
+      height: 40
+      bg_opa: TRANSP
+      border_width: 0
+      scrollbar_mode: "off"
+      scrollable: false
+      widgets:
+      - label:
+          text: "Target:"
+          text_font: roboto_md
+          text_color: 0x888888
+          align: LEFT_MID
+      - label:
+          id: climate_target_temp_big
+          text: "24°C"
+          text_font: roboto_xl
+          text_color: 0x00BFFF
+          align: LEFT_MID
+          x: 70
+      # Quick temp buttons
+      - button:
+          width: 44
+          height: 38
+          radius: 8
+          align: RIGHT_MID
+          x: -50
+          on_short_click:
+          - script.execute:
+              id: adjust_climate_temp
+              delta: -1
+          widgets:
+          - label:
+              text: "\U000F0374"
+              text_font: mdi_md
+              text_color: 0xFFFFFF
+              align: CENTER
+      - button:
+          width: 44
+          height: 38
+          radius: 8
+          align: RIGHT_MID
+          on_short_click:
+          - script.execute:
+              id: adjust_climate_temp
+              delta: 1
+          widgets:
+          - label:
+              text: "\U000F0417"
+              text_font: mdi_md
+              text_color: 0xFFFFFF
+              align: CENTER
+  # Mode buttons row
+  - obj:
+      width: 100%
+      height: 55
+      bg_color: 0x2A2E38
+      radius: 12
+      border_width: 0
+      scrollbar_mode: "off"
+      scrollable: false
+      pad_all: 8
+      layout:
+        type: FLEX
+        flex_flow: ROW
+        flex_align_main: SPACE_EVENLY
+        flex_align_cross: CENTER
+      widgets:
+      - button:
+          id: climate_mode_off
+          width: 46
+          height: 40
+          radius: 8
+          on_short_click:
+          - script.execute:
+              id: set_climate_mode
+              mode: "off"
+          widgets:
+          - label:
+              text: "\U000F0425"
+              text_font: mdi_md
+              text_color: 0x888888
+              align: CENTER
+      - button:
+          id: climate_mode_cool
+          width: 46
+          height: 40
+          radius: 8
+          on_short_click:
+          - script.execute:
+              id: set_climate_mode
+              mode: "cool"
+          widgets:
+          - label:
+              text: "\U000F0F29"
+              text_font: mdi_md
+              text_color: 0x00BFFF
+              align: CENTER
+      - button:
+          id: climate_mode_heat
+          width: 46
+          height: 40
+          radius: 8
+          on_short_click:
+          - script.execute:
+              id: set_climate_mode
+              mode: "heat"
+          widgets:
+          - label:
+              text: "\U000F0238"
+              text_font: mdi_md
+              text_color: 0xFF5722
+              align: CENTER
+      - button:
+          id: climate_mode_auto
+          width: 46
+          height: 40
+          radius: 8
+          on_short_click:
+          - script.execute:
+              id: set_climate_mode
+              mode: "auto"
+          widgets:
+          - label:
+              text: "\U000F0192"
+              text_font: mdi_md
+              text_color: 0x8BC34A
+              align: CENTER
+      - button:
+          id: climate_mode_fan
+          width: 46
+          height: 40
+          radius: 8
+          on_short_click:
+          - script.execute:
+              id: set_climate_mode
+              mode: "fan_only"
+          widgets:
+          - label:
+              text: "\U000F0210"
+              text_font: mdi_md
+              text_color: 0xAAAAAA
+              align: CENTER
+  # Fan speed row (for AC)
+  - obj:
+      id: climate_fan_row
+      width: 100%
+      height: 45
+      bg_color: 0x2A2E38
+      radius: 12
+      border_width: 0
+      scrollbar_mode: "off"
+      scrollable: false
+      pad_all: 6
+      layout:
+        type: FLEX
+        flex_flow: ROW
+        flex_align_main: SPACE_EVENLY
+        flex_align_cross: CENTER
+      widgets:
+      - label:
+          text: "Fan:"
+          text_font: roboto_sm
+          text_color: 0x888888
+      - button:
+          width: 50
+          height: 32
+          radius: 6
+          on_short_click:
+          - script.execute:
+              id: set_climate_fan
+              fan: "low"
+          widgets:
+          - label:
+              text: "Low"
+              text_font: roboto_sm
+              text_color: 0xFFFFFF
+              align: CENTER
+      - button:
+          width: 50
+          height: 32
+          radius: 6
+          on_short_click:
+          - script.execute:
+              id: set_climate_fan
+              fan: "medium"
+          widgets:
+          - label:
+              text: "Med"
+              text_font: roboto_sm
+              text_color: 0xFFFFFF
+              align: CENTER
+      - button:
+          width: 50
+          height: 32
+          radius: 6
+          on_short_click:
+          - script.execute:
+              id: set_climate_fan
+              fan: "high"
+          widgets:
+          - label:
+              text: "High"
+              text_font: roboto_sm
+              text_color: 0xFFFFFF
+              align: CENTER
+      - button:
+          width: 50
+          height: 32
+          radius: 6
+          on_short_click:
+          - script.execute:
+              id: set_climate_fan
+              fan: "auto"
+          widgets:
+          - label:
+              text: "Auto"
+              text_font: roboto_sm
+              text_color: 0xFFFFFF
+              align: CENTER

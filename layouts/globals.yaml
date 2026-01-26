@@ -44,3 +44,16 @@
   type: int
   restore_value: no
   initial_value: '0'
+# Climate control panel state
+- id: current_climate_entity
+  type: std::string
+  restore_value: no
+  initial_value: '""'
+- id: current_climate_target
+  type: int
+  restore_value: no
+  initial_value: '24'
+- id: current_climate_has_fan
+  type: bool
+  restore_value: no
+  initial_value: 'false'

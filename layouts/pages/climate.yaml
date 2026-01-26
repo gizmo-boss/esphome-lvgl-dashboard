@@ -1,0 +1,245 @@
+id: climate
+pad_top: 50
+pad_bottom: 50
+scrollbar_mode: "off"
+on_load:
+- lvgl.label.update:
+    id: page_title
+    text: Climate
+widgets:
+- obj:
+    width: 100%
+    height: 100%
+    border_width: 0
+    radius: 0
+    pad_top: 0
+    pad_bottom: 0
+    pad_left: 6
+    pad_right: 6
+    scrollbar_mode: "off"
+    scrollable: false
+    layout:
+      type: FLEX
+      flex_flow: ROW_WRAP
+      flex_align_main: START
+      pad_column: 8
+      pad_row: 8
+    widgets:
+    # ============ THERMOSTAT ============
+    - obj:
+        width: 100%
+        height: 2
+        bg_color: 0x555555
+        border_width: 0
+        radius: 1
+        scrollbar_mode: "off"
+        scrollable: false
+    # Thermostat card - clickable
+    - button:
+        id: thermostat_card
+        width: 100%
+        height: 80
+        bg_color: 0x2A2E38
+        radius: 12
+        border_width: 0
+        on_click:
+        - script.execute:
+            id: show_climate_control
+            entity_id: "climate.thermostat_thermostat"
+            name: "Underfloor"
+            has_fan: "false"
+        widgets:
+        # Icon circle
+        - obj:
+            id: thermostat_icon_circle
+            width: 50
+            height: 50
+            radius: 25
+            bg_color: 0x42495A
+            border_width: 0
+            align: LEFT_MID
+            x: 12
+            scrollbar_mode: "off"
+            scrollable: false
+            widgets:
+            - label:
+                id: thermostat_icon
+                text: "\U000F0393"
+                text_font: mdi_lg
+                text_color: 0x9DA0A6
+                align: CENTER
+        # Title & status
+        - label:
+            text: "Underfloor"
+            text_font: roboto_md
+            text_color: 0xFFFFFF
+            x: 72
+            y: 16
+        - label:
+            id: thermostat_status
+            text: "off"
+            text_font: roboto_sm
+            text_color: 0x888888
+            x: 72
+            y: 40
+        # Temperatures on right
+        - label:
+            id: thermostat_current_temp
+            text: "--°"
+            text_font: roboto_xl
+            text_color: 0xFFFFFF
+            align: RIGHT_MID
+            x: -60
+        - label:
+            id: thermostat_target_temp
+            text: "--°"
+            text_font: roboto_lg
+            text_color: 0xFF8C00
+            align: RIGHT_MID
+            x: -12
+
+    # ============ LIVING ROOM AC ============
+    - obj:
+        width: 100%
+        height: 2
+        bg_color: 0x555555
+        border_width: 0
+        radius: 1
+        scrollbar_mode: "off"
+        scrollable: false
+    # Living AC card - clickable
+    - button:
+        id: livingroom_ac_card
+        width: 100%
+        height: 80
+        bg_color: 0x2A2E38
+        radius: 12
+        border_width: 0
+        on_click:
+        - script.execute:
+            id: show_climate_control
+            entity_id: "climate.c6a1a756"
+            name: "Living"
+            has_fan: "true"
+        widgets:
+        # Icon circle
+        - obj:
+            id: livingroom_ac_icon_circle
+            width: 50
+            height: 50
+            radius: 25
+            bg_color: 0x42495A
+            border_width: 0
+            align: LEFT_MID
+            x: 12
+            scrollbar_mode: "off"
+            scrollable: false
+            widgets:
+            - label:
+                id: livingroom_ac_icon
+                text: "\U000F001B"
+                text_font: mdi_lg
+                text_color: 0x9DA0A6
+                align: CENTER
+        # Title & status
+        - label:
+            text: "Living"
+            text_font: roboto_md
+            text_color: 0xFFFFFF
+            x: 72
+            y: 16
+        - label:
+            id: livingroom_ac_status
+            text: "off"
+            text_font: roboto_sm
+            text_color: 0x888888
+            x: 72
+            y: 40
+        # Temperatures on right
+        - label:
+            id: livingroom_ac_current_temp
+            text: "--°"
+            text_font: roboto_xl
+            text_color: 0xFFFFFF
+            align: RIGHT_MID
+            x: -60
+        - label:
+            id: livingroom_ac_target_temp
+            text: "--°"
+            text_font: roboto_lg
+            text_color: 0x00BFFF
+            align: RIGHT_MID
+            x: -12
+
+    # ============ BEDROOM AC ============
+    - obj:
+        width: 100%
+        height: 2
+        bg_color: 0x555555
+        border_width: 0
+        radius: 1
+        scrollbar_mode: "off"
+        scrollable: false
+    # Bedroom AC card - clickable
+    - button:
+        id: bedroom_ac_card
+        width: 100%
+        height: 80
+        bg_color: 0x2A2E38
+        radius: 12
+        border_width: 0
+        on_click:
+        - script.execute:
+            id: show_climate_control
+            entity_id: "climate.c6a1ab8f"
+            name: "Bedroom"
+            has_fan: "true"
+        widgets:
+        # Icon circle
+        - obj:
+            id: bedroom_ac_icon_circle
+            width: 50
+            height: 50
+            radius: 25
+            bg_color: 0x42495A
+            border_width: 0
+            align: LEFT_MID
+            x: 12
+            scrollbar_mode: "off"
+            scrollable: false
+            widgets:
+            - label:
+                id: bedroom_ac_icon
+                text: "\U000F001B"
+                text_font: mdi_lg
+                text_color: 0x9DA0A6
+                align: CENTER
+        # Title & status
+        - label:
+            text: "Bedroom"
+            text_font: roboto_md
+            text_color: 0xFFFFFF
+            x: 72
+            y: 16
+        - label:
+            id: bedroom_ac_status
+            text: "off"
+            text_font: roboto_sm
+            text_color: 0x888888
+            x: 72
+            y: 40
+        # Temperatures on right
+        - label:
+            id: bedroom_ac_current_temp
+            text: "--°"
+            text_font: roboto_xl
+            text_color: 0xFFFFFF
+            align: RIGHT_MID
+            x: -60
+        - label:
+            id: bedroom_ac_target_temp
+            text: "--°"
+            text_font: roboto_lg
+            text_color: 0x00BFFF
+            align: RIGHT_MID
+            x: -12

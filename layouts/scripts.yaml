@@ -201,6 +201,150 @@
   - script.execute:
       id: apply_light_hs_color
 
+# Climate control panel scripts
+- id: show_climate_control
+  parameters:
+    entity_id: string
+    name: string
+    has_fan: string
+  then:
+  - globals.set:
+      id: current_climate_entity
+      value: !lambda return entity_id;
+  - globals.set:
+      id: current_climate_has_fan
+      value: !lambda return has_fan == "true";
+  - lvgl.label.update:
+      id: climate_control_title
+      text: !lambda return name;
+  # Load current temperatures from sensors
+  - lambda: |-
+      float current = 0;
+      float target = 24;
+      std::string status = "off";
+      
+      if (entity_id == "climate.thermostat_thermostat") {
+        current = id(thermostat_current_temp_sensor).state;
+        target = id(thermostat_target_temp_sensor).state;
+        status = id(thermostat_hvac_state).state;
+      } else if (entity_id == "climate.c6a1a756") {
+        current = id(livingroom_ac_current_temp_sensor).state;
+        target = id(livingroom_ac_target_temp_sensor).state;
+        status = id(livingroom_ac_hvac_state).state;
+      } else if (entity_id == "climate.c6a1ab8f") {
+        current = id(bedroom_ac_current_temp_sensor).state;
+        target = id(bedroom_ac_target_temp_sensor).state;
+        status = id(bedroom_ac_hvac_state).state;
+      }
+      
+      // Update current temp display
+      if (!std::isnan(current)) {
+        char buf[8];
+        snprintf(buf, sizeof(buf), "%.0f", current);
+        lv_label_set_text(id(climate_current_temp_big), buf);
+      }
+      
+      // Update target temp
+      if (!std::isnan(target)) {
+        id(current_climate_target) = (int)target;
+        lv_arc_set_value(id(climate_temp_arc), (int)target);
+        char buf[16];
+        snprintf(buf, sizeof(buf), "%.0f°C", target);
+        lv_label_set_text(id(climate_target_temp_big), buf);
+      }
+      
+      // Update status
+      lv_label_set_text(id(climate_control_status), status.c_str());
+      
+      // Update icon based on device type
+      if (entity_id == "climate.thermostat_thermostat") {
+        lv_label_set_text(id(climate_control_icon), "\U000F0393"); // thermostat icon
+      } else {
+        lv_label_set_text(id(climate_control_icon), "\U000F001B"); // AC icon
+      }
+      
+      // Update icon color based on mode
+      uint32_t icon_color = 0x00BFFF; // default blue
+      if (status == "heat") icon_color = 0xFF5722;
+      else if (status == "cool") icon_color = 0x00BFFF;
+      else if (status == "auto" || status == "fan_only") icon_color = 0x8BC34A;
+      else if (status == "off") icon_color = 0x888888;
+      lv_obj_set_style_text_color(id(climate_control_icon), lv_color_hex(icon_color), LV_PART_MAIN);
+  # Show/hide fan row based on device type
+  - if:
+      condition:
+        lambda: return has_fan == "true";
+      then:
+      - lvgl.widget.show: climate_fan_row
+      else:
+      - lvgl.widget.hide: climate_fan_row
+  - lvgl.widget.show: climate_control_panel
+
+- id: hide_climate_control
+  then:
+  - lvgl.widget.hide: climate_control_panel
+
+- id: update_climate_temp
+  parameters:
+    temp: int
+  then:
+  - globals.set:
+      id: current_climate_target
+      value: !lambda return temp;
+  - lvgl.label.update:
+      id: climate_target_temp_big
+      text: !lambda |-
+        char buf[16];
+        snprintf(buf, sizeof(buf), "%d°C", temp);
+        return std::string(buf);
+  - homeassistant.service:
+      service: climate.set_temperature
+      data_template:
+        entity_id: !lambda return id(current_climate_entity);
+        temperature: !lambda return std::to_string(id(current_climate_target));
+
+- id: adjust_climate_temp
+  parameters:
+    delta: int
+  then:
+  - lambda: |-
+      int new_temp = id(current_climate_target) + delta;
+      if (new_temp < 16) new_temp = 16;
+      if (new_temp > 30) new_temp = 30;
+      id(current_climate_target) = new_temp;
+      lv_arc_set_value(id(climate_temp_arc), new_temp);
+  - lvgl.label.update:
+      id: climate_target_temp_big
+      text: !lambda |-
+        char buf[16];
+        snprintf(buf, sizeof(buf), "%d°C", id(current_climate_target));
+        return std::string(buf);
+  - homeassistant.service:
+      service: climate.set_temperature
+      data_template:
+        entity_id: !lambda return id(current_climate_entity);
+        temperature: !lambda return std::to_string(id(current_climate_target));
+
+- id: set_climate_mode
+  parameters:
+    mode: string
+  then:
+  - homeassistant.service:
+      service: climate.set_hvac_mode
+      data_template:
+        entity_id: !lambda return id(current_climate_entity);
+        hvac_mode: !lambda return mode;
+
+- id: set_climate_fan
+  parameters:
+    fan: string
+  then:
+  - homeassistant.service:
+      service: climate.set_fan_mode
+      data_template:
+        entity_id: !lambda return id(current_climate_entity);
+        fan_mode: !lambda return fan;
+
 - id: update_battery_display
   then:
   - lambda: |-
