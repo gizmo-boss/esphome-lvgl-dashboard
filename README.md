@@ -2,6 +2,10 @@
 
 A beautiful, touch-enabled smart home control panel built with ESPHome and LVGL for the JC3248W535C ESP32-S3 display module. Control your lights, climate, and monitor energy usage directly from a sleek wall-mounted touchscreen.
 
+<p align="center">
+  <img src="images/ui-demo.jpg" alt="UI Demo" width="400">
+</p>
+
 ---
 
 ## 📟 Device Specifications
