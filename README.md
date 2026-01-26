@@ -22,6 +22,14 @@ A beautiful, touch-enabled smart home control panel built with ESPHome and LVGL 
 | **Display Interface** | QSPI |
 | **Framework** | ESP-IDF |
 
+### 🛒 Where to Buy
+
+- **Display Module**: [AliExpress — Guition JC3248W535C](https://a.aliexpress.com/_EIyWvhw)
+
+### 🖨️ 3D Printed Case
+
+- **Desktop Enclosure**: [MakerWorld — Guition JC3248W535 3.5" ESP32 Desktop Enclosure](https://makerworld.com/en/models/1026987-guition-jc3248w535-3-5-esp32-desktop-enclosure?from=search#profileId-1009332)
+
 ---
 
 ## ✨ Features
