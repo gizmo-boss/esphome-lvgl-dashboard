@@ -130,10 +130,6 @@ wifi_password: "your-wifi-password"
 ha_ip: "http://homeassistant.local:8123"
 api_encryption_key: "your-api-encryption-key"
 
-# Optional: OpenWeatherMap
-openweathermap_api_key: "your-api-key"
-latitude: "your-latitude"
-longitude: "your-longitude"
 ```
 
 ### 2. Generate API Encryption Key
