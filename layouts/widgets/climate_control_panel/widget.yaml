@@ -2,7 +2,7 @@ obj:
   id: climate_control_panel
   width: 100%
   height: 100%
-  bg_color: 0x1E2128
+  bg_color: ${color_bg}
   bg_opa: 98%
   hidden: true
   scrollbar_mode: "off"
@@ -29,27 +29,27 @@ obj:
           id: climate_control_icon
           text: "\U000F001B"
           text_font: mdi_lg
-          text_color: 0x00BFFF
+          text_color: ${color_cool}
           align: LEFT_MID
           x: 0
       - label:
           id: climate_control_title
           text: "Climate"
           text_font: roboto_lg
-          text_color: 0xFFFFFF
+          text_color: ${color_text_primary}
           align: LEFT_MID
           x: 40
       - label:
           id: climate_control_status
           text: "off"
           text_font: roboto_sm
-          text_color: 0x888888
+          text_color: ${color_text_muted}
           align: CENTER
       - button:
           width: 42
           height: 42
           align: RIGHT_MID
-          bg_color: 0x3A4048
+          bg_color: ${color_surface_alt}
           radius: 21
           border_width: 0
           on_click:
@@ -58,7 +58,7 @@ obj:
           - label:
               text: "\U000F0156"
               text_font: mdi_lg
-              text_color: 0xFF5555
+              text_color: ${color_danger}
               align: CENTER
   # Temperature Arc area
   - obj:
@@ -83,13 +83,13 @@ obj:
           rotation: 0
           adjustable: true
           mode: NORMAL
-          bg_color: 0x3A4048
+          bg_color: ${color_surface_alt}
           arc_width: 18
           indicator:
-            arc_color: 0x00BFFF
+            arc_color: ${color_cool}
             arc_width: 18
           knob:
-            bg_color: 0xFFFFFF
+            bg_color: ${color_outline}
             radius: 14
             pad_all: 10
           on_value:
@@ -101,9 +101,9 @@ obj:
           width: 130
           height: 130
           radius: 65
-          bg_color: 0x2A2E38
+          bg_color: ${color_surface}
           border_width: 3
-          border_color: 0x3A4048
+          border_color: ${color_surface_alt}
           align: CENTER
           scrollbar_mode: "off"
           scrollable: false
@@ -112,13 +112,13 @@ obj:
               id: climate_current_temp_big
               text: "--"
               text_font: roboto_xxl
-              text_color: 0xFFFFFF
+              text_color: ${color_text_primary}
               align: CENTER
               y: -8
           - label:
               text: "°C"
               text_font: roboto_md
-              text_color: 0x888888
+              text_color: ${color_text_muted}
               align: CENTER
               y: 24
   # Target temperature display
@@ -133,13 +133,13 @@ obj:
       - label:
           text: "Target:"
           text_font: roboto_md
-          text_color: 0x888888
+          text_color: ${color_text_muted}
           align: LEFT_MID
       - label:
           id: climate_target_temp_big
           text: "24°C"
           text_font: roboto_xl
-          text_color: 0x00BFFF
+          text_color: ${color_cool}
           align: LEFT_MID
           x: 70
       # Quick temp buttons
@@ -157,7 +157,7 @@ obj:
           - label:
               text: "\U000F0374"
               text_font: mdi_md
-              text_color: 0xFFFFFF
+              text_color: ${color_text_primary}
               align: CENTER
       - button:
           width: 44
@@ -172,13 +172,13 @@ obj:
           - label:
               text: "\U000F0417"
               text_font: mdi_md
-              text_color: 0xFFFFFF
+              text_color: ${color_text_primary}
               align: CENTER
   # Mode buttons row
   - obj:
       width: 100%
       height: 55
-      bg_color: 0x2A2E38
+      bg_color: ${color_surface}
       radius: 12
       border_width: 0
       scrollbar_mode: "off"
@@ -203,7 +203,7 @@ obj:
           - label:
               text: "\U000F0425"
               text_font: mdi_md
-              text_color: 0x888888
+              text_color: ${color_text_muted}
               align: CENTER
       - button:
           id: climate_mode_cool
@@ -218,7 +218,7 @@ obj:
           - label:
               text: "\U000F0F29"
               text_font: mdi_md
-              text_color: 0x00BFFF
+              text_color: ${color_cool}
               align: CENTER
       - button:
           id: climate_mode_heat
@@ -233,7 +233,7 @@ obj:
           - label:
               text: "\U000F0238"
               text_font: mdi_md
-              text_color: 0xFF5722
+              text_color: ${color_heat}
               align: CENTER
       - button:
           id: climate_mode_auto
@@ -248,7 +248,7 @@ obj:
           - label:
               text: "\U000F0192"
               text_font: mdi_md
-              text_color: 0x8BC34A
+              text_color: ${color_auto}
               align: CENTER
       - button:
           id: climate_mode_fan
@@ -263,14 +263,14 @@ obj:
           - label:
               text: "\U000F0210"
               text_font: mdi_md
-              text_color: 0xAAAAAA
+              text_color: ${color_icon_muted}
               align: CENTER
   # Fan speed row (for AC)
   - obj:
       id: climate_fan_row
       width: 100%
       height: 45
-      bg_color: 0x2A2E38
+      bg_color: ${color_surface}
       radius: 12
       border_width: 0
       scrollbar_mode: "off"
@@ -285,7 +285,7 @@ obj:
       - label:
           text: "Fan:"
           text_font: roboto_sm
-          text_color: 0x888888
+          text_color: ${color_text_muted}
       - button:
           width: 50
           height: 32
@@ -298,7 +298,7 @@ obj:
           - label:
               text: "Low"
               text_font: roboto_sm
-              text_color: 0xFFFFFF
+              text_color: ${color_text_primary}
               align: CENTER
       - button:
           width: 50
@@ -312,7 +312,7 @@ obj:
           - label:
               text: "Med"
               text_font: roboto_sm
-              text_color: 0xFFFFFF
+              text_color: ${color_text_primary}
               align: CENTER
       - button:
           width: 50
@@ -326,7 +326,7 @@ obj:
           - label:
               text: "High"
               text_font: roboto_sm
-              text_color: 0xFFFFFF
+              text_color: ${color_text_primary}
               align: CENTER
       - button:
           width: 50
@@ -340,5 +340,5 @@ obj:
           - label:
               text: "Auto"
               text_font: roboto_sm
-              text_color: 0xFFFFFF
+              text_color: ${color_text_primary}
               align: CENTER

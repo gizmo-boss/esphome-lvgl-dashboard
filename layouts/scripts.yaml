@@ -43,10 +43,10 @@
       then:
       - lvgl.label.update:
           id: wifi_icon
-          text_color: 0xFF5252
+          text_color: ${color_danger}
       - lvgl.label.update:
           id: ha_status_icon
-          text_color: 0xFF5252
+          text_color: ${color_danger}
       - lvgl.label.update:
           id: ha_status_value
           text: "No Wi-Fi connection"
@@ -57,20 +57,20 @@
           then:
           - lvgl.label.update:
               id: wifi_icon
-              text_color: 0xFFCC00
+              text_color: ${color_warning}
           - lvgl.label.update:
               id: ha_status_icon
-              text_color: 0xFFCC00
+              text_color: ${color_warning}
           - lvgl.label.update:
               id: ha_status_value
               text: "Home Assistant unreachable"
           else:
           - lvgl.label.update:
               id: wifi_icon
-              text_color: 0x888888
+              text_color: ${color_text_muted}
           - lvgl.label.update:
               id: ha_status_icon
-              text_color: 0x4CAF50
+              text_color: ${color_success}
           - lvgl.label.update:
               id: ha_status_value
               text: "Connected to Home Assistant"
@@ -322,11 +322,11 @@
       }
       
       // Update icon color based on mode
-      uint32_t icon_color = 0x00BFFF; // default blue
-      if (status == "heat") icon_color = 0xFF5722;
-      else if (status == "cool") icon_color = 0x00BFFF;
-      else if (status == "auto" || status == "fan_only") icon_color = 0x8BC34A;
-      else if (status == "off") icon_color = 0x888888;
+      uint32_t icon_color = ${color_cool}; // default blue
+      if (status == "heat") icon_color = ${color_heat};
+      else if (status == "cool") icon_color = ${color_cool};
+      else if (status == "auto" || status == "fan_only") icon_color = ${color_auto};
+      else if (status == "off") icon_color = ${color_text_muted};
       lv_obj_set_style_text_color(id(climate_control_icon), lv_color_hex(icon_color), LV_PART_MAIN);
   # Show/hide fan row based on device type
   - if:
@@ -410,7 +410,7 @@
       if (std::isnan(soc)) {
         lv_label_set_text(id(battery_soc_value), "--%");
         lv_obj_set_width(id(battery_soc_fill), 0);
-        lv_obj_set_style_bg_color(id(battery_soc_fill), lv_color_hex(0x888888), LV_PART_MAIN);
+        lv_obj_set_style_bg_color(id(battery_soc_fill), lv_color_hex(${color_text_muted}), LV_PART_MAIN);
         return;
       }
       int percent = (int)std::round(soc);
@@ -426,9 +426,9 @@
       }
       
       if (percent >= 60) {
-        lv_obj_set_style_bg_color(id(battery_soc_fill), lv_color_hex(0x4CAF50), LV_PART_MAIN);
+        lv_obj_set_style_bg_color(id(battery_soc_fill), lv_color_hex(${color_success}), LV_PART_MAIN);
       } else if (percent >= 30) {
-        lv_obj_set_style_bg_color(id(battery_soc_fill), lv_color_hex(0xFFCC00), LV_PART_MAIN);
+        lv_obj_set_style_bg_color(id(battery_soc_fill), lv_color_hex(${color_warning}), LV_PART_MAIN);
       } else {
-        lv_obj_set_style_bg_color(id(battery_soc_fill), lv_color_hex(0xFF5252), LV_PART_MAIN);
+        lv_obj_set_style_bg_color(id(battery_soc_fill), lv_color_hex(${color_danger}), LV_PART_MAIN);
       }

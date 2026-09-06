@@ -29,7 +29,7 @@ widgets:
     - obj:
         width: 100%
         height: 2
-        bg_color: 0x555555
+        bg_color: ${color_border}
         border_width: 0
         radius: 1
         scrollbar_mode: "off"
@@ -79,7 +79,7 @@ widgets:
     - obj:
         width: 100%
         height: 2
-        bg_color: 0x555555
+        bg_color: ${color_border}
         border_width: 0
         radius: 1
         scrollbar_mode: "off"
@@ -94,13 +94,13 @@ widgets:
         - label:
             text_font: mdi_xl
             text: "\U000F050F"
-            text_color: 0xFF5252
+            text_color: ${color_danger}
             align: LEFT_MID
             x: -10
         - label:
             text: "Temperature"
             text_font: roboto_sm
-            text_color: 0x888888
+            text_color: ${color_text_muted}
             align: LEFT_MID
             x: 30
             y: -18
@@ -122,13 +122,13 @@ widgets:
         - label:
             text_font: mdi_xl
             text: "\U000F058E"
-            text_color: 0x00CCFF
+            text_color: ${color_humidity}
             align: LEFT_MID
             x: -10
         - label:
             text: "Humidity"
             text_font: roboto_sm
-            text_color: 0x888888
+            text_color: ${color_text_muted}
             align: LEFT_MID
             x: 30
             y: -18

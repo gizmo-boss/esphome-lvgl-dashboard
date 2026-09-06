@@ -29,7 +29,7 @@ widgets:
     - obj:
         width: 100%
         height: 2
-        bg_color: 0x555555
+        bg_color: ${color_border}
         border_width: 0
         radius: 1
         scrollbar_mode: "off"
@@ -39,7 +39,7 @@ widgets:
         id: thermostat_card
         width: 100%
         height: 80
-        bg_color: 0x2A2E38
+        bg_color: ${color_surface}
         radius: 12
         border_width: 0
         on_click:
@@ -55,7 +55,7 @@ widgets:
             width: 50
             height: 50
             radius: 25
-            bg_color: 0x42495A
+            bg_color: ${color_surface_alt}
             border_width: 0
             align: LEFT_MID
             x: 12
@@ -66,20 +66,20 @@ widgets:
                 id: thermostat_icon
                 text: "\U000F0393"
                 text_font: mdi_lg
-                text_color: 0x9DA0A6
+                text_color: ${color_icon_muted}
                 align: CENTER
         # Title & status
         - label:
             text: "Underfloor"
             text_font: roboto_md
-            text_color: 0xFFFFFF
+            text_color: ${color_text_primary}
             x: 72
             y: 16
         - label:
             id: thermostat_status
             text: "off"
             text_font: roboto_sm
-            text_color: 0x888888
+            text_color: ${color_text_muted}
             x: 72
             y: 40
         # Temperatures on right
@@ -87,14 +87,14 @@ widgets:
             id: thermostat_current_temp
             text: "--°"
             text_font: roboto_xl
-            text_color: 0xFFFFFF
+            text_color: ${color_text_primary}
             align: RIGHT_MID
             x: -60
         - label:
             id: thermostat_target_temp
             text: "--°"
             text_font: roboto_lg
-            text_color: 0xFF8C00
+            text_color: ${color_heat}
             align: RIGHT_MID
             x: -12
 
@@ -102,7 +102,7 @@ widgets:
     - obj:
         width: 100%
         height: 2
-        bg_color: 0x555555
+        bg_color: ${color_border}
         border_width: 0
         radius: 1
         scrollbar_mode: "off"
@@ -112,7 +112,7 @@ widgets:
         id: livingroom_ac_card
         width: 100%
         height: 80
-        bg_color: 0x2A2E38
+        bg_color: ${color_surface}
         radius: 12
         border_width: 0
         on_click:
@@ -128,7 +128,7 @@ widgets:
             width: 50
             height: 50
             radius: 25
-            bg_color: 0x42495A
+            bg_color: ${color_surface_alt}
             border_width: 0
             align: LEFT_MID
             x: 12
@@ -139,20 +139,20 @@ widgets:
                 id: livingroom_ac_icon
                 text: "\U000F001B"
                 text_font: mdi_lg
-                text_color: 0x9DA0A6
+                text_color: ${color_icon_muted}
                 align: CENTER
         # Title & status
         - label:
             text: "Living"
             text_font: roboto_md
-            text_color: 0xFFFFFF
+            text_color: ${color_text_primary}
             x: 72
             y: 16
         - label:
             id: livingroom_ac_status
             text: "off"
             text_font: roboto_sm
-            text_color: 0x888888
+            text_color: ${color_text_muted}
             x: 72
             y: 40
         # Temperatures on right
@@ -160,14 +160,14 @@ widgets:
             id: livingroom_ac_current_temp
             text: "--°"
             text_font: roboto_xl
-            text_color: 0xFFFFFF
+            text_color: ${color_text_primary}
             align: RIGHT_MID
             x: -60
         - label:
             id: livingroom_ac_target_temp
             text: "--°"
             text_font: roboto_lg
-            text_color: 0x00BFFF
+            text_color: ${color_cool}
             align: RIGHT_MID
             x: -12
 
@@ -175,7 +175,7 @@ widgets:
     - obj:
         width: 100%
         height: 2
-        bg_color: 0x555555
+        bg_color: ${color_border}
         border_width: 0
         radius: 1
         scrollbar_mode: "off"
@@ -185,7 +185,7 @@ widgets:
         id: bedroom_ac_card
         width: 100%
         height: 80
-        bg_color: 0x2A2E38
+        bg_color: ${color_surface}
         radius: 12
         border_width: 0
         on_click:
@@ -201,7 +201,7 @@ widgets:
             width: 50
             height: 50
             radius: 25
-            bg_color: 0x42495A
+            bg_color: ${color_surface_alt}
             border_width: 0
             align: LEFT_MID
             x: 12
@@ -212,20 +212,20 @@ widgets:
                 id: bedroom_ac_icon
                 text: "\U000F001B"
                 text_font: mdi_lg
-                text_color: 0x9DA0A6
+                text_color: ${color_icon_muted}
                 align: CENTER
         # Title & status
         - label:
             text: "Bedroom"
             text_font: roboto_md
-            text_color: 0xFFFFFF
+            text_color: ${color_text_primary}
             x: 72
             y: 16
         - label:
             id: bedroom_ac_status
             text: "off"
             text_font: roboto_sm
-            text_color: 0x888888
+            text_color: ${color_text_muted}
             x: 72
             y: 40
         # Temperatures on right
@@ -233,13 +233,13 @@ widgets:
             id: bedroom_ac_current_temp
             text: "--°"
             text_font: roboto_xl
-            text_color: 0xFFFFFF
+            text_color: ${color_text_primary}
             align: RIGHT_MID
             x: -60
         - label:
             id: bedroom_ac_target_temp
             text: "--°"
             text_font: roboto_lg
-            text_color: 0x00BFFF
+            text_color: ${color_cool}
             align: RIGHT_MID
             x: -12

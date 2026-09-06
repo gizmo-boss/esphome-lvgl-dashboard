@@ -31,7 +31,7 @@ obj: # title bar
             - label:
                 text: "\U000F0140"
                 text_font: mdi_sm
-                text_color: 0x888888
+                text_color: ${color_text_muted}
                 align: CENTER
       # Link status. Always visible: a hidden icon is not a signal, so the
       # state is carried by colour instead (see the update_link_status script).
@@ -41,7 +41,7 @@ obj: # title bar
           x: -95 # RESOLUTION-SPECIFIC (clock width + padding)
           text: "\U000F05A9"
           text_font: mdi_sm
-          text_color: 0xFF5252
+          text_color: ${color_danger}
       - label: # clock
           id: nav_clock
           align: RIGHT_MID

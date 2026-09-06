@@ -14,7 +14,7 @@ obj: # navigation bar
   widgets:
     - button: # prev page
         height: 100%
-        bg_color: 0x42495A
+        bg_color: ${color_surface}
         border_width: 0
         radius: 0
         flex_grow: 1
@@ -28,7 +28,7 @@ obj: # navigation bar
     - button: # home page
         id: home_btn
         height: 100%
-        bg_color: 0x42495A
+        bg_color: ${color_surface}
         border_width: 0
         radius: 0
         flex_grow: 1
@@ -44,7 +44,7 @@ obj: # navigation bar
     - button: # next page
         id: next_btn
         height: 100%
-        bg_color: 0x42495A
+        bg_color: ${color_surface}
         border_width: 0
         radius: 0
         flex_grow: 1

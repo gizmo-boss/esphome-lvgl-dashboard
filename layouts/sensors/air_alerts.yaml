@@ -12,19 +12,19 @@ air_alert_status_sensor:
         then:
         - lvgl.label.update:
             id: air_alert_status_icon
-            text_color: 0xFF5252
+            text_color: ${color_danger}
         - lvgl.label.update:
             id: air_alert_status_value
             text: "Alert Active"
-            text_color: 0xFF5252
+            text_color: ${color_danger}
         else:
         - lvgl.label.update:
             id: air_alert_status_icon
-            text_color: 0x4CAF50
+            text_color: ${color_success}
         - lvgl.label.update:
             id: air_alert_status_value
             text: "All Clear"
-            text_color: 0xFFFFFF
+            text_color: ${color_text_primary}
 
 # Air alerts today count sensor
 air_alert_today_count_sensor:

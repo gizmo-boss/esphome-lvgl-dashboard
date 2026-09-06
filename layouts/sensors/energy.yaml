@@ -49,7 +49,7 @@ battery_soc_sensor:
     - lambda: |-
         if (std::isnan(x)) {
           lv_obj_set_width(id(battery_soc_fill), 0);
-          lv_obj_set_style_bg_color(id(battery_soc_fill), lv_color_hex(0x888888), LV_PART_MAIN);
+          lv_obj_set_style_bg_color(id(battery_soc_fill), lv_color_hex(${color_text_muted}), LV_PART_MAIN);
           return;
         }
         int percent = (int)std::round(x);
@@ -58,11 +58,11 @@ battery_soc_sensor:
         lv_obj_set_width(id(battery_soc_fill), (container_width * percent) / 100);
         lv_obj_set_height(id(battery_soc_fill), container_height);
         if (percent >= 60) {
-          lv_obj_set_style_bg_color(id(battery_soc_fill), lv_color_hex(0x4CAF50), LV_PART_MAIN); // green
+          lv_obj_set_style_bg_color(id(battery_soc_fill), lv_color_hex(${color_success}), LV_PART_MAIN); // green
         } else if (percent >= 30) {
-          lv_obj_set_style_bg_color(id(battery_soc_fill), lv_color_hex(0xFFCC00), LV_PART_MAIN); // yellow
+          lv_obj_set_style_bg_color(id(battery_soc_fill), lv_color_hex(${color_warning}), LV_PART_MAIN); // yellow
         } else {
-          lv_obj_set_style_bg_color(id(battery_soc_fill), lv_color_hex(0xFF5252), LV_PART_MAIN); // red
+          lv_obj_set_style_bg_color(id(battery_soc_fill), lv_color_hex(${color_danger}), LV_PART_MAIN); // red
         }
 
 # Battery voltage sensor
@@ -97,17 +97,17 @@ battery_power_sensor:
           else snprintf(buf, sizeof(buf), "%dW", val);
           return std::string(buf);
         text_color: !lambda |-
-          if (std::isnan(x)) return lv_color_hex(0x888888);
-          if (x > 0) return lv_color_hex(0x4CAF50);   // green = charging
-          else if (x < 0) return lv_color_hex(0xFF9800); // orange = discharging
-          else return lv_color_hex(0xFFFFFF);         // white = idle
+          if (std::isnan(x)) return lv_color_hex(${color_text_muted});
+          if (x > 0) return lv_color_hex(${color_success});   // green = charging
+          else if (x < 0) return lv_color_hex(${color_amber}); // orange = discharging
+          else return lv_color_hex(${color_text_primary});         // white = idle
     - lvgl.label.update:
         id: battery_power_icon
         text_color: !lambda |-
-          if (std::isnan(x)) return lv_color_hex(0x888888);
-          if (x > 0) return lv_color_hex(0x4CAF50);   // green = charging
-          else if (x < 0) return lv_color_hex(0xFF9800); // orange = discharging
-          else return lv_color_hex(0xFFFFFF);         // white = idle
+          if (std::isnan(x)) return lv_color_hex(${color_text_muted});
+          if (x > 0) return lv_color_hex(${color_success});   // green = charging
+          else if (x < 0) return lv_color_hex(${color_amber}); // orange = discharging
+          else return lv_color_hex(${color_text_primary});         // white = idle
 
 # Battery time dynamic sensor
 battery_time_dynamic_sensor:
@@ -126,23 +126,23 @@ battery_time_dynamic_sensor:
         if (status == "Charging") {
           lv_label_set_text(id(battery_time_primary), "Time to Full");
           lv_label_set_text(id(battery_time_icon), "\U000F17E0"); // battery-charging
-          lv_obj_set_style_text_color(id(battery_time_icon), lv_color_hex(0x4CAF50), LV_PART_MAIN); // green
-          lv_obj_set_style_text_color(id(battery_time_primary), lv_color_hex(0x888888), LV_PART_MAIN); // green
+          lv_obj_set_style_text_color(id(battery_time_icon), lv_color_hex(${color_success}), LV_PART_MAIN); // green
+          lv_obj_set_style_text_color(id(battery_time_primary), lv_color_hex(${color_text_muted}), LV_PART_MAIN); // green
         } else if (status == "Discharging") {
           lv_label_set_text(id(battery_time_primary), "Time to Empty");
           lv_label_set_text(id(battery_time_icon), "\U000F17DE"); // battery-discharging
-          lv_obj_set_style_text_color(id(battery_time_icon), lv_color_hex(0xFF9800), LV_PART_MAIN); // orange
-          lv_obj_set_style_text_color(id(battery_time_primary), lv_color_hex(0x888888), LV_PART_MAIN); // orange
+          lv_obj_set_style_text_color(id(battery_time_icon), lv_color_hex(${color_amber}), LV_PART_MAIN); // orange
+          lv_obj_set_style_text_color(id(battery_time_primary), lv_color_hex(${color_text_muted}), LV_PART_MAIN); // orange
         } else if (status == "Standby") {
           lv_label_set_text(id(battery_time_primary), "Standby");
           lv_label_set_text(id(battery_time_icon), "\U000F19E5"); // battery-idle
-          lv_obj_set_style_text_color(id(battery_time_icon), lv_color_hex(0x888888), LV_PART_MAIN); // grey
-          lv_obj_set_style_text_color(id(battery_time_primary), lv_color_hex(0x888888), LV_PART_MAIN); // grey
+          lv_obj_set_style_text_color(id(battery_time_icon), lv_color_hex(${color_text_muted}), LV_PART_MAIN); // grey
+          lv_obj_set_style_text_color(id(battery_time_primary), lv_color_hex(${color_text_muted}), LV_PART_MAIN); // grey
         } else {
           lv_label_set_text(id(battery_time_primary), "—");
           lv_label_set_text(id(battery_time_icon), "\U000F19E5"); // battery-idle
-          lv_obj_set_style_text_color(id(battery_time_icon), lv_color_hex(0x888888), LV_PART_MAIN); // grey
-          lv_obj_set_style_text_color(id(battery_time_primary), lv_color_hex(0x888888), LV_PART_MAIN); // grey
+          lv_obj_set_style_text_color(id(battery_time_icon), lv_color_hex(${color_text_muted}), LV_PART_MAIN); // grey
+          lv_obj_set_style_text_color(id(battery_time_primary), lv_color_hex(${color_text_muted}), LV_PART_MAIN); // grey
         }
   - id: battery_time_value
     platform: homeassistant

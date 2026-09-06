@@ -74,17 +74,17 @@ thermostat_sensors:
             then:
               - lvgl.widget.update:
                   id: thermostat_icon_circle
-                  bg_color: 0x42495A
+                  bg_color: ${color_surface_alt}
               - lvgl.label.update:
                   id: thermostat_icon
-                  text_color: 0x9DA0A6
+                  text_color: ${color_icon_muted}
             else:
               - lvgl.widget.update:
                   id: thermostat_icon_circle
-                  bg_color: 0x5C3A1A
+                  bg_color: ${color_tint_warm}
               - lvgl.label.update:
                   id: thermostat_icon
-                  text_color: 0xFF8C00
+                  text_color: ${color_heat}
 
     - id: thermostat_hvac_action
       platform: homeassistant
@@ -97,11 +97,11 @@ thermostat_sensors:
             then:
               - lvgl.widget.update:
                   id: thermostat_icon_circle
-                  bg_color: 0x5C2A1A
+                  bg_color: ${color_tint_heat}
               - lvgl.label.update:
                   id: thermostat_icon
                   text: "\U000F0238"
-                  text_color: 0xFF5722
+                  text_color: ${color_heat}
             else:
               - if:
                   condition:
@@ -183,10 +183,10 @@ livingroom_ac_sensors:
             then:
               - lvgl.widget.update:
                   id: livingroom_ac_icon_circle
-                  bg_color: 0x42495A
+                  bg_color: ${color_surface_alt}
               - lvgl.label.update:
                   id: livingroom_ac_icon
-                  text_color: 0x9DA0A6
+                  text_color: ${color_icon_muted}
             else:
               - if:
                   condition:
@@ -194,10 +194,10 @@ livingroom_ac_sensors:
                   then:
                     - lvgl.widget.update:
                         id: livingroom_ac_icon_circle
-                        bg_color: 0x1A3A5C
+                        bg_color: ${color_tint_blue}
                     - lvgl.label.update:
                         id: livingroom_ac_icon
-                        text_color: 0x00BFFF
+                        text_color: ${color_cool}
                   else:
                     - if:
                         condition:
@@ -205,17 +205,17 @@ livingroom_ac_sensors:
                         then:
                           - lvgl.widget.update:
                               id: livingroom_ac_icon_circle
-                              bg_color: 0x5C2A1A
+                              bg_color: ${color_tint_heat}
                           - lvgl.label.update:
                               id: livingroom_ac_icon
-                              text_color: 0xFF5722
+                              text_color: ${color_heat}
                         else:
                           - lvgl.widget.update:
                               id: livingroom_ac_icon_circle
-                              bg_color: 0x3A4A2A
+                              bg_color: ${color_tint_auto}
                           - lvgl.label.update:
                               id: livingroom_ac_icon
-                              text_color: 0x8BC34A
+                              text_color: ${color_auto}
 
 # ============ BEDROOM AC SENSORS ============
 bedroom_ac_sensors:
@@ -289,10 +289,10 @@ bedroom_ac_sensors:
             then:
               - lvgl.widget.update:
                   id: bedroom_ac_icon_circle
-                  bg_color: 0x42495A
+                  bg_color: ${color_surface_alt}
               - lvgl.label.update:
                   id: bedroom_ac_icon
-                  text_color: 0x9DA0A6
+                  text_color: ${color_icon_muted}
             else:
               - if:
                   condition:
@@ -300,10 +300,10 @@ bedroom_ac_sensors:
                   then:
                     - lvgl.widget.update:
                         id: bedroom_ac_icon_circle
-                        bg_color: 0x1A3A5C
+                        bg_color: ${color_tint_blue}
                     - lvgl.label.update:
                         id: bedroom_ac_icon
-                        text_color: 0x00BFFF
+                        text_color: ${color_cool}
                   else:
                     - if:
                         condition:
@@ -311,14 +311,14 @@ bedroom_ac_sensors:
                         then:
                           - lvgl.widget.update:
                               id: bedroom_ac_icon_circle
-                              bg_color: 0x5C2A1A
+                              bg_color: ${color_tint_heat}
                           - lvgl.label.update:
                               id: bedroom_ac_icon
-                              text_color: 0xFF5722
+                              text_color: ${color_heat}
                         else:
                           - lvgl.widget.update:
                               id: bedroom_ac_icon_circle
-                              bg_color: 0x3A4A2A
+                              bg_color: ${color_tint_auto}
                           - lvgl.label.update:
                               id: bedroom_ac_icon
-                              text_color: 0x8BC34A
+                              text_color: ${color_auto}
