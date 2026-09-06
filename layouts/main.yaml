@@ -49,6 +49,7 @@ lvgl:
   - <<: !include pages/outdoor.yaml
   - <<: !include pages/energy.yaml
   - <<: !include pages/climate.yaml
+  - <<: !include pages/air_alerts.yaml
 
 packages:
   # header
@@ -80,3 +81,6 @@ packages:
 
   # climate sensors
   <<: !include sensors/climate.yaml
+
+  # air alerts sensors
+  <<: !include sensors/air_alerts.yaml

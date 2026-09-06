@@ -70,3 +70,5 @@
 - "\U000F0E0C" # fan-off
 - "\U000F1B40" # hvac
 - "\U000F058C" # water (humidity/dry mode)
+- "\U000F078F" # alarm-light (air alert siren)
+- "\U000F0028" # alert-circle

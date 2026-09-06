@@ -1,0 +1,38 @@
+# Air alert status sensor
+air_alert_status_sensor:
+  binary_sensor:
+  - id: air_alert_status
+    platform: homeassistant
+    entity_id: binary_sensor.m_kiiv_air
+    trigger_on_initial_state: true
+    on_state:
+    - if:
+        condition:
+          - binary_sensor.is_on: air_alert_status
+        then:
+        - lvgl.label.update:
+            id: air_alert_status_icon
+            text_color: 0xFF5252
+        - lvgl.label.update:
+            id: air_alert_status_value
+            text: "Alert Active"
+            text_color: 0xFF5252
+        else:
+        - lvgl.label.update:
+            id: air_alert_status_icon
+            text_color: 0x4CAF50
+        - lvgl.label.update:
+            id: air_alert_status_value
+            text: "All Clear"
+            text_color: 0xFFFFFF
+
+# Air alerts today count sensor
+air_alert_today_count_sensor:
+  sensor:
+  - id: air_alert_today_count
+    platform: homeassistant
+    entity_id: sensor.air_alert_today_count
+    on_value:
+    - lvgl.label.update:
+        id: air_alert_today_count_value
+        text: !lambda return std::to_string((int)x);
