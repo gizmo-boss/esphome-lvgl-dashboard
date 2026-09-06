@@ -43,10 +43,6 @@ widgets:
             text: Hall
             width: 49%
             height: 86
-        on_short_click:
-        - homeassistant.service:
-            service: switch.toggle
-            data: { entity_id: switch.sonoff_1001275136_2 }
     - button:
         # closet light
         <<: !include
@@ -57,10 +53,6 @@ widgets:
             text: Closet
             width: 49%
             height: 86
-        on_short_click:
-        - homeassistant.service:
-            service: switch.toggle
-            data: { entity_id: switch.sonoff_1000b1b936_3 }
     # Separator before Temp/Humidity
     - obj:
         width: 100%
@@ -70,58 +62,22 @@ widgets:
         radius: 1
         scrollbar_mode: "off"
     - obj:
-        # temperature sensor
-        width: 49%
-        height: 70
-        bg_opa: TRANSP
-        border_width: 0
-        scrollbar_mode: "off"
-        widgets:
-        - label:
-            text_font: mdi_xl
-            text: "\U000F050F"
-            text_color: ${color_danger}
-            align: LEFT_MID
-            x: -10
-        - label:
-            text: "Temperature"
-            text_font: roboto_sm
-            text_color: ${color_text_muted}
-            align: LEFT_MID
-            x: 30
-            y: -18
-        - label:
-            id: corridor_temp_value
-            text: "..."
-            text_font: roboto_xl
-            align: LEFT_MID
-            x: 30
-            y: 14
+        <<: !include
+          file: ../widgets/stat_card/widget.yaml
+          vars:
+            uid: corridor_temp
+            icon: "\U000F050F"
+            icon_color: ${color_danger}
+            label: Temperature
+            unit: "°C"
+            width: 49%
     - obj:
-        # humidity sensor
-        width: 49%
-        height: 70
-        bg_opa: TRANSP
-        border_width: 0
-        scrollbar_mode: "off"
-        widgets:
-        - label:
-            text_font: mdi_xl
-            text: "\U000F058E"
-            text_color: ${color_humidity}
-            align: LEFT_MID
-            x: -10
-        - label:
-            text: "Humidity"
-            text_font: roboto_sm
-            text_color: ${color_text_muted}
-            align: LEFT_MID
-            x: 30
-            y: -18
-        - label:
-            id: corridor_humidity_value
-            text: "..."
-            text_font: roboto_xl
-            align: LEFT_MID
-            x: 30
-            y: 14
+        <<: !include
+          file: ../widgets/stat_card/widget.yaml
+          vars:
+            uid: corridor_humidity
+            icon: "\U000F058E"
+            icon_color: ${color_humidity}
+            label: Humidity
+            unit: "%"
+            width: 49%

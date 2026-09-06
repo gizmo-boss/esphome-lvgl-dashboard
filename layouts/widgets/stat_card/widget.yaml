@@ -1,0 +1,85 @@
+# A single readout: icon, caption, value, unit.
+#
+# required vars:
+# - uid          prefix for the generated ids (see below)
+# - icon         MDI glyph
+# - icon_color   token, e.g. ${color_danger}
+# - label        caption text
+# - unit         unit suffix, e.g. "°C". Pass " " for none.
+# - width        e.g. 49% or 100%
+#
+# generated ids: ${uid}_icon  ${uid}_label  ${uid}_value  ${uid}_unit
+#
+# Laid out entirely with flex - no absolute x/y - so the card survives a
+# change of width or resolution. The value carries an explicit width and
+# LONG_DOT: at 32 px "1013.2hPa" measures 153 px against ~108 px of column,
+# so without this it was silently clipped by the parent. Splitting the unit
+# into its own smaller label is what actually makes the number fit; DOT is
+# the backstop for anything unexpectedly long.
+
+# obj:
+  width: ${width}
+  height: 72
+  bg_opa: TRANSP
+  border_width: 0
+  pad_all: 0
+  scrollbar_mode: "off"
+  scrollable: false
+  layout:
+    type: FLEX
+    flex_flow: ROW
+    flex_align_cross: CENTER
+    pad_column: 8
+  widgets:
+    - label:
+        id: ${uid}_icon
+        text: ${icon}
+        text_font: mdi_lg
+        text_color: ${icon_color}
+    - obj:
+        flex_grow: 1
+        height: 100%
+        bg_opa: TRANSP
+        border_width: 0
+        pad_all: 0
+        scrollbar_mode: "off"
+        scrollable: false
+        layout:
+          type: FLEX
+          flex_flow: COLUMN
+          flex_align_main: CENTER
+          pad_row: 0
+        widgets:
+          - label:
+              id: ${uid}_label
+              text: ${label}
+              text_font: roboto_sm
+              text_color: ${color_text_muted}
+              width: 100%
+              long_mode: DOT
+          - obj:
+              width: 100%
+              height: 38
+              bg_opa: TRANSP
+              border_width: 0
+              pad_all: 0
+              scrollbar_mode: "off"
+              scrollable: false
+              layout:
+                type: FLEX
+                flex_flow: ROW
+                flex_align_cross: END
+                pad_column: 3
+              widgets:
+                - label:
+                    id: ${uid}_value
+                    text: "--"
+                    text_font: roboto_xl
+                    text_color: ${color_text_primary}
+                    flex_grow: 1
+                    long_mode: DOT
+                - label:
+                    id: ${uid}_unit
+                    text: ${unit}
+                    text_font: roboto_sm
+                    text_color: ${color_text_muted}

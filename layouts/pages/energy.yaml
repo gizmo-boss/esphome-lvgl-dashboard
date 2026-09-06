@@ -6,6 +6,9 @@ on_load:
 - lvgl.label.update:
     id: page_title
     text: Energy
+# TODO(P1-6): this delay exists only because the hand-built battery gauge
+# reads lv_obj_get_width() before the first layout pass. It goes away with
+# the switch to a native bar widget.
 - delay: 100ms
 - script.execute: update_battery_display
 widgets:
@@ -37,59 +40,25 @@ widgets:
         scrollbar_mode: "off"
     # Row 1: Grid Power & Voltage
     - obj:
-        width: 49%
-        height: 70
-        bg_opa: TRANSP
-        border_width: 0
-        scrollbar_mode: "off"
-        widgets:
-        - label:
-            text_font: mdi_xl
-            text: "\U000F0241"
-            text_color: ${color_warning}
-            align: LEFT_MID
-            x: -10
-        - label:
-            text: "Grid Power"
-            text_font: roboto_sm
-            text_color: ${color_text_muted}
-            align: LEFT_MID
-            x: 30
-            y: -18
-        - label:
-            id: power_value
-            text: "--"
-            text_font: roboto_xl
-            align: LEFT_MID
-            x: 30
-            y: 14
+        <<: !include
+          file: ../widgets/stat_card/widget.yaml
+          vars:
+            uid: power
+            icon: "\U000F0241"
+            icon_color: ${color_warning}
+            label: Grid Power
+            unit: kW
+            width: 49%
     - obj:
-        width: 49%
-        height: 70
-        bg_opa: TRANSP
-        border_width: 0
-        scrollbar_mode: "off"
-        widgets:
-        - label:
-            text_font: mdi_xl
-            text: "\U000F140B"
-            text_color: ${color_humidity}
-            align: LEFT_MID
-            x: -10
-        - label:
-            text: "Voltage"
-            text_font: roboto_sm
-            text_color: ${color_text_muted}
-            align: LEFT_MID
-            x: 30
-            y: -18
-        - label:
-            id: voltage_value
-            text: "--"
-            text_font: roboto_xl
-            align: LEFT_MID
-            x: 30
-            y: 14
+        <<: !include
+          file: ../widgets/stat_card/widget.yaml
+          vars:
+            uid: voltage
+            icon: "\U000F140B"
+            icon_color: ${color_humidity}
+            label: Voltage
+            unit: V
+            width: 49%
     # Separator between Grid and Battery
     - obj:
         width: 100%
@@ -158,60 +127,25 @@ widgets:
                 x: -10
     # Row 3: Battery Voltage & Power
     - obj:
-        width: 49%
-        height: 70
-        bg_opa: TRANSP
-        border_width: 0
-        scrollbar_mode: "off"
-        widgets:
-        - label:
-            text_font: mdi_xl
-            text: "\U000F12A3"
-            text_color: ${color_pressure}
-            align: LEFT_MID
-            x: -10
-        - label:
-            text: "Batt Voltage"
-            text_font: roboto_sm
-            text_color: ${color_text_muted}
-            align: LEFT_MID
-            x: 30
-            y: -18
-        - label:
-            id: battery_voltage_value
-            text: "--"
-            text_font: roboto_xl
-            align: LEFT_MID
-            x: 30
-            y: 14
+        <<: !include
+          file: ../widgets/stat_card/widget.yaml
+          vars:
+            uid: battery_voltage
+            icon: "\U000F12A3"
+            icon_color: ${color_pressure}
+            label: Batt Voltage
+            unit: V
+            width: 49%
     - obj:
-        width: 49%
-        height: 70
-        bg_opa: TRANSP
-        border_width: 0
-        scrollbar_mode: "off"
-        widgets:
-        - label:
-            text_font: mdi_xl
-            id: battery_power_icon
-            text: "\U000F0241"
-            text_color: ${color_success}
-            align: LEFT_MID
-            x: -10
-        - label:
-            text: "Batt Power"
-            text_font: roboto_sm
-            text_color: ${color_text_muted}
-            align: LEFT_MID
-            x: 30
-            y: -18
-        - label:
-            id: battery_power_value
-            text: "--"
-            text_font: roboto_xl
-            align: LEFT_MID
-            x: 20
-            y: 14
+        <<: !include
+          file: ../widgets/stat_card/widget.yaml
+          vars:
+            uid: battery_power
+            icon: "\U000F0241"
+            icon_color: ${color_success}
+            label: Batt Power
+            unit: W
+            width: 49%
     # Separator between Battery and New Sensors
     - obj:
         width: 100%
@@ -220,34 +154,15 @@ widgets:
         border_width: 0
         radius: 1
         scrollbar_mode: "off"
-    # Row 4: Battery Time Dynamic
+    # Row 4: Battery Time Dynamic. Caption and value are both driven by the
+    # sensor, so this card uses the generated ${uid}_label id.
     - obj:
-        width: 100%
-        height: 86
-        bg_opa: TRANSP
-        border_width: 0
-        scrollbar_mode: "off"
-        widgets:
-        - label:
-            id: battery_time_icon
-            text_font: mdi_lg
-            text: "\U000F19E5"
-            text_color: ${color_text_muted}
-            align: LEFT_MID
-            x: -5
-        - label:
-            id: battery_time_primary
-            text: "--"
-            text_font: roboto_sm
-            text_color: ${color_text_muted}
-            align: LEFT_MID
-            x: 30
-            y: -18
-        - label:
-            id: battery_time_secondary
-            text: "--"
-            text_font: roboto_xl
-            text_color: ${color_text_primary}
-            align: LEFT_MID
-            x: 30
-            y: 14
+        <<: !include
+          file: ../widgets/stat_card/widget.yaml
+          vars:
+            uid: battery_time
+            icon: "\U000F19E5"
+            icon_color: ${color_text_muted}
+            label: "--"
+            unit: " "
+            width: 100%

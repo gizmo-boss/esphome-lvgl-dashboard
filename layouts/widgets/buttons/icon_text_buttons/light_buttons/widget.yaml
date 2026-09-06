@@ -17,15 +17,15 @@
     icon_off: "󰌶"
     text: ${text}
 on_short_click:
-- logger.log: "Toggling switch ${entity_id}"
 - homeassistant.service:
     action: switch.toggle
     data:
       entity_id: ${entity_id}
-      brightness_pct: '100'
+# Hold to force off. These are switch entities, so the previous
+# `brightness_pct: '1'` had no effect other than an error in the Home
+# Assistant log -- switch.turn_on takes no brightness.
 on_long_press:
 - homeassistant.service:
-    action: switch.turn_on
+    action: switch.turn_off
     data:
       entity_id: ${entity_id}
-      brightness_pct: '1'

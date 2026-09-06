@@ -10,7 +10,7 @@ outdoor_temp_sensor:
         text: !lambda |-
           if (std::isnan(x)) return std::string("--");
           char buf[16];
-          snprintf(buf, sizeof(buf), "%.1f°C", x);
+          snprintf(buf, sizeof(buf), "%.1f", x);
           return std::string(buf);
 
 # Outdoor humidity sensor
@@ -25,10 +25,12 @@ outdoor_humidity_sensor:
         text: !lambda |-
           if (std::isnan(x)) return std::string("--");
           char buf[16];
-          snprintf(buf, sizeof(buf), "%.1f%", x);
+          snprintf(buf, sizeof(buf), "%.1f", x);
           return std::string(buf);
 
-# Outdoor pressure sensor
+# Outdoor pressure sensor.
+# Rendered without decimals: 0.1 hPa is below the sensor's meaningful
+# resolution, and "1013" fits the card where "1013.2" does not.
 outdoor_pressure_sensor:
   sensor:
   - id: outdoor_pressure
@@ -40,5 +42,5 @@ outdoor_pressure_sensor:
         text: !lambda |-
           if (std::isnan(x)) return std::string("--");
           char buf[16];
-          snprintf(buf, sizeof(buf), "%.1fhPa", x);
+          snprintf(buf, sizeof(buf), "%.0f", x);
           return std::string(buf);

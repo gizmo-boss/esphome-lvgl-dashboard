@@ -15,7 +15,7 @@ bedroom_temp_sensor:
         text: !lambda |-
           if (std::isnan(x)) return std::string("--");
           char buf[16];
-          snprintf(buf, sizeof(buf), "%.1f°C", x);
+          snprintf(buf, sizeof(buf), "%.1f", x);
           return std::string(buf);
 
 # Bedroom humidity sensor
@@ -30,5 +30,5 @@ bedroom_humidity_sensor:
         text: !lambda |-
           if (std::isnan(x)) return std::string("--");
           char buf[16];
-          snprintf(buf, sizeof(buf), "%.1f%", x);
+          snprintf(buf, sizeof(buf), "%.1f", x);
           return std::string(buf);
