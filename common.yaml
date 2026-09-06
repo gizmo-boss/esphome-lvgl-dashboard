@@ -117,7 +117,9 @@ interval:
       - if:
           condition:
             lambda: |-
-              return id(auto_off_enabled) && id(display_on) && (millis() - id(last_touch_time) > 60000); // 60 seconds timeout
+              return id(auto_off_enabled) && id(display_on)
+                  && !(id(keep_screen_on_air_alert) && id(air_alert_active))
+                  && (millis() - id(last_touch_time) > 60000); // 60 seconds timeout
           then:
             - logger.log: "Display timeout reached, turning off"
             - light.turn_off: backlight

@@ -2,6 +2,20 @@
   type: bool
   restore_value: yes
   initial_value: 'true'
+# When true, an active air alert keeps the screen on regardless of
+# auto_off_enabled / the inactivity timeout.
+- id: keep_screen_on_air_alert
+  type: bool
+  restore_value: yes
+  initial_value: 'true'
+- id: air_alert_active
+  type: bool
+  restore_value: no
+  initial_value: 'false'
+- id: air_alert_started_at
+  type: uint32_t
+  restore_value: no
+  initial_value: '0'
 # Link state, mirrored from the wifi/api triggers in common.yaml so that
 # update_link_status can render both halves without querying the components.
 - id: wifi_connected

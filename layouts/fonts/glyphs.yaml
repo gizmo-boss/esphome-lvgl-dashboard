@@ -39,3 +39,4 @@
 - "\U000F0192" # clock-fast (auto mode)
 - "\U000F078F" # alarm-light (air alert siren)
 - "\U000F0028" # alert-circle
+- "\U000F0150" # clock-outline (alert duration)

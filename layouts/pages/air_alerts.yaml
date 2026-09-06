@@ -63,3 +63,21 @@ widgets:
             label: Alerts Today
             unit: " "
             width: 100%
+    # Separator before alert duration
+    - obj:
+        width: 100%
+        height: 2
+        bg_color: ${color_border}
+        border_width: 0
+        radius: 1
+        scrollbar_mode: "off"
+    - obj:
+        <<: !include
+          file: ../widgets/stat_card/widget.yaml
+          vars:
+            uid: air_alert_duration
+            icon: "\U000F0150"
+            icon_color: ${color_danger}
+            label: Alert Duration
+            unit: " "
+            width: 100%

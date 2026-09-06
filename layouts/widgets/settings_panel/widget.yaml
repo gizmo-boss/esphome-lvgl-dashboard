@@ -168,6 +168,56 @@ obj:
           border_width: 2
           border_color: ${color_text_muted}
           hidden: true
+  # Air alert screen-on toggle card
+  - button:
+      width: 100%
+      height: 70
+      bg_color: ${color_surface}
+      radius: 20
+      border_width: 0
+      pad_left: 12
+      pad_right: 12
+      scrollbar_mode: "off"
+      scrollable: false
+      layout:
+        type: FLEX
+        flex_flow: ROW
+        flex_align_cross: CENTER
+        pad_column: 12
+      on_click:
+      - script.execute: toggle_air_alert_screen
+      widgets:
+      - label:
+          text: "\U000F078F"
+          text_font: mdi_lg
+          text_color: ${color_danger}
+      - label:
+          text: "Screen On for Air Alerts"
+          text_font: roboto_md
+          text_color: ${color_text_primary}
+          flex_grow: 1
+      - obj:
+          id: air_alert_screen_checked
+          width: 44
+          height: 44
+          bg_color: ${color_success}
+          radius: 20
+          border_width: 0
+          widgets:
+          - label:
+              text: "\U000F012C"
+              text_font: mdi_lg
+              text_color: ${color_text_primary}
+              align: CENTER
+      - obj:
+          id: air_alert_screen_unchecked
+          width: 44
+          height: 44
+          bg_color: ${color_surface_alt}
+          radius: 20
+          border_width: 2
+          border_color: ${color_text_muted}
+          hidden: true
   # Separator before info section
   - obj:
       width: 100%
