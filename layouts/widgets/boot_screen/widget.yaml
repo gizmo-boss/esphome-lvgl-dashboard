@@ -26,5 +26,12 @@
             indicator:
               arc_color: ${color_accent}
               arc_width: 8
+        - label:
+            id: boot_screen_status
+            align: CENTER
+            y: 150
+            text: " "
+            text_font: roboto_sm
+            text_color: ${color_text_muted}
       on_press:
         - lvgl.widget.hide: boot_screen

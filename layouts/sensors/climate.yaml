@@ -60,14 +60,21 @@ thermostat_sensors:
       on_value:
         - lvgl.label.update:
             id: thermostat_status
-            text: !lambda return x;
+            text: !lambda &climate_state_label |-
+              if (x == "off") return std::string("Off");
+              if (x == "heat") return std::string("Heat");
+              if (x == "cool") return std::string("Cool");
+              if (x == "heat_cool") return std::string("Auto");
+              if (x == "fan_only") return std::string("Fan");
+              if (x == "dry") return std::string("Dry");
+              return x;
         - if:
             condition:
               lambda: return id(current_climate_entity) == "climate.thermostat_thermostat";
             then:
             - lvgl.label.update:
                 id: climate_control_status
-                text: !lambda return x;
+                text: *climate_state_label
         - if:
             condition:
               lambda: return x == "off";
@@ -169,14 +176,14 @@ livingroom_ac_sensors:
       on_value:
         - lvgl.label.update:
             id: livingroom_ac_status
-            text: !lambda return x;
+            text: *climate_state_label
         - if:
             condition:
               lambda: return id(current_climate_entity) == "climate.c6a1a756";
             then:
             - lvgl.label.update:
                 id: climate_control_status
-                text: !lambda return x;
+                text: *climate_state_label
         - if:
             condition:
               lambda: return x == "off";
@@ -275,14 +282,14 @@ bedroom_ac_sensors:
       on_value:
         - lvgl.label.update:
             id: bedroom_ac_status
-            text: !lambda return x;
+            text: *climate_state_label
         - if:
             condition:
               lambda: return id(current_climate_entity) == "climate.c6a1ab8f";
             then:
             - lvgl.label.update:
                 id: climate_control_status
-                text: !lambda return x;
+                text: *climate_state_label
         - if:
             condition:
               lambda: return x == "off";

@@ -61,7 +61,7 @@ widgets:
             uid: fan
             entity_id: switch.sonoff_1000af2f21_1
             text: Fan
-            width: 49%
+            width: 100%
             height: 86
     # Separator before Temp/Humidity
     - obj:

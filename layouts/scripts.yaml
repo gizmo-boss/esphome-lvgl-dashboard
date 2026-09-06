@@ -130,37 +130,11 @@
         char buf[8];
         snprintf(buf, sizeof(buf), "%d%%", (brightness * 100) / 255);
         return std::string(buf);
-  - lambda: |-
-      // Update preview color with new brightness
-      int h = id(current_light_hue);
-      int s = id(current_light_saturation);
-      int v = brightness * 100 / 255;
-      
-      // HSV to RGB conversion
-      float hf = h / 60.0f;
-      int hi = (int)hf % 6;
-      float f = hf - (int)hf;
-      float sf = s / 100.0f;
-      float vf = v / 100.0f;
-      
-      float p = vf * (1 - sf);
-      float q = vf * (1 - f * sf);
-      float t = vf * (1 - (1 - f) * sf);
-      
-      float r, g, b;
-      switch(hi) {
-        case 0: r = vf; g = t; b = p; break;
-        case 1: r = q; g = vf; b = p; break;
-        case 2: r = p; g = vf; b = t; break;
-        case 3: r = p; g = q; b = vf; break;
-        case 4: r = t; g = p; b = vf; break;
-        default: r = vf; g = p; b = q; break;
-      }
-      
-      uint32_t color = ((int)(r * 255) << 16) | ((int)(g * 255) << 8) | (int)(b * 255);
-      lv_obj_set_style_bg_color(id(light_color_preview), lv_color_hex(color), LV_PART_MAIN);
+  # Repaint the preview swatch from the same single implementation used by
+  # the hue and saturation paths.
+  - script.execute: refresh_light_preview
   - homeassistant.service:
-      service: light.turn_on
+      action: light.turn_on
       data_template:
         entity_id: !lambda return id(current_light_entity);
         brightness: !lambda return std::to_string(id(current_light_brightness));
@@ -175,64 +149,51 @@
   - script.execute:
       id: apply_light_hs_color
 
-- id: update_light_saturation
-  parameters:
-    saturation: int
+# The only HSV -> RGB implementation in the project. Previously this
+# conversion was written out twice, ~30 lines each, and the copies had
+# already drifted: one of them updated the arc indicator colour, the other
+# did not.
+- id: refresh_light_preview
   then:
-  - globals.set:
-      id: current_light_saturation
-      value: !lambda return saturation;
-  - script.execute:
-      id: apply_light_hs_color
+  - lambda: |-
+      const int h = id(current_light_hue);
+      const int s = id(current_light_saturation);
+      const int v = id(current_light_brightness) * 100 / 255;
+
+      auto hsv_to_rgb = [](float h, float s, float v) -> uint32_t {
+        const float hf = h / 60.0f;
+        const int   hi = (int) hf % 6;
+        const float f  = hf - (int) hf;
+        const float p  = v * (1 - s);
+        const float q  = v * (1 - f * s);
+        const float t  = v * (1 - (1 - f) * s);
+        float r, g, b;
+        switch (hi) {
+          case 0:  r = v; g = t; b = p; break;
+          case 1:  r = q; g = v; b = p; break;
+          case 2:  r = p; g = v; b = t; break;
+          case 3:  r = p; g = q; b = v; break;
+          case 4:  r = t; g = p; b = v; break;
+          default: r = v; g = p; b = q; break;
+        }
+        return ((int) (r * 255) << 16) | ((int) (g * 255) << 8) | (int) (b * 255);
+      };
+
+      // Swatch shows the colour as it will actually look, brightness included.
+      lv_obj_set_style_bg_color(id(light_color_preview),
+                                lv_color_hex(hsv_to_rgb(h, s / 100.0f, v / 100.0f)),
+                                LV_PART_MAIN);
+      // Arc indicator shows the pure hue, so the wheel stays readable at any
+      // brightness or saturation.
+      lv_obj_set_style_arc_color(id(light_hue_arc),
+                                 lv_color_hex(hsv_to_rgb(h, 1.0f, 1.0f)),
+                                 LV_PART_INDICATOR);
 
 - id: apply_light_hs_color
   then:
-  - lambda: |-
-      int h = id(current_light_hue);
-      int s = id(current_light_saturation);
-      int v = id(current_light_brightness) * 100 / 255;
-      
-      // HSV to RGB conversion for preview (full saturation/value for arc color)
-      float hf = h / 60.0f;
-      int hi = (int)hf % 6;
-      float f = hf - (int)hf;
-      float sf = s / 100.0f;
-      float vf = v / 100.0f;
-      
-      float p = vf * (1 - sf);
-      float q = vf * (1 - f * sf);
-      float t = vf * (1 - (1 - f) * sf);
-      
-      float r, g, b;
-      switch(hi) {
-        case 0: r = vf; g = t; b = p; break;
-        case 1: r = q; g = vf; b = p; break;
-        case 2: r = p; g = vf; b = t; break;
-        case 3: r = p; g = q; b = vf; break;
-        case 4: r = t; g = p; b = vf; break;
-        default: r = vf; g = p; b = q; break;
-      }
-      
-      uint32_t color = ((int)(r * 255) << 16) | ((int)(g * 255) << 8) | (int)(b * 255);
-      lv_obj_set_style_bg_color(id(light_color_preview), lv_color_hex(color), LV_PART_MAIN);
-      
-      // Update arc indicator color (pure hue, full saturation)
-      float hf2 = h / 60.0f;
-      int hi2 = (int)hf2 % 6;
-      float f2 = hf2 - (int)hf2;
-      float r2, g2, b2;
-      switch(hi2) {
-        case 0: r2 = 1.0f; g2 = f2; b2 = 0; break;
-        case 1: r2 = 1.0f - f2; g2 = 1.0f; b2 = 0; break;
-        case 2: r2 = 0; g2 = 1.0f; b2 = f2; break;
-        case 3: r2 = 0; g2 = 1.0f - f2; b2 = 1.0f; break;
-        case 4: r2 = f2; g2 = 0; b2 = 1.0f; break;
-        default: r2 = 1.0f; g2 = 0; b2 = 1.0f - f2; break;
-      }
-      uint32_t arc_color = ((int)(r2 * 255) << 16) | ((int)(g2 * 255) << 8) | (int)(b2 * 255);
-      lv_obj_set_style_arc_color(id(light_hue_arc), lv_color_hex(arc_color), LV_PART_INDICATOR);
+  - script.execute: refresh_light_preview
   - homeassistant.service:
-      service: light.turn_on
+      action: light.turn_on
       data_template:
         entity_id: !lambda return id(current_light_entity);
         hs_color: !lambda |-
@@ -253,9 +214,8 @@
       
       id(current_light_hue) = h;
       id(current_light_saturation) = s;
-      
+
       lv_arc_set_value(id(light_hue_arc), h);
-      lv_slider_set_value(id(light_saturation_slider), s, LV_ANIM_ON);
   - script.execute:
       id: apply_light_hs_color
 
@@ -356,7 +316,7 @@
         snprintf(buf, sizeof(buf), "%d°C", temp);
         return std::string(buf);
   - homeassistant.service:
-      service: climate.set_temperature
+      action: climate.set_temperature
       data_template:
         entity_id: !lambda return id(current_climate_entity);
         temperature: !lambda return std::to_string(id(current_climate_target));
@@ -378,7 +338,7 @@
         snprintf(buf, sizeof(buf), "%d°C", id(current_climate_target));
         return std::string(buf);
   - homeassistant.service:
-      service: climate.set_temperature
+      action: climate.set_temperature
       data_template:
         entity_id: !lambda return id(current_climate_entity);
         temperature: !lambda return std::to_string(id(current_climate_target));
@@ -388,7 +348,7 @@
     mode: string
   then:
   - homeassistant.service:
-      service: climate.set_hvac_mode
+      action: climate.set_hvac_mode
       data_template:
         entity_id: !lambda return id(current_climate_entity);
         hvac_mode: !lambda return mode;
@@ -398,7 +358,7 @@
     fan: string
   then:
   - homeassistant.service:
-      service: climate.set_fan_mode
+      action: climate.set_fan_mode
       data_template:
         entity_id: !lambda return id(current_climate_entity);
         fan_mode: !lambda return fan;

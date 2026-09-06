@@ -30,7 +30,7 @@ obj: # title bar
           widgets:
             - label:
                 text: "\U000F0140"
-                text_font: mdi_sm
+                text_font: mdi_md
                 text_color: ${color_text_muted}
                 align: CENTER
       # Link status. Always visible: a hidden icon is not a signal, so the
@@ -46,4 +46,4 @@ obj: # title bar
           id: nav_clock
           align: RIGHT_MID
           x: -${padding} # RESOLUTION-SPECIFIC
-          text: " "
+          text: "--:--"

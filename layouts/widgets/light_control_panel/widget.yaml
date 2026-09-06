@@ -19,7 +19,7 @@ obj:
   # Header bar
   - obj:
       width: 100%
-      height: 45
+      height: 50
       bg_opa: TRANSP
       border_width: 0
       scrollbar_mode: "off"
@@ -39,8 +39,8 @@ obj:
           align: LEFT_MID
           x: 44
       - button:
-          width: 45
-          height: 45
+          width: 50
+          height: 50
           align: RIGHT_MID
           bg_color: ${color_surface}
           radius: 20
@@ -160,19 +160,6 @@ obj:
           - script.execute:
               id: update_light_brightness
               brightness: !lambda return (int)x;
-  # Hidden saturation slider (for script compatibility)
-  - obj:
-      width: 0
-      height: 0
-      hidden: true
-      widgets:
-      - slider:
-          id: light_saturation_slider
-          width: 1
-          height: 1
-          min_value: 0
-          max_value: 100
-          value: 100
   # Quick color presets row.
   # The swatch colours below are deliberately NOT design tokens: each one is
   # the light colour the preset sets, i.e. data, not theme. Only the outline

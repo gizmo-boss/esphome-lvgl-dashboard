@@ -61,7 +61,7 @@ widgets:
             uid: stylage_light
             entity_id: light.stylage_rgb_light
             text: Stylage
-            width: 49%
+            width: 100%
             height: 86
 
     # Separator before Temp/Humidity

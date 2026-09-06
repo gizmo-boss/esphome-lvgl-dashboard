@@ -61,7 +61,7 @@ widgets:
             uid: dinner_table
             entity_id: switch.sonoff_1001275592_3
             text: Table
-            width: 49%
+            width: 100%
             height: 86
     # Separator before Temp/Humidity
     - obj:
