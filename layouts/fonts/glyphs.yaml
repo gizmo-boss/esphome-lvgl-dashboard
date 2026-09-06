@@ -1,52 +1,27 @@
+# MDI glyphs compiled into every mdi_* font size.
+#
+# Keep this list tight: each glyph is rasterised into all five sizes
+# (20/26/34/42/50 px at 4 bpp), so one unused entry costs roughly 3 KB of
+# flash. Before adding a size or a glyph, check it is actually referenced.
+#
+# Both spellings count as a reference: the escaped "\U000Fxxxx" form and
+# the literal UTF-8 character.
+
 - "\U000F0210" # fan
-- "\U000F0502" # television
-- "\U000F0335" # lightbulb
 - "\U000F06E8" # lightbult-on
 - "\U000F0336" # lightbulb-outline
-- "\U000F1253" # lightbulb-group
-- "\U000F1254" # lightbulb-group-outline
-- "\U000F075D" # volume-plus
-- "\U000F075E" # volume-minus
 - "\U000F0141" # chevron-left
 - "\U000F0142" # chevron-right
 - "\U000F0140" # chevron-down
 - "\U000F02DC" # home
 - "\U000F0425" # power
 - "\U000F01D8" # dots-horizontal
-- "\U000F040E" # play-pause
-- "\U000F04DB" # stop
-- "\U000F042B" # printer-3d
-- "\U000F0E5B" # printer-3d-nozzle
-- "\U000F02E3" # bed
-- "\U000F1576" # lamps
-- "\U000F04B9" # sofa
-- "\U000F0D80" # home-floor-1
-- "\U000F0D81" # home-floor-2
-- "\U000F0F9B" # home-export-outline
 - "\U000F0241" # flash (lightning bolt for power)
 - "\U000F140B" # transmission-tower (grid)
-- "\U000F0079" # battery (full)
-- "\U000F007A" # battery-10
-- "\U000F007B" # battery-20
-- "\U000F007C" # battery-30
-- "\U000F007D" # battery-40
-- "\U000F007E" # battery-50
-- "\U000F007F" # battery-60
-- "\U000F0080" # battery-70
-- "\U000F0081" # battery-80
-- "\U000F0082" # battery-90
-- "\U000F0084" # battery-charging
-- "\U000F0091" # battery-unknown
-- "\U000F125D" # battery-heart-variant (battery health)
 - "\U000F12A3" # sine-wave (voltage/AC)
-- "\U000F1A13" # home-lightning-bolt
 - "\U000F0493" # cog (settings)
 - "\U000F00E0" # brightness-6 (brightness)
 - "\U000F0156" # close (X)
-- "\U000F0131" # checkbox-marked
-- "\U000F0130" # checkbox-blank-outline
-- "\U000F0594" # timer-off (auto-off)
-- "\U000F05B3" # clock-outline
 - "\U000F17E0" # battery-charging (custom)
 - "\U000F17DE" # battery-discharging (custom)
 - "\U000F19E5" # battery-idle (custom)
@@ -55,20 +30,12 @@
 - "\U000F050F" # thermometer-lines (temperature)
 - "\U000F058E" # water-percent (humidity)
 - "\U000F0874" # gauge-full (pressure)
-- "\U000F0266" # format-color-fill (color picker)
-- "\U000F0B66" # invert-colors (saturation)
-- "\U000F0769" # palette (color palette)
 - "\U000F0393" # thermostat
-- "\U000F0166" # air-conditioner
 - "\U000F001B" # air-conditioner-alt (F001B)
 - "\U000F0238" # fire (heat)
 - "\U000F0F29" # snowflake (cool)
 - "\U000F0374" # minus-circle-outline
 - "\U000F0417" # plus-circle-outline
-- "\U000F04D8" # speedometer (fan speed)
 - "\U000F0192" # clock-fast (auto mode)
-- "\U000F0E0C" # fan-off
-- "\U000F1B40" # hvac
-- "\U000F058C" # water (humidity/dry mode)
 - "\U000F078F" # alarm-light (air alert siren)
 - "\U000F0028" # alert-circle
