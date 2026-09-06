@@ -18,7 +18,7 @@ obj: # navigation bar
         border_width: 0
         radius: 0
         flex_grow: 1
-        on_press:
+        on_short_click:
           - lvgl.page.previous:
         widgets:
           - label:
@@ -32,7 +32,7 @@ obj: # navigation bar
         border_width: 0
         radius: 0
         flex_grow: 1
-        on_press:
+        on_short_click:
           - script.execute: go_home
         on_long_press:
           - script.execute: turn_off_display
@@ -48,7 +48,7 @@ obj: # navigation bar
         border_width: 0
         radius: 0
         flex_grow: 1
-        on_press:
+        on_short_click:
           - lvgl.page.next:
         on_long_press:
           - if:
@@ -56,14 +56,6 @@ obj: # navigation bar
                 - lambda: return !id(display_on);
               then:
                 - script.execute: turn_on_display
-        # on_press:
-        #   - if:
-        #       condition:
-        #         - lambda: return !id(display_on);
-        #       then:
-        #         - script.execute: turn_on_display
-        #       else:
-        #         - lvgl.page.next:
         widgets:
           - label:
               align: CENTER
