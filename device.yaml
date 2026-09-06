@@ -65,20 +65,28 @@ touchscreen:
     address: 0x3B
     on_touch:
       - lambda: |-
-          // Update the last touch time
           id(last_touch_time) = millis();
-          
-          // If display is off, turn it on and stop event propagation
-          if (!id(display_on)) {
-            id(display_on) = true;
-            id(backlight).turn_on().perform();
-            // We can't stop propagation in this version of ESPHome
-          }
-          
-          // For debugging (optional)
-          ESP_LOGI("touch", "x=%d, y=%d, x_raw=%d, y_raw=%d",
+          ESP_LOGD("touch", "x=%d, y=%d, x_raw=%d, y_raw=%d",
             touch.x,
             touch.y,
             touch.x_raw,
             touch.y_raw
           );
+      # Wake the backlight only. LVGL is left paused so this press is
+      # swallowed: Touchscreen::loop() runs LVTouchListener::update() before
+      # firing on_touch, so touch_pressed_ was already latched to false.
+      - if:
+          condition:
+            lambda: 'return !id(display_on);'
+          then:
+            - script.execute: wake_display
+    # Resume LVGL once the finger is lifted. Doing it here rather than in
+    # on_touch matters: the touchscreen re-reads every 50 ms, so resuming
+    # while the finger is still down would let a long wake-up press through.
+    on_release:
+      - if:
+          condition:
+            - lvgl.is_paused:
+            - lambda: 'return id(display_on);'
+          then:
+            - lvgl.resume:

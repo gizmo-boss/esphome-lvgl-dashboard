@@ -8,13 +8,28 @@
       id: display_on
       value: 'false'
   - light.turn_off: backlight
+  # Pausing LVGL is what makes the wake-up touch harmless: while paused,
+  # LVTouchListener::update() forces touch_pressed_ = false, so the press
+  # never reaches a widget. It also stops rendering entirely while asleep.
+  - lvgl.pause:
 
-- id: turn_on_display
+# Light the screen back up without letting the waking touch through.
+# LVGL stays paused here on purpose - it is resumed on touch release
+# (see device.yaml), by which time the press has already been discarded.
+- id: wake_display
   then:
   - globals.set:
       id: display_on
       value: 'true'
-  - light.turn_on: backlight
+  - lambda: 'id(last_touch_time) = millis();'
+  - light.turn_on:
+      id: backlight
+      brightness: !lambda return id(brightness_level);
+
+- id: turn_on_display
+  then:
+  - script.execute: wake_display
+  - lvgl.resume:
   - script.execute: go_home
 
 - id: show_settings
