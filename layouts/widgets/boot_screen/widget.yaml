@@ -35,3 +35,6 @@
             text_color: ${color_text_muted}
       on_press:
         - lvgl.widget.hide: boot_screen
+        # Invalidate alone wasn't enough to repaint what the boot screen
+        # covered; reloading the home page (like a Home button press) does.
+        - script.execute: go_home

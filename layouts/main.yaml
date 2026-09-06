@@ -24,6 +24,10 @@ script: !include scripts.yaml
 lvgl:
   default_font: roboto_md
   theme: !include themes/main.yaml
+  # This qspi_dbi panel doesn't reliably apply partial-window updates, which
+  # is why content stayed blank until something forced a full frame (e.g. a
+  # touch). Redrawing the whole frame every time avoids relying on that.
+  full_refresh: true
   top_layer:
     widgets:
     - <<: !include { file: widgets/header/widget.yaml, vars: { <<: *nav_widget_vars } }

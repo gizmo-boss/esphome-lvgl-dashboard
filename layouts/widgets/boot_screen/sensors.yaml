@@ -1,6 +1,9 @@
 api:
   on_client_connected:
     - lvgl.widget.hide: boot_screen
+    # Invalidate alone wasn't enough to repaint what the boot screen covered;
+    # reloading the home page (like a Home button press) reliably does.
+    - script.execute: go_home
 
 # The boot screen otherwise waits on the API forever: if Home Assistant
 # never answers, the spinner spins with no way for the user to tell why.
