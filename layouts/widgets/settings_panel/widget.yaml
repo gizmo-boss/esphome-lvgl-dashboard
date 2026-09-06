@@ -6,16 +6,17 @@ obj:
   bg_opa: 98%
   hidden: true
   scrollbar_mode: "off"
-  pad_left: 6
-  pad_right: 6
+  pad_left: 12
+  pad_right: 12
   pad_top: 6
+  pad_bottom: 12
   layout:
     type: FLEX
     flex_flow: COLUMN
     flex_align_main: START
-    pad_row: 8
+    pad_row: 12
   widgets:
-  # Header bar (matching titlebar style)
+  # Header bar (matches light/climate control panel headers)
   - obj:
       width: 100%
       height: 50
@@ -61,31 +62,44 @@ obj:
   # Brightness control card
   - obj:
       width: 100%
-      height: 90
+      height: 96
       bg_color: ${color_surface}
       radius: 20
       border_width: 0
-      scrollbar_mode: "off"
       pad_all: 12
+      scrollbar_mode: "off"
+      scrollable: false
+      layout:
+        type: FLEX
+        flex_flow: COLUMN
+        pad_row: 8
       widgets:
-      - label:
-          text: "\U000F00E0"
-          text_font: mdi_lg
-          text_color: ${color_warning}
-          align: TOP_LEFT
-      - label:
-          text: "Brightness"
-          text_font: roboto_sm
-          text_color: ${color_text_muted}
-          align: TOP_LEFT
-          x: 36
-          y: 2
+      - obj:
+          width: 100%
+          height: 28
+          bg_opa: TRANSP
+          border_width: 0
+          pad_all: 0
+          scrollbar_mode: "off"
+          scrollable: false
+          layout:
+            type: FLEX
+            flex_flow: ROW
+            flex_align_cross: CENTER
+            pad_column: 8
+          widgets:
+          - label:
+              text: "\U000F00E0"
+              text_font: mdi_md
+              text_color: ${color_warning}
+          - label:
+              text: "Brightness"
+              text_font: roboto_sm
+              text_color: ${color_text_muted}
       - slider:
           id: brightness_slider
           width: 100%
           height: 24
-          align: BOTTOM_MID
-          y: -6
           min_value: 10
           max_value: 100
           value: 100
@@ -109,27 +123,33 @@ obj:
       bg_color: ${color_surface}
       radius: 20
       border_width: 0
+      pad_left: 12
+      pad_right: 12
+      scrollbar_mode: "off"
+      scrollable: false
+      layout:
+        type: FLEX
+        flex_flow: ROW
+        flex_align_cross: CENTER
+        pad_column: 12
       on_click:
       - script.execute: toggle_auto_off
       widgets:
+      # Flat children only: a covering obj here would swallow the tap
+      # before it reaches the button underneath.
       - label:
           text: "\U000F0425"
           text_font: mdi_lg
           text_color: ${color_accent}
-          align: LEFT_MID
-          x: 12
       - label:
           text: "Auto Screen Off"
           text_font: roboto_md
           text_color: ${color_text_primary}
-          align: LEFT_MID
-          x: 48
+          flex_grow: 1
       - obj:
           id: auto_off_checked
           width: 44
           height: 44
-          align: RIGHT_MID
-          x: -12
           bg_color: ${color_success}
           radius: 20
           border_width: 0
@@ -143,8 +163,6 @@ obj:
           id: auto_off_unchecked
           width: 44
           height: 44
-          align: RIGHT_MID
-          x: -12
           bg_color: ${color_surface_alt}
           radius: 20
           border_width: 2
@@ -161,22 +179,25 @@ obj:
   # Device info row
   - obj:
       width: 100%
-      height: 50
+      height: 40
       bg_opa: TRANSP
       border_width: 0
+      pad_all: 0
       scrollbar_mode: "off"
+      scrollable: false
+      layout:
+        type: FLEX
+        flex_flow: ROW
+        flex_align_cross: CENTER
+        pad_column: 8
       widgets:
       - label:
           id: ha_status_icon
           text: "\U000F05A9"
           text_font: mdi_md
           text_color: ${color_danger}
-          align: LEFT_MID
-          x: 6
       - label:
           id: ha_status_value
           text: "Connecting..."
           text_font: roboto_sm
           text_color: ${color_text_muted}
-          align: LEFT_MID
-          x: 42
