@@ -77,11 +77,6 @@ sensor:
     update_interval: 60s
 
 text_sensor:
-  - platform: homeassistant
-    name: "HomeAssistant Text Sensor"
-    entity_id: sensor.dummy_text_sensor
-    internal: true
-
   - platform: wifi_info
     ip_address:
       name: IP Address

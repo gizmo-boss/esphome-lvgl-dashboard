@@ -15,14 +15,3 @@ time:
               text:
                 time_format: "%H:%M:%S"
                 time: ha_time
-
-# sensor:
-#   - id: thermostat_temp
-#     platform: homeassistant
-#     entity_id: sensor.thermostat_temperature
-#     on_value:
-#       - lvgl.label.update:
-#           id: header_temp
-#           text:
-#             format: "%.1f°C"
-#             args: [ 'x' ]

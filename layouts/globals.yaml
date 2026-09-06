@@ -41,19 +41,6 @@
   type: int
   restore_value: no
   initial_value: '255'
-# Work state history storage (8 entries max)
-- id: work_state_current
-  type: std::string
-  restore_value: no
-  initial_value: '""'
-- id: work_state_history
-  type: std::string
-  restore_value: no
-  initial_value: '""'
-- id: work_state_history_count
-  type: int
-  restore_value: no
-  initial_value: '0'
 # Climate control panel state
 - id: current_climate_entity
   type: std::string
