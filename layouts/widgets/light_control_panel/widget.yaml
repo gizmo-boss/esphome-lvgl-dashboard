@@ -109,7 +109,7 @@ obj:
           widgets:
           - label:
               text: "󰛨"
-              text_font: mdi_xxl
+              text_font: mdi_xl
               text_color: ${color_text_primary}
               align: CENTER
   # Brightness control card

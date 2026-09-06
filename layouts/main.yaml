@@ -12,7 +12,6 @@ font: !include
     icons_md: 26
     icons_lg: 34
     icons_xl: 42
-    icons_xxl: 50
 
 # Nav widget sizing
 .sizing:
