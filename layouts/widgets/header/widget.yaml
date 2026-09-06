@@ -33,14 +33,15 @@ obj: # title bar
                 text_font: mdi_sm
                 text_color: 0x888888
                 align: CENTER
-      - label: # wifi icon
+      # Link status. Always visible: a hidden icon is not a signal, so the
+      # state is carried by colour instead (see the update_link_status script).
+      - label:
           id: wifi_icon
           align: RIGHT_MID
           x: -95 # RESOLUTION-SPECIFIC (clock width + padding)
           text: "\U000F05A9"
           text_font: mdi_sm
-          text_color: 0x888888
-          hidden: true
+          text_color: 0xFF5252
       - label: # clock
           id: nav_clock
           align: RIGHT_MID

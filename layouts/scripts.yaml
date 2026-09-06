@@ -32,6 +32,49 @@
   - lvgl.resume:
   - script.execute: go_home
 
+# Single place that renders link state. Three states, because "no Wi-Fi" and
+# "Wi-Fi up but Home Assistant unreachable" mean very different things to the
+# person looking at stale numbers on screen.
+- id: update_link_status
+  then:
+  - if:
+      condition:
+        lambda: 'return !id(wifi_connected);'
+      then:
+      - lvgl.label.update:
+          id: wifi_icon
+          text_color: 0xFF5252
+      - lvgl.label.update:
+          id: ha_status_icon
+          text_color: 0xFF5252
+      - lvgl.label.update:
+          id: ha_status_value
+          text: "No Wi-Fi connection"
+      else:
+      - if:
+          condition:
+            lambda: 'return !id(api_connected);'
+          then:
+          - lvgl.label.update:
+              id: wifi_icon
+              text_color: 0xFFCC00
+          - lvgl.label.update:
+              id: ha_status_icon
+              text_color: 0xFFCC00
+          - lvgl.label.update:
+              id: ha_status_value
+              text: "Home Assistant unreachable"
+          else:
+          - lvgl.label.update:
+              id: wifi_icon
+              text_color: 0x888888
+          - lvgl.label.update:
+              id: ha_status_icon
+              text_color: 0x4CAF50
+          - lvgl.label.update:
+              id: ha_status_value
+              text: "Connected to Home Assistant"
+
 - id: show_settings
   then:
   - lvgl.widget.show: settings_panel

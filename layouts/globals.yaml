@@ -2,6 +2,16 @@
   type: bool
   restore_value: yes
   initial_value: 'true'
+# Link state, mirrored from the wifi/api triggers in common.yaml so that
+# update_link_status can render both halves without querying the components.
+- id: wifi_connected
+  type: bool
+  restore_value: no
+  initial_value: 'false'
+- id: api_connected
+  type: bool
+  restore_value: no
+  initial_value: 'false'
 - id: brightness_level
   type: float
   restore_value: yes

@@ -167,13 +167,15 @@ obj:
       scrollbar_mode: "off"
       widgets:
       - label:
+          id: ha_status_icon
           text: "\U000F05A9"
           text_font: mdi_md
-          text_color: 0x888888
+          text_color: 0xFF5252
           align: LEFT_MID
           x: 6
       - label:
-          text: "Connected to Home Assistant"
+          id: ha_status_value
+          text: "Connecting..."
           text_font: roboto_sm
           text_color: 0x888888
           align: LEFT_MID
