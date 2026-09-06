@@ -41,6 +41,11 @@ A beautiful, touch-enabled smart home control panel built with ESPHome and LVGL 
 - **Corridor** — Hallway lighting
 - **Outdoor** — External lighting and sensors
 
+### 🚨 Air Alerts
+- Live alert status ("All Clear" / "Alert Active") from a binary sensor
+- Running alert duration (`HH:MM:SS`) and today's alert count
+- Optional auto screen-on while an alert is active, with a settings toggle
+
 ### 🌡️ Climate Control
 - **Thermostat** — Underfloor heating control
 - **Air Conditioning** — Per-room AC control with fan speed
@@ -63,8 +68,9 @@ A beautiful, touch-enabled smart home control panel built with ESPHome and LVGL 
 ### ⚙️ Settings Panel
 - Display brightness slider
 - Auto screen-off toggle (60s timeout)
+- Screen-on toggle for active air alerts
 - Touch-to-wake functionality
-- WiFi connection status
+- WiFi / Home Assistant connection status
 
 ### 🎨 User Interface
 - Modern dark theme with accent colors
@@ -195,10 +201,10 @@ HomeAssistant_Display/
     ├── main.yaml           # LVGL layout orchestrator
     ├── globals.yaml        # Global variables
     ├── scripts.yaml        # ESPHome scripts
+    ├── tokens.yaml         # Design tokens (colors) shared by every page/widget
     │
     ├── fonts/              # Custom fonts (Roboto, MDI icons)
     ├── themes/             # LVGL theme configuration
-    ├── styles/             # Reusable widget styles
     │
     ├── pages/              # Room-specific pages
     │   ├── bedroom.yaml
@@ -207,23 +213,23 @@ HomeAssistant_Display/
     │   ├── corridor.yaml
     │   ├── outdoor.yaml
     │   ├── energy.yaml
-    │   └── climate.yaml
+    │   ├── climate.yaml
+    │   └── air_alerts.yaml
     │
-    ├── sensors/            # Home Assistant sensor bindings
+    ├── sensors/            # Home Assistant sensor bindings (one file per page)
     │
     └── widgets/            # Reusable UI components
         ├── header/         # Top navigation bar
         ├── footer/         # Bottom navigation
         ├── boot_screen/    # Startup splash
         ├── settings_panel/ # Settings overlay
-        ├── buttons/        # Button variants
-        │   ├── icon_buttons/
-        │   ├── text_buttons/
+        ├── stat_card/      # Icon + caption + value readout, used on every page
+        ├── buttons/
         │   └── icon_text_buttons/
         │       ├── light_buttons/
         │       ├── rgb_light_buttons/
         │       └── fan_buttons/
-        ├── light_control_panel/   # Brightness slider overlay
+        ├── light_control_panel/   # Brightness/color slider overlay
         └── climate_control_panel/ # Temperature control overlay
 ```
 
@@ -248,7 +254,7 @@ HomeAssistant_Display/
         height: 86
     on_short_click:
     - homeassistant.service:
-        service: switch.toggle
+        action: switch.toggle
         data: { entity_id: switch.my_light_entity }
 ```
 
