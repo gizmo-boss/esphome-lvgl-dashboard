@@ -12,15 +12,23 @@ living_room_temp_sensor:
     on_value:
     - lvgl.label.update:
         id: living_room_temp_value
-        text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "°C";
+        text: !lambda |-
+          if (std::isnan(x)) return std::string("--");
+          char buf[16];
+          snprintf(buf, sizeof(buf), "%.1f°C", x);
+          return std::string(buf);
 
 # Living room humidity sensor
 living_room_humidity_sensor:
   sensor:
   - id: living_room_humidity
     platform: homeassistant
-    entity_id: sensor.bedroom_temp_humidity
+    entity_id: sensor.livingroom_temp_humidity
     on_value:
     - lvgl.label.update:
         id: living_room_humidity_value
-        text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "%";
+        text: !lambda |-
+          if (std::isnan(x)) return std::string("--");
+          char buf[16];
+          snprintf(buf, sizeof(buf), "%.1f%", x);
+          return std::string(buf);
