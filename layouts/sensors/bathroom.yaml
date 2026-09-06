@@ -12,7 +12,11 @@ bathroom_temp_sensor:
     on_value:
     - lvgl.label.update:
         id: bathroom_temp_value
-        text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "°C";
+        text: !lambda |-
+          if (std::isnan(x)) return std::string("--");
+          char buf[16];
+          snprintf(buf, sizeof(buf), "%.1f°C", x);
+          return std::string(buf);
 
 # Bathroom humidity sensor
 bathroom_humidity_sensor:
@@ -23,4 +27,8 @@ bathroom_humidity_sensor:
     on_value:
     - lvgl.label.update:
         id: bathroom_humidity_value
-        text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "%";
+        text: !lambda |-
+          if (std::isnan(x)) return std::string("--");
+          char buf[16];
+          snprintf(buf, sizeof(buf), "%.1f%", x);
+          return std::string(buf);
