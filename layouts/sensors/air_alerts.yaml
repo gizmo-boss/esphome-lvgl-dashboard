@@ -1,0 +1,83 @@
+# Air alert status sensor
+air_alert_status_sensor:
+  binary_sensor:
+  - id: air_alert_status
+    platform: homeassistant
+    entity_id: binary_sensor.m_kiiv_air
+    trigger_on_initial_state: true
+    on_state:
+    - if:
+        condition:
+          - binary_sensor.is_on: air_alert_status
+        then:
+        - globals.set:
+            id: air_alert_active
+            value: 'true'
+        - globals.set:
+            id: air_alert_started_at
+            value: !lambda return millis();
+        - lvgl.label.update:
+            id: air_alert_status_icon
+            text_color: ${color_danger}
+        - lvgl.label.update:
+            id: air_alert_status_value
+            text: "Alert Active"
+            text_color: ${color_danger}
+        - if:
+            condition:
+              lambda: 'return id(keep_screen_on_air_alert);'
+            then:
+            # wake_display only flips the backlight/global state; the screen
+            # stays paused (see device.yaml) until resumed and won't render
+            # anything, so both calls are needed to actually show the alert.
+            - script.execute: wake_display
+            - lvgl.resume:
+            - lvgl.page.show: air_alerts
+        else:
+        - globals.set:
+            id: air_alert_active
+            value: 'false'
+        # Give the user the normal 60s grace period to see "All Clear"
+        # instead of the auto-off timer firing on the very next tick.
+        - globals.set:
+            id: last_touch_time
+            value: !lambda return millis();
+        - lvgl.label.update:
+            id: air_alert_status_icon
+            text_color: ${color_success}
+        - lvgl.label.update:
+            id: air_alert_status_value
+            text: "All Clear"
+            text_color: ${color_text_primary}
+        - lvgl.label.update:
+            id: air_alert_duration_value
+            text: "--"
+
+  interval:
+  - interval: 1s
+    then:
+    - if:
+        condition:
+          lambda: 'return id(air_alert_active);'
+        then:
+        - lvgl.label.update:
+            id: air_alert_duration_value
+            text: !lambda |-
+              uint32_t elapsed = (millis() - id(air_alert_started_at)) / 1000;
+              uint32_t h = elapsed / 3600;
+              uint32_t m = (elapsed % 3600) / 60;
+              uint32_t s = elapsed % 60;
+              char buf[16];
+              snprintf(buf, sizeof(buf), "%02u:%02u:%02u", h, m, s);
+              return std::string(buf);
+
+# Air alerts today count sensor
+air_alert_today_count_sensor:
+  sensor:
+  - id: air_alert_today_count
+    platform: homeassistant
+    entity_id: sensor.air_alert_today_count
+    on_value:
+    - lvgl.label.update:
+        id: air_alert_today_count_value
+        text: !lambda return std::to_string((int)x);

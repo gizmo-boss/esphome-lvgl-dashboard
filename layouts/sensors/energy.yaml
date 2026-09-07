@@ -10,7 +10,7 @@ power_sensor:
         text: !lambda |-
           if (std::isnan(x)) return std::string("--");
           char buf[16];
-          snprintf(buf, sizeof(buf), "%.1fkW", x);
+          snprintf(buf, sizeof(buf), "%.1f", x);
           return std::string(buf);
 
 # Voltage sensor
@@ -25,7 +25,7 @@ voltage_sensor:
         text: !lambda |-
           if (std::isnan(x)) return std::string("--");
           char buf[16];
-          snprintf(buf, sizeof(buf), "%.0fV", x);
+          snprintf(buf, sizeof(buf), "%.0f", x);
           return std::string(buf);
 
 # Battery SoC sensor
@@ -49,7 +49,7 @@ battery_soc_sensor:
     - lambda: |-
         if (std::isnan(x)) {
           lv_obj_set_width(id(battery_soc_fill), 0);
-          lv_obj_set_style_bg_color(id(battery_soc_fill), lv_color_hex(0x888888), LV_PART_MAIN);
+          lv_obj_set_style_bg_color(id(battery_soc_fill), lv_color_hex(${color_text_muted}), LV_PART_MAIN);
           return;
         }
         int percent = (int)std::round(x);
@@ -58,11 +58,11 @@ battery_soc_sensor:
         lv_obj_set_width(id(battery_soc_fill), (container_width * percent) / 100);
         lv_obj_set_height(id(battery_soc_fill), container_height);
         if (percent >= 60) {
-          lv_obj_set_style_bg_color(id(battery_soc_fill), lv_color_hex(0x4CAF50), LV_PART_MAIN); // green
+          lv_obj_set_style_bg_color(id(battery_soc_fill), lv_color_hex(${color_success}), LV_PART_MAIN); // green
         } else if (percent >= 30) {
-          lv_obj_set_style_bg_color(id(battery_soc_fill), lv_color_hex(0xFFCC00), LV_PART_MAIN); // yellow
+          lv_obj_set_style_bg_color(id(battery_soc_fill), lv_color_hex(${color_warning}), LV_PART_MAIN); // yellow
         } else {
-          lv_obj_set_style_bg_color(id(battery_soc_fill), lv_color_hex(0xFF5252), LV_PART_MAIN); // red
+          lv_obj_set_style_bg_color(id(battery_soc_fill), lv_color_hex(${color_danger}), LV_PART_MAIN); // red
         }
 
 # Battery voltage sensor
@@ -77,7 +77,7 @@ battery_voltage_sensor:
         text: !lambda |-
           if (std::isnan(x)) return std::string("--");
           char buf[16];
-          snprintf(buf, sizeof(buf), "%.1fV", x);
+          snprintf(buf, sizeof(buf), "%.1f", x);
           return std::string(buf);
 
 # Battery power sensor
@@ -93,21 +93,21 @@ battery_power_sensor:
           if (std::isnan(x)) return std::string("--");
           char buf[16];
           int val = (int)std::round(x);
-          if (val > 0) snprintf(buf, sizeof(buf), "+%dW", val);
-          else snprintf(buf, sizeof(buf), "%dW", val);
+          if (val > 0) snprintf(buf, sizeof(buf), "+%d", val);
+          else snprintf(buf, sizeof(buf), "%d", val);
           return std::string(buf);
         text_color: !lambda |-
-          if (std::isnan(x)) return lv_color_hex(0x888888);
-          if (x > 0) return lv_color_hex(0x4CAF50);   // green = charging
-          else if (x < 0) return lv_color_hex(0xFF9800); // orange = discharging
-          else return lv_color_hex(0xFFFFFF);         // white = idle
+          if (std::isnan(x)) return lv_color_hex(${color_text_muted});
+          if (x > 0) return lv_color_hex(${color_success});   // green = charging
+          else if (x < 0) return lv_color_hex(${color_amber}); // orange = discharging
+          else return lv_color_hex(${color_text_primary});         // white = idle
     - lvgl.label.update:
         id: battery_power_icon
         text_color: !lambda |-
-          if (std::isnan(x)) return lv_color_hex(0x888888);
-          if (x > 0) return lv_color_hex(0x4CAF50);   // green = charging
-          else if (x < 0) return lv_color_hex(0xFF9800); // orange = discharging
-          else return lv_color_hex(0xFFFFFF);         // white = idle
+          if (std::isnan(x)) return lv_color_hex(${color_text_muted});
+          if (x > 0) return lv_color_hex(${color_success});   // green = charging
+          else if (x < 0) return lv_color_hex(${color_amber}); // orange = discharging
+          else return lv_color_hex(${color_text_primary});         // white = idle
 
 # Battery time dynamic sensor
 battery_time_dynamic_sensor:
@@ -124,27 +124,27 @@ battery_time_dynamic_sensor:
         std::string status = x;
         // Update primary text
         if (status == "Charging") {
-          lv_label_set_text(id(battery_time_primary), "Time to Full");
+          lv_label_set_text(id(battery_time_label), "Time to Full");
           lv_label_set_text(id(battery_time_icon), "\U000F17E0"); // battery-charging
-          lv_obj_set_style_text_color(id(battery_time_icon), lv_color_hex(0x4CAF50), LV_PART_MAIN); // green
-          lv_obj_set_style_text_color(id(battery_time_primary), lv_color_hex(0x888888), LV_PART_MAIN); // green
+          lv_obj_set_style_text_color(id(battery_time_icon), lv_color_hex(${color_success}), LV_PART_MAIN); // green
+          lv_obj_set_style_text_color(id(battery_time_label), lv_color_hex(${color_text_muted}), LV_PART_MAIN); // green
         } else if (status == "Discharging") {
-          lv_label_set_text(id(battery_time_primary), "Time to Empty");
+          lv_label_set_text(id(battery_time_label), "Time to Empty");
           lv_label_set_text(id(battery_time_icon), "\U000F17DE"); // battery-discharging
-          lv_obj_set_style_text_color(id(battery_time_icon), lv_color_hex(0xFF9800), LV_PART_MAIN); // orange
-          lv_obj_set_style_text_color(id(battery_time_primary), lv_color_hex(0x888888), LV_PART_MAIN); // orange
+          lv_obj_set_style_text_color(id(battery_time_icon), lv_color_hex(${color_amber}), LV_PART_MAIN); // orange
+          lv_obj_set_style_text_color(id(battery_time_label), lv_color_hex(${color_text_muted}), LV_PART_MAIN); // orange
         } else if (status == "Standby") {
-          lv_label_set_text(id(battery_time_primary), "Standby");
+          lv_label_set_text(id(battery_time_label), "Standby");
           lv_label_set_text(id(battery_time_icon), "\U000F19E5"); // battery-idle
-          lv_obj_set_style_text_color(id(battery_time_icon), lv_color_hex(0x888888), LV_PART_MAIN); // grey
-          lv_obj_set_style_text_color(id(battery_time_primary), lv_color_hex(0x888888), LV_PART_MAIN); // grey
+          lv_obj_set_style_text_color(id(battery_time_icon), lv_color_hex(${color_text_muted}), LV_PART_MAIN); // grey
+          lv_obj_set_style_text_color(id(battery_time_label), lv_color_hex(${color_text_muted}), LV_PART_MAIN); // grey
         } else {
-          lv_label_set_text(id(battery_time_primary), "—");
+          lv_label_set_text(id(battery_time_label), "—");
           lv_label_set_text(id(battery_time_icon), "\U000F19E5"); // battery-idle
-          lv_obj_set_style_text_color(id(battery_time_icon), lv_color_hex(0x888888), LV_PART_MAIN); // grey
-          lv_obj_set_style_text_color(id(battery_time_primary), lv_color_hex(0x888888), LV_PART_MAIN); // grey
+          lv_obj_set_style_text_color(id(battery_time_icon), lv_color_hex(${color_text_muted}), LV_PART_MAIN); // grey
+          lv_obj_set_style_text_color(id(battery_time_label), lv_color_hex(${color_text_muted}), LV_PART_MAIN); // grey
         }
-  - id: battery_time_value
+  - id: battery_time_remaining
     platform: homeassistant
     entity_id: sensor.battery_time_dynamic_2
     on_value:
@@ -152,12 +152,12 @@ battery_time_dynamic_sensor:
         std::string status = id(battery_time_status_str);
         if (status == "Charging" || status == "Discharging") {
           if (x.empty()) {
-            lv_label_set_text(id(battery_time_secondary), "--");
+            lv_label_set_text(id(battery_time_value), "--");
           } else {
-            lv_label_set_text(id(battery_time_secondary), x.c_str());
+            lv_label_set_text(id(battery_time_value), x.c_str());
           }
         } else {
-          lv_label_set_text(id(battery_time_secondary), "");
+          lv_label_set_text(id(battery_time_value), "");
         }
 
 # Battery energy remaining sensor

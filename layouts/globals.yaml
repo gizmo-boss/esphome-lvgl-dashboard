@@ -2,6 +2,30 @@
   type: bool
   restore_value: yes
   initial_value: 'true'
+# When true, an active air alert keeps the screen on regardless of
+# auto_off_enabled / the inactivity timeout.
+- id: keep_screen_on_air_alert
+  type: bool
+  restore_value: yes
+  initial_value: 'true'
+- id: air_alert_active
+  type: bool
+  restore_value: no
+  initial_value: 'false'
+- id: air_alert_started_at
+  type: uint32_t
+  restore_value: no
+  initial_value: '0'
+# Link state, mirrored from the wifi/api triggers in common.yaml so that
+# update_link_status can render both halves without querying the components.
+- id: wifi_connected
+  type: bool
+  restore_value: no
+  initial_value: 'false'
+- id: api_connected
+  type: bool
+  restore_value: no
+  initial_value: 'false'
 - id: brightness_level
   type: float
   restore_value: yes
@@ -31,19 +55,6 @@
   type: int
   restore_value: no
   initial_value: '255'
-# Work state history storage (8 entries max)
-- id: work_state_current
-  type: std::string
-  restore_value: no
-  initial_value: '""'
-- id: work_state_history
-  type: std::string
-  restore_value: no
-  initial_value: '""'
-- id: work_state_history_count
-  type: int
-  restore_value: no
-  initial_value: '0'
 # Climate control panel state
 - id: current_climate_entity
   type: std::string

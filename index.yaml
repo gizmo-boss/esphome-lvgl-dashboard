@@ -4,6 +4,9 @@ esphome:
 
 substitutions:
   home_page: bedroom
+  # Design tokens. Defined at the top level so every page, widget, theme and
+  # lambda in the tree can reference them as ${color_*}.
+  <<: !include layouts/tokens.yaml
 
 packages:
   common: !include common.yaml

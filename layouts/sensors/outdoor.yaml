@@ -7,7 +7,11 @@ outdoor_temp_sensor:
     on_value:
     - lvgl.label.update:
         id: outdoor_temp_value
-        text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "°C";
+        text: !lambda |-
+          if (std::isnan(x)) return std::string("--");
+          char buf[16];
+          snprintf(buf, sizeof(buf), "%.1f", x);
+          return std::string(buf);
 
 # Outdoor humidity sensor
 outdoor_humidity_sensor:
@@ -18,9 +22,15 @@ outdoor_humidity_sensor:
     on_value:
     - lvgl.label.update:
         id: outdoor_humidity_value
-        text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "%";
+        text: !lambda |-
+          if (std::isnan(x)) return std::string("--");
+          char buf[16];
+          snprintf(buf, sizeof(buf), "%.1f", x);
+          return std::string(buf);
 
-# Outdoor pressure sensor
+# Outdoor pressure sensor.
+# Rendered without decimals: 0.1 hPa is below the sensor's meaningful
+# resolution, and "1013" fits the card where "1013.2" does not.
 outdoor_pressure_sensor:
   sensor:
   - id: outdoor_pressure
@@ -29,4 +39,8 @@ outdoor_pressure_sensor:
     on_value:
     - lvgl.label.update:
         id: outdoor_pressure_value
-        text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "hPa";
+        text: !lambda |-
+          if (std::isnan(x)) return std::string("--");
+          char buf[16];
+          snprintf(buf, sizeof(buf), "%.0f", x);
+          return std::string(buf);

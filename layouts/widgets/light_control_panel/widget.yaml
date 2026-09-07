@@ -2,7 +2,7 @@ obj:
   id: light_control_panel
   width: 100%
   height: 100%
-  bg_color: 0x42495A
+  bg_color: ${color_bg}
   bg_opa: 98%
   hidden: true
   scrollbar_mode: "off"
@@ -19,7 +19,7 @@ obj:
   # Header bar
   - obj:
       width: 100%
-      height: 45
+      height: 50
       bg_opa: TRANSP
       border_width: 0
       scrollbar_mode: "off"
@@ -28,21 +28,21 @@ obj:
           id: light_control_icon
           text: "󰛨"
           text_font: mdi_lg
-          text_color: 0xFFB347
+          text_color: ${color_icon_on}
           align: LEFT_MID
           x: 6
       - label:
           id: light_control_title
           text: "Light Control"
           text_font: roboto_lg
-          text_color: 0xFFFFFF
+          text_color: ${color_text_primary}
           align: LEFT_MID
           x: 44
       - button:
-          width: 45
-          height: 45
+          width: 50
+          height: 50
           align: RIGHT_MID
-          bg_color: 0x5A6173
+          bg_color: ${color_surface}
           radius: 20
           border_width: 0
           on_click:
@@ -51,13 +51,13 @@ obj:
           - label:
               text: "\U000F0156"
               text_font: mdi_lg
-              text_color: 0xFF5555
+              text_color: ${color_danger}
               align: CENTER
   # Separator
   - obj:
       width: 100%
       height: 2
-      bg_color: 0x555555
+      bg_color: ${color_surface_alt}
       border_width: 0
       radius: 1
       scrollbar_mode: "off"
@@ -82,13 +82,13 @@ obj:
           end_angle: 360
           rotation: 270
           adjustable: true
-          bg_color: 0x555555
+          bg_color: ${color_surface_alt}
           arc_width: 20
           indicator:
             arc_color: 0xFF8800
             arc_width: 20
           knob:
-            bg_color: 0xFFFFFF
+            bg_color: ${color_outline}
             radius: 14
             pad_all: 12
           on_value:
@@ -101,22 +101,22 @@ obj:
           width: 120
           height: 120
           radius: 60
-          bg_color: 0xFFB347
+          bg_color: ${color_icon_on}
           border_width: 4
-          border_color: 0xFFFFFF
+          border_color: ${color_outline}
           align: CENTER
           scrollbar_mode: "off"
           widgets:
           - label:
               text: "󰛨"
-              text_font: mdi_xxl
-              text_color: 0xFFFFFF
+              text_font: mdi_xl
+              text_color: ${color_text_primary}
               align: CENTER
   # Brightness control card
   - obj:
       width: 100%
       height: 90
-      bg_color: 0x5A6173
+      bg_color: ${color_surface}
       radius: 20
       border_width: 0
       scrollbar_mode: "off"
@@ -125,12 +125,12 @@ obj:
       - label:
           text: "\U000F00E0"
           text_font: mdi_lg
-          text_color: 0xFFCC00
+          text_color: ${color_warning}
           align: TOP_LEFT
       - label:
           text: "Brightness"
           text_font: roboto_sm
-          text_color: 0x888888
+          text_color: ${color_text_muted}
           align: TOP_LEFT
           x: 36
           y: 4
@@ -138,7 +138,7 @@ obj:
           id: light_brightness_value
           text: "100%"
           text_font: roboto_md
-          text_color: 0xFFFFFF
+          text_color: ${color_text_primary}
           align: TOP_RIGHT
           y: 2
       - slider:
@@ -150,30 +150,20 @@ obj:
           min_value: 1
           max_value: 255
           value: 255
-          bg_color: 0x42495A
+          bg_color: ${color_surface_alt}
           indicator:
-            bg_color: 0xFFCC00
+            bg_color: ${color_warning}
           knob:
-            bg_color: 0xFFFFFF
+            bg_color: ${color_outline}
             radius: 12
           on_value:
           - script.execute:
               id: update_light_brightness
               brightness: !lambda return (int)x;
-  # Hidden saturation slider (for script compatibility)
-  - obj:
-      width: 0
-      height: 0
-      hidden: true
-      widgets:
-      - slider:
-          id: light_saturation_slider
-          width: 1
-          height: 1
-          min_value: 0
-          max_value: 100
-          value: 100
-  # Quick color presets row
+  # Quick color presets row.
+  # The swatch colours below are deliberately NOT design tokens: each one is
+  # the light colour the preset sets, i.e. data, not theme. Only the outline
+  # of the white swatch is themed.
   - obj:
       width: 100%
       height: 60
@@ -191,7 +181,7 @@ obj:
           radius: 23
           bg_color: 0xFFFFFF
           border_width: 2
-          border_color: 0x888888
+          border_color: ${color_border}
           on_click:
           - script.execute: { id: set_light_preset, preset: white }
       - button:

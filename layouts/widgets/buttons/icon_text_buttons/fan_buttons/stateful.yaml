@@ -19,7 +19,7 @@
         width: 50
         height: 50
         radius: 25
-        bg_color: 0x42495A
+        bg_color: ${color_surface_alt}
         border_width: 0
         align: LEFT_MID
         scrollbar_mode: "off"
@@ -28,7 +28,7 @@
           - label:
               text: ${icon_off}
               text_font: mdi_md
-              text_color: 0x9DA0A6
+              text_color: ${color_icon_muted}
               align: CENTER
     # Icon circle container - ON state (green)
     - obj:
@@ -36,17 +36,16 @@
         width: 50
         height: 50
         radius: 25
-        bg_color: 0x1B4332
+        bg_color: ${color_tint_green}
         border_width: 0
         align: LEFT_MID
         scrollbar_mode: "off"
         hidden: true
         widgets:
           - label:
-              id: ${uid}_spinning_icon
               text: ${icon_on}
               text_font: mdi_md
-              text_color: 0x52B788
+              text_color: ${color_fan_on}
               align: CENTER
     # Icon circle container - UNKNOWN state
     - obj:
@@ -54,7 +53,7 @@
         width: 50
         height: 50
         radius: 25
-        bg_color: 0x42495A
+        bg_color: ${color_surface_alt}
         border_width: 0
         align: LEFT_MID
         scrollbar_mode: "off"
@@ -62,7 +61,7 @@
           - label:
               text: "\U000F01D8"
               text_font: mdi_md
-              text_color: 0x9DA0A6
+              text_color: ${color_icon_muted}
               align: CENTER
     # Text label to the right of the circle
     - label:

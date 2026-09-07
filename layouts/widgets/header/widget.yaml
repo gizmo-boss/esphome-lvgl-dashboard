@@ -30,19 +30,20 @@ obj: # title bar
           widgets:
             - label:
                 text: "\U000F0140"
-                text_font: mdi_sm
-                text_color: 0x888888
+                text_font: mdi_md
+                text_color: ${color_text_muted}
                 align: CENTER
-      - label: # wifi icon
+      # Link status. Always visible: a hidden icon is not a signal, so the
+      # state is carried by colour instead (see the update_link_status script).
+      - label:
           id: wifi_icon
           align: RIGHT_MID
           x: -95 # RESOLUTION-SPECIFIC (clock width + padding)
           text: "\U000F05A9"
           text_font: mdi_sm
-          text_color: 0x888888
-          hidden: true
+          text_color: ${color_danger}
       - label: # clock
           id: nav_clock
           align: RIGHT_MID
           x: -${padding} # RESOLUTION-SPECIFIC
-          text: " "
+          text: "--:--"

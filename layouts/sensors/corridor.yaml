@@ -11,7 +11,11 @@ corridor_temp_sensor:
     on_value:
     - lvgl.label.update:
         id: corridor_temp_value
-        text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "°C";
+        text: !lambda |-
+          if (std::isnan(x)) return std::string("--");
+          char buf[16];
+          snprintf(buf, sizeof(buf), "%.1f", x);
+          return std::string(buf);
 
 # Corridor humidity sensor
 corridor_humidity_sensor:
@@ -22,4 +26,8 @@ corridor_humidity_sensor:
     on_value:
     - lvgl.label.update:
         id: corridor_humidity_value
-        text: !lambda return std::to_string(std::round(x * 10) / 10.0).substr(0, std::to_string(std::round(x * 10) / 10.0).find(".") + 2) + "%";
+        text: !lambda |-
+          if (std::isnan(x)) return std::string("--");
+          char buf[16];
+          snprintf(buf, sizeof(buf), "%.1f", x);
+          return std::string(buf);

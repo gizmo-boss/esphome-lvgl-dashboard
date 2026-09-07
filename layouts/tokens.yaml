@@ -1,0 +1,62 @@
+# Design tokens — the single source of truth for colour in this dashboard.
+#
+# Included into index.yaml's `substitutions:` block, so every `${color_*}`
+# below resolves in any page, widget, theme or lambda.
+#
+# Contrast was verified against WCAG 2.1 relative luminance. Every text
+# token clears 4.5:1 on both `color_bg` and `color_surface`; every icon
+# token clears 3:1 on `color_surface_alt` (icon circles carry icons, never
+# body text, so the 3:1 non-text threshold applies there).
+#
+#                        on color_bg   on color_surface
+#   color_text_primary       16.11            13.58
+#   color_text_muted          8.53             7.19
+#   color_accent              7.01             5.91
+#   color_success             5.80             4.89
+#   color_warning            10.66             8.98
+#   color_danger              5.81             4.89
+#   color_heat                5.87             4.95
+#   color_cool                7.59             6.40
+#
+# Surfaces are deliberately darker than the previous palette. The old
+# background (0x42495A) and card (0x5A6173) were too light for any muted or
+# semantic tone to reach 4.5:1 — 0x888888 on 0x5A6173 measured 1.75:1.
+
+# --- Surfaces -----------------------------------------------------------
+color_bg: "0x1E2128"          # screen background, full-screen overlays
+color_surface: "0x2A2E38"     # cards, buttons, raised rows
+color_surface_alt: "0x363C4A" # icon circles, slider/arc tracks, inset wells
+color_border: "0x4A5262"      # separators and hairline rules
+
+# --- Text ---------------------------------------------------------------
+color_text_primary: "0xFFFFFF"
+color_text_muted: "0xB6BDC9"  # captions and secondary labels
+color_outline: "0xFFFFFF"     # physical outlines: slider knobs, battery shell
+
+# --- Semantic state -----------------------------------------------------
+color_accent: "0x00B6FF"
+color_success: "0x4CAF50"
+color_warning: "0xFFCC00"
+color_danger: "0xFF6B6B"      # lightened from 0xFF5252, which read 4.26:1 on surface
+color_amber: "0xFFA726"       # battery discharging, alert counts
+
+# --- Domain accents -----------------------------------------------------
+color_heat: "0xFF7043"        # lightened from 0xFF5722 (4.29:1 on surface)
+color_cool: "0x00BFFF"
+color_auto: "0x8BC34A"
+color_humidity: "0x00CCFF"
+color_pressure: "0x9575CD"
+
+# --- Icons --------------------------------------------------------------
+color_icon_muted: "0x9DA0A6"  # icon in an "off" state
+color_icon_on: "0xFFB347"     # lamp icon when lit
+color_fan_on: "0x52B788"
+
+# --- State tints --------------------------------------------------------
+# Backgrounds for icon circles. These host an icon, never body text.
+color_tint_amber: "0x5C4A1A"
+color_tint_green: "0x1B4332"
+color_tint_blue: "0x1A3A5C"
+color_tint_heat: "0x5C2A1A"
+color_tint_warm: "0x5C3A1A"
+color_tint_auto: "0x3A4A2A"

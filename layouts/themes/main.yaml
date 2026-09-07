@@ -1,18 +1,18 @@
 obj:
-  bg_color: 0x42495A
-  text_color: 0xFFFFFF
+  bg_color: ${color_bg}
+  text_color: ${color_text_primary}
 button:
-  bg_color: 0x5A6173
+  bg_color: ${color_surface}
   border_width: 0
-  border_color: 0x00B6FF
+  border_color: ${color_accent}
   radius: 20
   shadow_width: 0
 bar:
-  bg_color: 0x111111
-  text_color: 0xFFFFFF
+  bg_color: ${color_surface_alt}
+  text_color: ${color_text_primary}
 dropdown:
-  bg_color: 0x5A6173
-  text_color: 0xFFFFFF
-  border_color: 0x00B6FF
+  bg_color: ${color_surface}
+  text_color: ${color_text_primary}
+  border_color: ${color_accent}
   border_width: 1
   shadow_width: 0

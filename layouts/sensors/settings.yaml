@@ -20,6 +20,16 @@ settings_init:
           else:
           - lvgl.widget.hide: auto_off_checked
           - lvgl.widget.show: auto_off_unchecked
+      - if:
+          condition:
+            lambda: 'return id(keep_screen_on_air_alert);'
+          then:
+          - lvgl.widget.show: air_alert_screen_checked
+          - lvgl.widget.hide: air_alert_screen_unchecked
+          else:
+          - lvgl.widget.hide: air_alert_screen_checked
+          - lvgl.widget.show: air_alert_screen_unchecked
+      - script.execute: update_link_status
       - delay: 500ms
       - script.execute: update_battery_display
 
