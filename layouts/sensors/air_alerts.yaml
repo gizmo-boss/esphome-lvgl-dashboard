@@ -81,3 +81,44 @@ air_alert_today_count_sensor:
     - lvgl.label.update:
         id: air_alert_today_count_value
         text: !lambda return std::to_string((int)x);
+
+# Air alert level sensor (red/yellow/other), colours the shield icon and label
+air_alert_level_sensor:
+  text_sensor:
+  - id: air_alert_level
+    platform: homeassistant
+    entity_id: sensor.m_kiiv
+    on_value:
+    - lvgl.label.update:
+        id: air_alert_level_value
+        text: !lambda |-
+          std::string s = x;
+          for (auto &c : s) c = tolower(c);
+          if (s == "red") return std::string("Red");
+          if (s == "yellow") return std::string("Yellow");
+          return std::string("Unknown");
+    - if:
+        condition:
+          lambda: |-
+            std::string s = x;
+            for (auto &c : s) c = tolower(c);
+            return s == "red";
+        then:
+        - lvgl.label.update:
+            id: air_alert_level_icon
+            text_color: ${color_danger}
+        else:
+        - if:
+            condition:
+              lambda: |-
+                std::string s = x;
+                for (auto &c : s) c = tolower(c);
+                return s == "yellow";
+            then:
+            - lvgl.label.update:
+                id: air_alert_level_icon
+                text_color: ${color_warning}
+            else:
+            - lvgl.label.update:
+                id: air_alert_level_icon
+                text_color: ${color_icon_muted}

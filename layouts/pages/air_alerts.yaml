@@ -57,6 +57,24 @@ widgets:
         <<: !include
           file: ../widgets/stat_card/widget.yaml
           vars:
+            uid: air_alert_level
+            icon: "\U000F0498"
+            icon_color: ${color_icon_muted}
+            label: Level
+            unit: " "
+            width: 100%
+    # Separator before alert count
+    - obj:
+        width: 100%
+        height: 2
+        bg_color: ${color_border}
+        border_width: 0
+        radius: 1
+        scrollbar_mode: "off"
+    - obj:
+        <<: !include
+          file: ../widgets/stat_card/widget.yaml
+          vars:
             uid: air_alert_today_count
             icon: "\U000F0028"
             icon_color: ${color_amber}
